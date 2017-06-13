@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.wq.spring_boot</groupId>
+  <artifactId>project_maven4spring_boot</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <!-- 
+  	添加Spring Boot的父级依赖，这样当前项目就是一个Spring Boot项目， 
+  	spring-boot-starter-parent是一个特殊的starter，它用来提供相关的Maven默认依赖，使用它之后，常用的包依赖可以省去version标签
+  	Spring Boot提供的jar包依赖可在C:\Users\0\.m2\repository\org\springframework\boot\spring-boot-dependencies\1.5.3.RELEASE\spring-boot-dependencies-1.5.3.RELEASE中查看
+  -->
+  <parent>
+  	<groupId>org.springframework.boot</groupId>
+  	<artifactId>spring-boot-starter-parent</artifactId>
+  	<version>1.3.0.RELEASE</version>
+  	<relativePath/>
+  </parent>
+  
+  <dependencies>
+  	<!-- 添加Spring Boot的Web依赖 -->
+  	<dependency>
+  		<groupId>org.springframework.boot</groupId>
+  		<artifactId>spring-boot-starter-web</artifactId>
+  	</dependency>
+  	<!-- 添加自定义的spring-boot-starter-hello包依赖，测试自定义自动配置 -->
+  	<dependency>
+  		<groupId>com.wq</groupId>
+  		<artifactId>spring-boot-starter-hello</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+  
+  <build>
+  	<plugins>
+  		<!-- Spring Boot的编译插件 -->
+  		<plugin>
+  			<groupId>org.springframework.boot</groupId>
+  			<artifactId>spring-boot-maven-plugin</artifactId>
+  		</plugin>
+  	</plugins>
+  </build>
+</project>

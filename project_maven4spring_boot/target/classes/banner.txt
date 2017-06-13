@@ -1,0 +1,11 @@
+【替换banner】
+新建banner.txt文件，在http://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20中
+得到新字符后，拷贝到src/main/resources/下，在启动项目，可看到banner被替换了
+
+                 __                
+__  _  _______ _/  |_  ___________ 
+\ \/ \/ /\__  \\   __\/ __ \_  __ \
+ \     /  / __ \|  | \  ___/|  | \/
+  \/\_/  (____  /__|  \___  >__|   
+              \/          \/       
+

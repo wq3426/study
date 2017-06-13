@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.wq</groupId>
+  <artifactId>project_maven4spring4</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <!-- 定义变量在dependency中引用，用于设置编译级别 -->
+  <properties>
+  	<java.version>1.7</java.version>
+  </properties>
+  
+  <dependencies>
+  	<!-- 增加Spring的依赖 -->
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-context</artifactId>
+  		<version>4.1.6.RELEASE</version>
+  	</dependency>
+  	
+  	<!-- 增加spring aop支持 -->
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-aop</artifactId>
+  		<version>4.1.6.RELEASE</version>
+  	</dependency>
+  	<!-- aspectj 支持 -->
+  	<dependency>
+  		<groupId>org.aspectj</groupId>
+  		<artifactId>aspectjrt</artifactId>
+  		<version>1.8.5</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.aspectj</groupId>
+  		<artifactId>aspectjweaver</artifactId>
+  		<version>1.8.5</version>
+  	</dependency>
+  	
+  	<!-- 增加JSR250支持 Bean的初始化和销毁-->
+  	<dependency>
+  		<groupId>javax.annotation</groupId>
+  		<artifactId>jsr250-api</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  	
+  	<!-- Spring test 支持 -->
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-test</artifactId>
+  		<version>4.1.6.RELEASE</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.11</version>
+  	</dependency>
+  </dependencies>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-compiler-plugin</artifactId>
+  			<version>2.3.2</version>
+  			<!-- 设置编译级别 -->
+  			<configuration>
+  				<source>${java.version}</source>
+  				<target>${java.version}</target>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
+  
+</project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="1 seconds">
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	
+	<jmxConfigurator/>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>logbak: %d{HH:mm:ss.SSS} %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- 将spring的web包下的类的日志级别设置为DEBUG，当出现和参数类型相关的4XX错误时，会看到更详细的错误信息 -->
+	<logger name="org.springframework.web" level="DEBUG"/>
+	
+	<root level="info">
+		<appender-ref ref="console"/>
+	</root>
+</configuration>

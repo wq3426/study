@@ -1,0 +1,201 @@
+<!-- project pom文件的顶级元素 -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion><!--  所使用的object model版本 -->
+  <groupId>com.wq.spring_mvc</groupId><!-- 项目创建团体或组织的唯一标志符，通常是域名倒写 -->
+  <artifactId>project_maven4spring_mvc</artifactId><!-- 项目artifact唯一的基地址名 -->
+  <version>0.0.1-SNAPSHOT</version><!-- artifact的版本，通常能看见为类似0.0.1-SNAPSHOT，其中SNAPSHOT表示项目开发中，为开发版本 -->
+  
+  <!-- 
+  	name 表示项目的展现名，在maven生成的文档中使用
+	url表示项目的地址，在maven生成的文档中使用
+	description 表示项目的描述，在maven生成的文档中使用
+	build 表示build配置
+	parent 表示父pom
+   -->
+  
+  <!-- artifact打包的方式，如jar、war、ear等等。默认为jar。这个不仅表示项目最终产生何种后缀的文件，也表示build过程使用什么样的lifecycle。 -->
+  <packaging>war</packaging>
+  
+  <!-- 定义变量在dependency中引用，用于设置编译级别 -->
+  <properties>
+  	<!-- Generic properties -->
+  	<java.version>1.7</java.version>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  	
+  	<!-- Web -->
+  	<jsp.version>2.2</jsp.version>
+  	<jstl.version>1.2</jstl.version>
+  	<servlet.version>3.1.0</servlet.version>
+  	
+  	<!-- Spring -->
+	<spring-framework.version>4.1.5.RELEASE</spring-framework.version>  	
+	
+	<!-- Logging -->
+	<logback.version>1.0.13</logback.version>
+	<slf4j.version>1.7.5</slf4j.version>
+  </properties>
+  
+  <!-- dependencies 表示依赖，在子节点dependencies中添加具体依赖的groupId artifactId和version -->
+  <dependencies>
+  	<dependency>
+  		<groupId>javax</groupId>
+  		<artifactId>javaee-web-api</artifactId>
+  		<version>7.0</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	
+  	<!-- Spring MVC -->
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-webmvc</artifactId>
+  		<version>${spring-framework.version}</version>
+  	</dependency>
+  	
+  	<!-- 其他Web依赖 -->
+  	<dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>jstl</artifactId>
+  		<version>${jstl.version}</version>
+  	</dependency>
+ 	<dependency>
+  		<groupId>taglibs</groupId>
+  		<artifactId>standard</artifactId>
+  		<version>1.1.2</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>javax.servlet-api</artifactId>
+  		<version>${servlet.version}</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>javax.servlet.jsp</groupId>
+  		<artifactId>jsp-api</artifactId>
+  		<version>${jsp.version}</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	
+  	<!-- Spring and Transactions -->
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-tx</artifactId>
+  		<version>${spring-framework.version}</version>
+  	</dependency>
+  	
+  	<!-- 使用SLF4J和LogBack作为日志 -->
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-api</artifactId>
+  		<version>${slf4j.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>log4j</groupId>
+  		<artifactId>log4j</artifactId>
+  		<version>1.2.16</version>
+  		<exclusions>
+  			<exclusion>
+  				<groupId>javax.servlet</groupId>
+  				<artifactId>servlet-api</artifactId>
+  			</exclusion>
+  		</exclusions>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>jcl-over-slf4j</artifactId>
+  		<version>${slf4j.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-classic</artifactId>
+  		<version>${logback.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-core</artifactId>
+  		<version>${logback.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-access</artifactId>
+  		<version>${logback.version}</version>
+  	</dependency>
+  	
+  	<!-- 添加jackson依赖，提供对json和xml格式的支持 -->
+  	<dependency>
+  		<groupId>com.fasterxml.jackson.dataformat</groupId>
+  		<artifactId>jackson-dataformat-xml</artifactId>
+  		<version>2.5.3</version>
+  	</dependency>
+  	
+  	<!-- 仅支持json -->
+  	<!-- 
+  	<dependency>
+  		<groupId>com.fasterxml.jackson.core</groupId>
+  		<artifactId>jackson-databind</artifactId>
+  		<version>2.5.3</version>
+  	</dependency>
+  	 -->
+  	 
+  	 <!-- 文件上传依赖 -->
+  	 <dependency>
+  	 	<groupId>commons-fileupload</groupId>
+  	 	<artifactId>commons-fileupload</artifactId>
+  	 	<version>1.3.1</version>
+  	 </dependency>
+  	 <!-- 非必须，可简化I/O操作 -->
+  	 <dependency>
+  	 	<groupId>commons-io</groupId>
+  	 	<artifactId>commons-io</artifactId>
+  	 	<version>2.2</version>
+  	 </dependency>
+  	 
+  	 <!-- 导出Excel依赖 -->
+  	 <dependency>
+  	 	<groupId>org.apache.poi</groupId>
+  	 	<artifactId>poi</artifactId>
+  	 	<version>3.9</version>
+  	 </dependency>
+  	 <dependency>
+  	 	<groupId>org.apache.poi</groupId>
+  	 	<artifactId>poi-ooxml</artifactId>
+  	 	<version>3.9</version>
+  	 </dependency>
+  	 
+  	 <!-- 测试依赖 -->
+  	 <dependency>
+  	 	<groupId>org.springframework</groupId>
+  	 	<artifactId>spring-test</artifactId>
+  	 	<version>${spring-framework.version}</version>
+  	 	<scope>test</scope>
+  	 </dependency>
+  	 <dependency>
+  	 	<groupId>junit</groupId>
+  	 	<artifactId>junit</artifactId>
+  	 	<version>4.11</version>
+  	 	<scope>test</scope>
+  	 </dependency>
+  </dependencies>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-compiler-plugin</artifactId>
+  			<version>2.3.2</version>
+  			<configuration>
+  				<source>${java.version}</source>
+  				<target>${java.version}</target>
+  			</configuration>
+  		</plugin>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-war-plugin</artifactId>
+  			<version>2.3</version>
+  			<configuration>
+  				<failOnMissingWebXml>false</failOnMissingWebXml>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
+</project>

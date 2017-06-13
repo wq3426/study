@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="project_maven4spring_mvc"
+  id="myeclipse.1495847958711"
+  context-root="/mvc"
+  j2ee-spec="1.7"
+  archive="project_maven4spring_mvc.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

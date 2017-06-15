@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -130,5 +131,14 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter{// 2
 		converters.add(myMessageConverter());
 	}
 	
+	/**
+	 * Spring提供的方法级别的拦截器MethodValidationPostProcessor，可以实现对方法参数的校验
+	 * 使用时需要在controller类上添加@Validated注解
+	 * @return
+	 */
+	@Bean
+	public MethodValidationPostProcessor methodValidationPostProcessor() {
+		return new MethodValidationPostProcessor();
+    }
 	
 }

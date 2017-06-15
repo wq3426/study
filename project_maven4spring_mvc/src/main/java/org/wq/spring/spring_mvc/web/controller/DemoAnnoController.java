@@ -1,14 +1,18 @@
 package org.wq.spring.spring_mvc.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Min;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.wq.spring.spring_mvc.domain.DemoObj;
+import org.wq.spring.spring_mvc.domain.validator.AllValidator;
 
 /**
  *0. @Controller声明控制器类
@@ -17,6 +21,7 @@ import org.wq.spring.spring_mvc.domain.DemoObj;
  * @author wq3426
  */
 @Controller //0
+@Validated //实现方法级别的校验
 @RequestMapping("/anno") //请求映射注解，映射此类的访问路径为 /anno
 public class DemoAnnoController {
 
@@ -43,7 +48,7 @@ public class DemoAnnoController {
 	
 	//5.Long id 常规的request参数解析（基础类型），请求方式为：/anno/requestParam?id=1
 	@RequestMapping(value="/requestParam", produces="text/plain;charset=UTF-8")
-	public @ResponseBody String passRequestParam(Long id, HttpServletRequest request){// 5
+	public @ResponseBody String passRequestParam(@Min(value=1, message="id最小为1") @RequestParam Long id, HttpServletRequest request){// 5
 		return "url:" + request.getRequestURL() + " can access, id: " + id;
 	}
 	
@@ -56,11 +61,41 @@ public class DemoAnnoController {
 		return obj;
 	}
 	
-	@RequestMapping(value="/obj2", produces="application/json;charset=UTF-8",
+	/**
+	 * 8.解析参数到对象（引用类型）
+	 * 
+	 * 入参：{"id": 1, "name": "wq"}
+	 * 请求方式：请求的contentType："application/json"，POST方式
+	 * 接收参数对象：DemoObj  使用注解 @RequestBody 修饰
+	 * 
+	 * @param obj
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/obj2", produces="application/json;charset=UTF-8", 
+			consumes="application/json", method=RequestMethod.POST)
+	public @ResponseBody DemoObj passObj2(@RequestBody @Validated(AllValidator.class) DemoObj obj, HttpServletRequest request){// 8
+		System.out.println("content-Type   "+request.getContentType());
+		System.out.println("url:" + request.getRequestURL() + " can access, obj id: " 
+		                   + obj.getId() + " obj name:" + obj.getName());
+		return obj;
+	}
+	
+	/**
+	 * 9.解析参数到对象（引用类型）
+	 * 
+	 * 入参：id=1&name=wq
+	 * 请求方式：请求的contentType："application/x-www-form-urlencoded"，POST方式
+	 * 接收参数对象：DemoObj
+	 * 
+	 * @param obj
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/obj3", produces="application/json;charset=UTF-8", 
 			consumes="application/x-www-form-urlencoded", method=RequestMethod.POST)
-	@ResponseBody
-	public DemoObj passObj2(@ModelAttribute("obj") DemoObj obj, HttpServletRequest request){// 6
-		System.out.println("content-Typt   "+request.getContentType());
+	public @ResponseBody DemoObj passObj3(DemoObj obj, HttpServletRequest request){// 9
+		System.out.println("content-Type   "+request.getContentType());
 		System.out.println("url:" + request.getRequestURL() + " can access, obj id: " 
 		                   + obj.getId() + " obj name:" + obj.getName());
 		return obj;

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<project name="core" default="buildzxhb" basedir="../">
+	<import file="build_eop.xml"/>
+	<import file="build_cms.xml"/>
+	<import file="build_shop.xml"/>
+	<import file="build_fastdfs.xml"/>
+	<import file="build_b2b2c.xml"/>
+	<import file="build_b2b2c_api.xml"/>
+	<import file="build_data_analysis.xml"/>
+	<import file="build_integral.xml"/>
+	
+	<!--请设定为本地硬盘目录-->
+	<property name="tempdir"  value="G:/outzxhb" />
+	
+	<!--要编译的类目录-->
+	<property name="build.dir"  value="${tempdir}/classes" />
+
+	<!--classpath-->
+	<path id="buildpath">
+	    <fileset dir="WebContent/WEB-INF/lib">
+	    	  <include name="**/*.jar"/>
+		</fileset>
+    	<fileset dir="WebContent/WEB-INF/jars">
+    		  <include name="**/*.jar"/> 
+		</fileset>	    		
+	    <dirset dir="${build.dir}">   
+	    </dirset>  		  	
+	</path>
+
+	<target name="clean">
+    	
+    	<!--创建编译目录-->
+    	<delete dir="${tempdir}"></delete>
+    	<mkdir dir="${build.dir}"/>
+    	<mkdir dir="${tempdir}/lib"/>
+		
+	</target>
+
+	<!-- 生成gas产品包 -->
+	<target name="buildzxhb" depends="clean,jar_eop,jar_cms,jar_shop,jar_fastdfs,jar_b2b2c,jar_b2b2c_api,jar_data_analysis,jar_integral">
+		<delete file="${tempdir}/zxhb.war"/>
+		<war destfile="${tempdir}/zxhb.war" webxml="WebContent/WEB-INF/web.xml">
+		  <fileset dir="WebContent">
+		  	 <exclude name="products/**"/>
+		  	 <exclude name="saas/**"/>
+		  	 <exclude name="test/**"/>
+		  </fileset>
+		  <fileset dir="WebContent">
+		  	<include name="products/base/**" />
+		  	<include name="products/company/**"/>
+		  	<include name="products/simple/**"/>
+		  	<include name="products/b2b2c/**"/>
+		  </fileset>
+		  <lib dir="${tempdir}/lib">
+		  </lib>
+		  <classes dir="resource" >
+		  </classes>
+		</war>
+	</target>
+
+	
+</project>

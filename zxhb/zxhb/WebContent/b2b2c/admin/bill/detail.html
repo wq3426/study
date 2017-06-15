@@ -1,0 +1,169 @@
+<#include '/admin/header.html' >
+<#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<#assign permssion = "com.enation.app.base.core.directive.PermssionDirective"?new()> 
+<div class="main">
+	<div class="shadowBoxWhite  whiteBox">
+		<div class="detail">
+			<table style="width: 100%">
+				<tbody>
+				<tr>
+					<th class="title" colspan="4">结算单详细信息</th>
+				</tr>
+				<tr>
+					<td >结算单号:</td>
+					<td>
+						${billDetail.sn}
+					</td>
+					<td >起止时间:</td>
+					<td>
+						<@dateFormat time='${billDetail.start_time}' pattern='yyyy-MM-dd'/>
+						-
+						<@dateFormat time='${billDetail.end_time}' pattern='yyyy-MM-dd'/>
+					</td>
+				</tr>
+				<tr>
+					<td>出账日期:</td>
+					<td>
+						${billDetail.bill_time}
+					</td>
+					<td>结算状态:</td>
+					<td>
+						<#if billDetail.status==1>
+							已出账 
+						<#elseif billDetail.status==0>
+							未出账 
+						<#elseif billDetail.status==2>
+							已确认&nbsp;&nbsp;
+							<@permssion actid="finance,super_admin">
+								<a href="javascript:void(0)" class="button"  id="pass" >审核</a>
+							</@permssion>
+						<#elseif billDetail.status==3>
+							已审核
+							<@permssion actid="finance,super_admin">
+								<a href="javascript:void(0)" class="button"  id="pass" >结算</a>
+							</@permssion>
+						<#else>
+							已付款
+						</#if>
+					</td>
+				</tr>
+				<tr>
+					<td>店铺名称:</td>
+					<td colspan="3">${store.store_name}</td>
+				</tr>
+				<tr>
+					<td>银行开户名:</td>
+					<td>${store.bank_account_name}</td>
+					<td>公司银行账号:</td>
+					<td>${store.bank_account_number}</td>
+				</tr>
+				<tr>
+					<td>开户银行支行名称:</td>
+					<td>${store.bank_name}</td>
+					<td>支行联行号:</td>
+					<td>${store.bank_code}</td>
+				</tr>
+				<tr>
+					<td>银行地址:</td>
+					<td colspan="3">
+						${store.bank_province} -${store.bank_city}-${store.bank_region}
+					</td>
+				</tr>
+				<tr>
+					<td>平台应付金额:</td>
+					<td colspan="3">
+						${billDetail.bill_price} = ${billDetail.price} (订单金额) - ${billDetail.commi_price} (佣金金额) - ${billDetail.returned_price} (退单金额) + ${billDetail.returned_commi_price} (退还佣金) - ${billDetail.cod_price} (货到付款金额)
+					</td>
+				</tr>  
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<br/>
+	<div class="shadowBoxWhite  whiteBox">
+			<table class="easyui-datagrid" data-options="url:'${ctx}/b2b2c/admin/storeBill!bill_order_list_json.do?sn=${billDetail.sn}',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+				pagination="true" width="width"  sortName="order_id" sortOrder="desc">
+				<thead>
+					<tr>
+						<th class="title" colspan="9">订单列表</th>
+					</tr>
+					<tr>
+						<th data-options="field:'sn',width:150">订单号</th>
+						<th data-options="field:'create_time',width:100,sortable:'true'" formatter="formatDate" >下单日期</th>
+						<th data-options="field:'sale_cmpl_time',width:100,sortable:'true'" formatter="formatDate">发货日期</th>		
+						<th data-options="field:'need_pay_money',width:100,sortable:'true'" formatter="forMoney">订单总额</th>
+						<th data-options="field:'ship_name',width:100">收货人</th>
+						<th data-options="field:'payment_name',width:100,sortable:'true'">支付方式</th>
+						<th data-options="field:'action',width:100" formatter="formatOrder">操作</th>
+					</tr>
+				</thead>
+			</table>
+	</div>
+	<br/>
+	<div class="shadowBoxWhite whiteBox">
+		<table id="orderReturndata" class="easyui-datagrid"
+			data-options="url:'${ctx}/b2b2c/admin/storeBill!bill_sellback_list_json.do?sn=${billDetail.sn}',pageList: [10,15,20,30],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" width="width">
+			<thead>
+				<tr>
+					<th data-options="field:'id',width:35">退货ID</th>
+					<th data-options="field:'tradeno',width:100">退货单号</th>
+					<th data-options="field:'refund_way',width:100" >支付方式</th>
+					<th data-options="field:'ordersn',width:100">退货订单号</th>
+					<th data-options="field:'regtime',width:100" formatter="formatDate">操作时间</th>
+					<th data-options="field:'alltotal_pay',width:100">退货金额</th>
+					<th data-options="field:'action',width:50,align:'center'" formatter="formatReturn">操作</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+function formatOrder(value,row,index){
+	var val="<a class='edit' title='查看' href='#' onclick=\"newTab('查看订单详细','${ctx}/b2b2c/admin/storeOrder!orderDetail.do?orderId="+row.order_id+"&sn="+row.sn+"&logi_no="+row.logi_no+"&uname="+row.uname+"&ship="+row.ship_name+"&status="+row.status+"')\"></a>";
+	return val;
+}
+function forMoney(value, row, index) {
+	var val = "￥" + value;
+	return val;
+}
+function formatDate(value,row,index){
+	if(value==null||value==0){
+		return "";
+	}
+	else{
+		return getFormatDateByLong(value, "yyyy-MM-dd");
+	}
+	
+}
+function formatReturn(value,row,index){
+	var val= "<a href='javascript:void(0);' onclick=newTab('退货详细','${ctx}/shop/admin/sellBack!payment.do?id="+row.id+"'); >查看</a>";
+	return val;
+}
+
+$(function(){
+	$("#pass").click(function(){
+		var id=${billDetail.id};
+		$.ajax({
+			url : "${ctx}/b2b2c/admin/storeBill!edit_bill_detail.do",
+			data:{'bill_id':id,'status':${billDetail.status} },
+			dataType: "json", 
+			cache : false,
+			success : function(result) {
+				
+				if(result.result==1){
+					$.Loading.success(result.message);
+					location.reload();
+				}else{
+					$.Loading.error(result.message);
+				}
+			},
+			error : function() {
+				$.Loading.message("出现错误,请重试！");
+			}
+		});
+		
+	});
+})
+</script>
+<#include '/admin/footer.html' >

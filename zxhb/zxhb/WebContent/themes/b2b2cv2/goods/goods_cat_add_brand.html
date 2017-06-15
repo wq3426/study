@@ -1,0 +1,228 @@
+<#include '/store/store_header.html' /> <#assign
+checkB2b2cMemberTag=newTag("checkB2b2cMemberTag")> <#assign
+storeMember=checkB2b2cMemberTag()> <#-- 创建商品分类标签 --> <#assign
+storeGoodsCatListTag= newTag("storeGoodsCatListTag") > <#-- 查询商品分类列表
+0表示查子分类 --> <#assign storeGoodsCatList=
+storeGoodsCatListTag("{'type':0,'storeid':${storeid!0}}")!''>
+<style>
+.select_cat_tools {
+	padding: 0px;
+	overflow: hidden;
+}
+
+.tabmenu ul .active {
+	background-color: #FF4A00;
+	color: #fff;
+	cursor: default;
+	display: inline-block;
+	font: 18px/36px "microsoft yahei";
+	height: 36px;
+	padding: 0 20px;
+}
+
+.tabmenu ul .normal {
+	color: #FF4A00;
+	background-color: #ffffff;
+	display: inline-block;
+	font: lighter 14px/33px "microsoft yahei";
+	height: 33px;
+	padding: 0 10px;
+	border-bottom: 2px solid #FF4A00;
+	float: left;
+	border: none;
+}
+
+.ncu_btn3 {
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	border-image: none;
+	cursor: pointer;
+	display: inline-block;
+	font: 12px/20px "microsoft yahei";
+	padding: 4px 50px;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	color: #fff;
+	background-color: #5bb75b;
+	border-color: #52a452 #52a452 #448944;
+	z-index: 1;
+	border-radius: 3px;
+	margin-left: 400px;
+	border: none;
+}
+</style>
+<div class="store_center">
+	<#include '/store/left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color: #999;">您的位置：</span>商品管理 > <span>店铺商品管理</span> 
+				 <span> > </span>新增商品品牌
+		</div>
+		<div class="store_right_main">
+			<div class="tabmenu">
+				<ul class="tab pngFix">
+					<li><a class="normal"
+						href="${ctx}/goods/goods_cat.html?menu=store_goods">商品分类</a> <a
+						class="active"
+						href="${ctx}/goods/goods_cat_add_brand.html?menu=store_goods">新增商品品牌</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="select_cat_tools">
+				<div class="tips_choice">
+					<dl class="hover_tips_cont">
+						<dt class="current_sort" style="" id="commoditydt">您当前选择的商品类别是：</dt>
+						<dd id="commoditydd"></dd>
+					</dl>
+				</div>
+				<div class="select_cat_list">
+					<div style="position: relative;" class="wp_sort">
+						<div class="wp_sort_block" id="class_div"></div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<b>新增品牌名称:</b><input type="text" style="margin-left: 10px;" id="newBrand"/>
+			</div>
+			<input type="button" class="ncu_btn3" id="applyNext" value="立即申请" />
+		</div>
+	</div>
+</div>
+<script>
+	var CatLoader = {
+		init : function() {
+			var self = this;
+			this.loadChildren(0);
+
+			$("#applyNext").click(function() {
+				var newBrand=$("#newBrand").val();
+				var catid = self.getSelectedCatId();
+				if (!catid) {
+					alert("请选择商品的分类");
+				}else {
+					//location.href = "add_goods.html?store_id=${member.store_id!0}&catid=" + catid+"&menu=store_goods";
+					$.ajax({
+						type : 'POST',
+						url : "${ctx}/api/b2b2c/goodsCat!sendEmail.do?cat_id="+ catid+"&newBrand="+newBrand,
+						dataType : 'json',
+						async: false,
+						success : function(result) {
+							 if (result.result == 0) {
+								 alert(result.message);
+							} else {
+								alert(result.message);
+							} 
+							 window.location.reload();
+						},
+						error : function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(XMLHttpRequest.status);
+							alert(XMLHttpRequest.readyState);
+							alert(textStatus);
+						}
+					});
+				}
+
+			});
+		},
+		loadChildren : function(catid) {
+			var self = this;
+			$.ajax({
+				type : 'GET',
+				url : '${ctx}/api/b2b2c/goodsCat!getStoreGoodsChildJson.do?ajax=yes&cat_id='
+						+ catid,
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						self.appendCatList(result.data, catid);
+						self.refreshPath();
+					} else {
+						alert("加载分类出错[" + result.message + "]");
+					}
+				},
+				error : function() {
+
+				}
+
+			});
+		},
+		appendCatList : function(catJson, catid) {
+			if (catJson.length == 0)
+				return;
+			var self = this;
+			var selHtml = '<div class="sort_list cat_box" id="box_'+catid+'" >';
+			selHtml += '<div class="wp_category_list">'
+			selHtml += '<div class="category_list" id="class_div_1">'
+			selHtml += '<ul>'
+			$
+					.each(
+							catJson,
+							function(i, cat) {
+								selHtml += '<li catid="'+cat.cat_id+'" class="" id="box_'+catid+'" >'
+								selHtml += '<a href="javascript:void(0)" catid="'
+										+ cat.cat_id
+										+ '" class=""><span class="has_leaf">'
+										+ cat.name + '</span></a>'
+								selHtml += "</li>";
+							});
+			selHtml += '</ul></div></div></div>'
+
+			$(selHtml).appendTo($("#class_div")).find("a").click(function() {
+				var $this = $(this);
+				self.removeChildBox($this.parent().attr("id"));
+				self.loadChildren($this.attr("catid"));
+
+				$this.parent().parent().find('a').removeClass("classDivClick");
+				$this.addClass("classDivClick");
+
+				$("#applyNext").attr("disabled", false);
+			});
+
+		},
+		removeChildBox : function(boxid) {
+			var flag = false;
+			$("#class_div .cat_box").each(function() {
+				var $this = $(this);
+				if (flag) {
+					$this.remove();
+				}
+				if ($this.attr("id") == boxid) {
+					flag = true;
+				}
+			});
+		},
+		refreshPath : function() {
+			var pathbox = $("#commoditydd").empty();
+			var html = "";
+			$("#class_div a.classDivClick").each(function(i, v) {
+				if (i != 0) {
+					html += "&nbsp;&gt;&nbsp;";
+				}
+				var name = $(this).text();
+				html += name;
+			});
+			pathbox.append(html);
+		},
+		getSelectedCatId : function() {
+			var catEl = $("#class_div a.classDivClick:last");
+			var selectedEnd = $("#class_div div.sort_list :last").find(
+					"a[class='classDivClick']");
+			if (catEl.length == 0) {
+				return false;
+			} else if (selectedEnd.length == 0) {
+				return false;
+			} else {
+				return catEl.attr("catid");
+			}
+
+		}
+
+	};
+	$(function() {
+		CatLoader.init();
+	});
+</script>
+<#include '../common/footer.html' />

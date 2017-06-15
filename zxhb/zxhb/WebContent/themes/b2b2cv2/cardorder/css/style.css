@@ -1,0 +1,50 @@
+
+.deploy-right-sidebar {
+	background-image: url(../images/menu.png);
+	width:72px;
+	height:79px;
+	background-position: center center;
+	float: right;
+	margin-top:0px; position: fixed; top:20px; right: 20px; z-index: 999;
+}
+
+.sidebar-scroll-right {
+	width: 250px;
+	overflow: scroll!important;
+	overflow-x: hidden!important;
+	-webkit-overflow-scroll: touch!important;
+	height: 100%;
+}
+.sidebar-right {
+	box-shadow: -2px 0px 2px 0px rgba(0, 0, 0, 0.3);
+	background:#1c1c1c;
+	background-repeat: repeat;
+	position: fixed;
+	overflow: hidden;
+	z-index: 99999;
+	right: -240px;
+	top: 0px;
+	bottom: 0px;
+	width: 230px;
+	margin-right: 10px;
+}
+/*Sidebar RIght Styles*/
+
+
+
+.sidebar-header-right {
+	height: 50px;
+	background-color: #1c1c1c;
+	border-bottom: solid 1px #141719;
+}
+.close-sidebar-right {
+	background-color: #1c1c1c;
+	background-image: url(../images/guan.png);
+	background-size: 50px 50px;
+	background-repeat: no-repeat;
+	height: 50px;
+	width: 50px;
+	margin-left:10px; margin-top:10px;
+	display: block;
+}
+

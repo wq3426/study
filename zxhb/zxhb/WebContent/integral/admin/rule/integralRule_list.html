@@ -1,0 +1,185 @@
+<#include '/admin/header.html' >
+<style>
+.input_text{
+	width: 95%;
+}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="memberform">
+		<div id="tb" style="height: auto">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="append()">添加</a>
+			<span style="float: right;"> 
+				<span id="simpleSearch">
+					<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;"
+					placeholder="请输入积分规则，积分值" name="searchKeyWord"> 
+					<a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true" onclick="searchIntegral()">搜索</a>
+				</span>
+			</span>
+		</div>
+		
+		<div class="clear height10"></div>
+		<div class="shadowBoxWhite tableDiv">
+		<input id="Advanced" name="Advanced" type="hidden" value="0" />
+		<table class="easyui-datagrid"
+			data-options="url:'integral!integrallistJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" id="integraldata" sortName="integral_ruleid" sortOrder="desc" >
+			<thead>
+				<tr>
+					<th data-options="field:'integral_ruleid',checkbox:true"></th>
+					<th data-options="field:'integral_rulecontent',width:200,align:'center'">积分规则内容</th>
+					<th data-options="field:'integral_value',width:200,align:'center'">积分值</th>
+					<th data-options="field:'isset_integralup',width:200,align:'center',
+							formatter: function(value,row,index){
+									if(row.isset_integralup == '0'){
+										return '否';
+									}else{
+										return '是';
+									}
+								}">是否设置每天的积分上限</th>
+					<th data-options="field:'integral_upvalue',width:200,align:'center'">每天的积分上限</th>
+					<th data-options="field:'action',width:100,align:'center'"
+						formatter="formatOperation">操作</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+	</form>
+	<div id="divdia" style="display: none;"></div>
+
+</div>
+<script type="text/javascript">
+
+		function formatOperation(value, row, index) {
+			var val = "<a class='edit' title='修改' href='javascript:void(0);' onclick='edit("+row.integral_ruleid+")' ></a>";
+			return val;
+		}
+		
+		function append(){
+		    $("#divdia").show();
+		　　	$('#divdia').dialog({
+		　　		title: '添加积分规则',			//对话框的标题
+		　　		width: 500,
+		　　		closed: false,
+		　　		cache: false,
+		　　		href: '${ctx}/integral/admin/integral!add.do', 	 //对话框所引用的html页面
+		　　		modal: true,
+		　　		buttons: [{					//创建按钮
+		　　			 text:'保存',
+		　　			 iconCls:'icon-ok',
+		　　			 handler:function(result){
+		　　				 var savebtn = $(this);
+		　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+		　　				 if(!disabled){
+			　　				 addIntegralForm(savebtn);
+			　　			 }	
+		　　			}
+		　　		},{
+					text : '取消',
+					handler : function() {
+						$('#divdia').dialog('close');
+					}
+				}]
+		　　	});
+		}
+		function edit(id){
+		    $("#divdia").show();
+		　　	$('#divdia').dialog({
+		　　		title: '修改积分规则',			//对话框的标题
+		　　		width: 500,
+		　　		closed: false,
+		　　		cache: false,
+		　　		href: '${ctx}/integral/admin/integral!edit.do?id='+id, 	 //对话框所引用的html页面
+		　　		modal: true,
+		　　		buttons: [{					//创建按钮
+		　　			 text:'保存',
+		　　			 iconCls:'icon-ok',
+		　　			 handler:function(){
+		　　				 var savebtn = $(this);
+		　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+		　　				 if(!disabled){
+			　　				 editIntegralForm(savebtn);
+			　　			 }	
+		　　			}
+		　　		},{
+					text : '取消',
+					handler : function() {
+						$('#divdia').dialog('close');
+					}
+				}]
+		　　	});
+		}
+		function addIntegralForm(savebtn){
+			var formflag= $("#integralForm").form().form('validate');
+			if(formflag){
+				$.Loading.show("正在保存请稍后...");
+				savebtn.linkbutton("disable");	
+				var options = {
+						url : "${ctx}/integral/admin/integral!saveAddIntegral.do",
+						type : "POST",
+						dataType : "json",
+						success : function(result) {
+							if(result.result==1){
+								$("#divdia").dialog('close');
+								$('#integraldata').datagrid('reload');
+								$.Loading.success(result.message);
+							}else{
+								$("#divdia").dialog('close');
+								$('#integraldata').datagrid('reload');
+								$.Loading.error(result.message);
+							}
+							savebtn.linkbutton("enable");
+					 	},
+					 	error : function(e) {
+					 		$.Loading.error('出现错误，请重试');
+					 		savebtn.linkbutton("enable");
+						}
+					};
+				$('#integralForm').ajaxSubmit(options);	
+			}
+			
+		}
+		function editIntegralForm(savebtn){
+			var formflag= $("#integralEditForm").form().form('validate');
+			if(formflag){
+				$.Loading.show("正在保存请稍后...");
+				savebtn.linkbutton("disable");	
+				var options = {
+						url : "${ctx}/integral/admin/integral!editIntegral.do",
+						type : "POST",
+						dataType : "json",
+						success : function(result) {
+							if(result.result==1){
+								$("#divdia").dialog('close');
+								$('#integraldata').datagrid('reload');
+								$.Loading.success(result.message);
+							}else{
+								$("#divdia").dialog('close');
+								$('#integraldata').datagrid('reload');
+								$.Loading.error(result.message);
+							}
+							savebtn.linkbutton("enable");
+					 	},
+					 	error : function(e) {
+					 		$.Loading.error('出现错误，请重试');
+					 		savebtn.linkbutton("enable");
+						}
+					};
+				$('#integralEditForm').ajaxSubmit(options);	
+			}
+		}
+
+	function searchIntegral() {
+
+		var searchtype = $("#Advanced").val();
+		var keyword = $("#searchKeyword").val();
+		
+		$("#integraldata").datagrid('load', {
+			stype : searchtype,
+			keyword : keyword,
+
+			page : 1
+		});
+	}
+</script>
+<#include '/admin/footer.html' >

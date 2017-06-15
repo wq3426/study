@@ -1,0 +1,203 @@
+
+<#include '/store/store_header.html' />
+<title>商家信息设置</title>
+<style>
+	.setting_body{
+		border: 1px solid #EEEEEE;
+		width: 1000px;
+		height:920px;
+		margin: auto;
+		padding-top:20px;
+
+	}
+	.setting_body_left{
+		width:250px;
+		float:left;
+		padding-right:10px;
+		clear:both;
+	}
+	.setting_body_left>li{
+		height:40px;
+		text-align:right;
+	}
+	.setting_body_right{
+		width:730px;
+		float:left;
+		}
+	.setting_body_right>li{
+		height:40px;
+		text-align:left;
+	}
+	.setting_body ul li>span{
+		color:red;
+	}
+	.file_style{
+		border:1px solid #A9A9A9;
+		width:130px;
+		 display: inline-block;
+		 padding:2px 15px 2px 2px;
+	}
+	.setting_button{
+		width:70px;
+		height:24px;
+		background-color:#57B857;
+		color:#fff;
+	}
+</style>
+<!--商家信息设置-->
+<!--居中的框-->
+
+<!--id为编写完成需要写  填写完成为能实现预览功能 -->
+  
+  
+   <div class="setting_body">
+            <ul class="setting_body_left">
+                <li><span>*&nbsp;</span>店铺名称：</li>
+                <li><span>*&nbsp;</span>店铺LOGO：</li>
+                <li><span>*&nbsp;</span>所在地区：</li>
+                <li><span>*&nbsp;</span>详细地址：</li>
+                <li><span>*&nbsp;</span>邮编：</li>
+                <li><span>*&nbsp;</span>联系人姓名：</li>
+                <li><span>*&nbsp;</span>联系方式：</li>
+                <li><span>*&nbsp;</span>上传联系人身份证照片：</li>
+                <li><span>*&nbsp;</span>企业法人姓名：</li>
+                <li><span>*&nbsp;</span>企业法人身份证号：</li>
+                <li><span>*&nbsp;</span>上传企业法人身份证照片：</li>
+                <li><span>*&nbsp;</span>营业执照注册号：</li>
+                <li><span>*&nbsp;</span>上传执照照片：</li>
+                <li><span>*&nbsp;</span>银行开户名：</li>
+                <li><span>*&nbsp;</span>公司银行账号：</li>
+                <li><span>*&nbsp;</span>开户银行支行名称：</li>
+                <li><span>*&nbsp;</span>支行联行号：</li>
+                <li><span>*&nbsp;</span>开户银行地址：</li>
+                <li><span>*&nbsp;</span>支付宝账号：</li>
+                <li><span>*&nbsp;</span>微信账号：</li>
+                <li><span>*&nbsp;</span>客服电话：</li>
+                <li><span>*&nbsp;</span>售后电话：</li>
+            </ul>
+            <ul class="setting_body_right">
+                <li name="店铺名称"><input  type="text" id="store_name"/>&nbsp;&nbsp;请控制在20个字符以内</li>
+                <li name="店铺logo">
+                    <div  class="file_style">
+                        <input type="button" value=" 浏览… " id="store_logo"/><span >&nbsp;&nbsp;未选择文件</span>
+                    </div>
+                	     支持格式jpg/jpeg/png/gif,请保证图片清晰文件大小不能超过400KB
+                </li>
+                <li name="所在地区" id="store_region ">
+                	<!-- 所在地区  三级联动 Start -->
+                  <form name="form2">
+   					 <select name="s1" onChange="changeselect2()">
+       					 <option>请选择</option>
+       					 <option value="10">1-10</option>
+       					 <option value="20">11-20</option>
+  					 </select>
+   					 <select name="s2" onChange="changeselect3(document.form2.s1.value,this.value)">
+       					 <option>请选择</option>
+    				</select>
+    				<select name="s3" onChange="alert(this.value)">
+        				<option>请选择</option>
+    					</select>
+				  </form>
+						<!-- 三级联动 Over -->
+                </li>
+                <li name="详情地址"><input type="text" id="store_detail"/></li>
+                <li name="邮编"><input type="text" id="store_code"/></li>
+                <li name="联系人姓名"><input type="text" id="contact_name"/></li>
+                <li name="联系方式"><input type="text" id="contact_information"/></li>
+                <li name="上传联系人身份证照片" id="contact_id_card">
+                   <div  class="file_style">
+                        <input type="button" value=" 浏览… "/><span >&nbsp;&nbsp;未选择文件</span>
+                    </div>
+                	     支持格式jpg/jpeg/png/gif,请保证图片清晰文件大小不能超过400KB
+                </li>
+                <li name="企业法人姓名"><input type="text" id="corporate_name"/></li>
+                <li name="企业法人身份证号"><input type="text" id="corporate_id_number"/></li>
+                <li name="上传企业法人身份证照片" id="corporate_id_card">
+                    <div  class="file_style">
+                        <input type="button" value=" 浏览… "/><span >&nbsp;&nbsp;未选择文件</span>
+                    </div>
+                	     支持格式jpg/jpeg/png/gif,请保证图片清晰文件大小不能超过400KB
+                </li>
+                <li name="营业执照注册号"><input type="text" id="license_registration_number"/></li>
+                <li name="上传执照照片" id="license_photo">
+                   <div  class="file_style">
+                        <input type="button" value=" 浏览… "/><span >&nbsp;&nbsp;未选择文件</span>
+                    </div>
+                	     支持格式jpg/jpeg/png/gif,请保证图片清晰文件大小不能超过400KB
+                </li>
+                <li name="银行开户名"><input type="text" id="bank_account_name"/></li>
+                <li name="公司银行账号 "><input type="text" id="company_bank_account"/></li>
+                <li name="开户银行支行名称"><input type="text"/></li>
+                <li name="支行联行号"><input type="text"/></li>
+                <li name="开户银行地址">
+                    <!-- 开户行地址 三级联动 Start -->
+                  <form name="form2">
+   					 <select name="s1" onChange="changeselect2()">
+       					 <option>请选择</option>
+       					 <option value="10">1-10</option>
+       					 <option value="20">11-20</option>
+  					 </select>
+   					 <select name="s2" onChange="changeselect3(document.form2.s1.value,this.value)">
+       					 <option>请选择</option>
+    				</select>
+    				<select name="s3" onChange="alert(this.value)">
+        				<option>请选择</option>
+    					</select>
+				  </form>
+						<!-- 三级联动 Over -->
+                </li>
+            <li name="支付宝账号"><input type="text"/></li>
+            <li name="微信账号"><input type="text"/></li>
+            <li name="客服电话"><input type="text"/></li>
+            <li name="售后电话"><input type="text"/></li>
+            <li><input class="setting_button" type="button" value="预&nbsp;&nbsp;览"/><input class="setting_button" type="button" value="立即开启"/></li>
+            </ul>
+
+        </div>
+
+<!-- 三级联动JS star -->
+<script language="JavaScript">
+    <!--
+    var subval = new Array();
+    subval[0] = new Array('10', '单数', '1', '=1')
+    subval[1] = new Array('10', '双数', '2', '=2')
+    subval[2] = new Array('10', '单数', '3', '=3')
+    subval[3] = new Array('10', '双数', '4', '=4')
+    subval[4] = new Array('10', '单数', '5', '=5')
+    subval[5] = new Array('10', '双数', '6', '=6')
+    subval[6] = new Array('10', '单数', '7', '=7')
+    subval[7] = new Array('10', '双数', '8', '=8')
+    subval[8] = new Array('10', '单数', '9', '=9')
+    subval[9] = new Array('10', '双数', '10', '=10')
+    subval[10] = new Array('20', '单数', '11', '=11')
+    subval[11] = new Array('20', '双数', '12', '=12')
+    subval[12] = new Array('20', '单数', '13', '=13')
+    subval[13] = new Array('20', '双数', '14', '=14')
+    subval[14] = new Array('20', '单数', '15', '=15')
+    subval[15] = new Array('20', '双数', '16', '=16')
+    subval[16] = new Array('20', '单数', '17', '=17')
+    subval[17] = new Array('20', '双数', '18', '=18')
+    subval[18] = new Array('20', '单数', '19', '=19')
+    subval[19] = new Array('20', '双数', '20', '=20')
+    function changeselect2() {
+        document.form2.s2.length = 0;
+        document.form2.s2.options[0] = new Option('请选择', '');
+        document.form2.s2.options[1] = new Option('选择单数', '单数');
+        document.form2.s2.options[2] = new Option('选择双数', '双数');
+        document.form2.s3.length = 0;
+        document.form2.s3.options[0] = new Option('请选择', '');
+    }
+    function changeselect3(sub1, sub2) {
+        document.form2.s3.length = 0;
+        document.form2.s3.options[0] = new Option('请选择', '');
+        for (i = 0; i < subval.length; i++) {
+            if ((subval[i][0] == sub1) & (subval[i][1] == sub2)) {
+                document.form2.s3.options[document.form2.s3.length] = new Option(subval[i][2], subval[i][3]);
+            }
+        }
+    }
+    //-->
+</script>
+<!-- 三级联动JS over -->
+<#include '/common/footer.html' />
+

@@ -1,0 +1,257 @@
+<#include '/admin/header.html' >
+<#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<!--提现申请-->
+        <style>
+            .input_text{
+                width: 150px;
+            }
+        </style>
+        <div id="apply_detail" style="display: none; overflow:hidden"></div>
+        <div id="loading"></div>
+        <div class="main">
+            <div class='buttonArea' style="height: auto">
+		<span style="float: right;">
+		 	<span id="simpleSearch">
+			 	<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;" placeholder="请输入流水号" name="searchKeyWord">
+				<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchApply()">搜索</a>
+			</span>
+			<a href="javascript:void(0)" class="button" data-options="plain:true" id="aAdvanced">高级搜索</a>
+		</span>
+            </div>
+            <div style="display: block;" class="searchAdvanced" >
+                <input id="Advanced" name="Advanced" type="hidden" value="0" />
+                <table width="98%" border="0" cellspacing="0" cellpadding="8">
+                    <tr>
+                    	<td width="" align="right">流水号：</td>
+                        <td style=""><input type="text" value="" id="sn" name="sn" class="input_text">
+                        </td>
+                        <td width="" align="right">申请单位：</td>
+                        <td style=""><input type="text" value="" id="store_name" name="store_name" class="input_text">
+                        </td>
+                        <td width="" align="right">状态</td>
+                        <td style=""><select id="trade_status" class="inputSelect valid"
+                                    style="width: 145px;">
+                            <option value="">---所有---</option>
+                            <#list applyDraw?keys as key >
+                            <option value="${applyDraw.get(key)}">${key}</option>
+                            </#list>
+                        </select></td>
+                        <td width="" align="right">下单时间</td>
+                        <td style=""><input class="easyui-datebox" style="width: 90px;height: 28px;"
+                                   id="start_time" data-options="buttons:buttons" /> <span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                            <input class="easyui-datebox" style="width: 90px;height: 28px;" id="end_time"
+                                   data-options="buttons:e_buttons" /></td>
+                        <td style="" align="center"><a id="searchAdvance"
+                                                          class="button blueButton " onclick="searchApply()"
+                                                          href="javascript:;">开始搜索</a></td>
+
+                    </tr>
+                </table>
+            </div>
+            <div class="clear height10"></div>
+            <div class="shadowBoxWhite tableDiv">
+                <table  id="applyData" class="easyui-datagrid"
+                        data-options="url:'${ctx}/b2b2c/admin/adminSettlement!applyListJson.do',remoteSort:false,pageList: [10,15,18],pageSize:${pageSize},fitColumns:'true'"
+                        pagination="true" width="width">
+                    <thead>
+                    <tr>
+                        <th  data-options="field:'sn',width:100">流水号</th>
+                        <th  data-options="field:'trade_time',width:100" formatter="formatTime" >申请日期</th>
+                        <th  data-options="field:'store_name',width:150" >申请单位</th>
+                        <th  data-options="field:'apply_balance',width:100" formatter="formatMoney">经销商账户余额</th>
+                        <th  data-options="field:'trade_money',width:100" formatter="formatMoney">提现金额</th>
+                        <th  data-options="field:'pay_type',width:150" formatter="formatPayType">提款类型</th>
+                        <th  data-options="field:'account',width:100" >提款账号</th>
+                        <th  data-options="field:'trade_status',width:30"  formatter="formatStatus">状态</th>
+                        <th  data-options="field:'action',width:50,align:'center'" formatter="formatOperation">操作</th>
+                        <th  data-options="field:'apply_remarks',width:100" >备注</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <script type="text/javascript">
+        	function formatPayType(value,row,index){
+        		if(value==""||value=="null"||value==null){
+        			val="银行支付";
+        		}else if("bank"==value){
+        			val="银行支付";
+        		}else if("weichat"==value){
+        			val="微信支付";
+        		}else if("alipay"==value){
+        			val="支付宝支付";
+        		}
+        		return val;
+        	}
+        	
+            function formatMoney(value,row,index){
+                var val="￥"+value;
+                return val;
+            }
+
+            function formatTime(value,row,index){
+                if(value==null||value==0){
+                    return "";
+                }
+                else{
+                    return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+                }
+            }
+
+            function formatStatus(value,row,index){
+                var val;
+                if(value==3){val="处理中";}else if(value==4){val="已处理";}
+                return val;
+            }
+
+            function formatOperation(value,row,index){
+                var val="<a href='#' onclick='paydetail(\""+row.sn+"\")'>提交汇款单</a>";
+                return val;
+            }
+            
+            
+            function paydetail(sn){
+                $("#apply_detail").show();
+                $('#apply_detail').dialog({
+                    title: '提交汇款单',
+                    width: 750,
+                    top: 100,
+                    closed: false,
+                    cache: false,
+                    href: '${ctx}/b2b2c/admin/adminSettlement!apply_detail.do?sn='+sn,
+                    modal: true,
+                    buttons: [{					//创建按钮
+       	　　			 text:'保存',
+       	　　			 iconCls:'icon-ok',
+       	　　			 handler:function(){
+       	　　				 var savebtn = $(this);
+       	　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+       	　　				 if(!disabled){
+       		　　				 addRemitForm(savebtn);
+       		　　			 }	
+       	　　			}
+       	　　		}]
+            	});
+            }
+          
+            
+            function addRemitForm(savebtn){
+            	var formflag= $("#applyForm").form().form('validate');
+            	if(formflag){
+            		$.Loading.show("正在保存请稍后...");
+            		savebtn.linkbutton("disable");	
+            		var options = {
+            				url : "${ctx}/b2b2c/admin/adminSettlement!apply_comfirm.do",
+            				type : "POST",
+            				dataType : "json",
+            				success : function(result) {
+            					if(result.result==1){
+            						$("#apply_detail").dialog('close');
+            						$('#applyData').datagrid('reload');
+            						$.Loading.success(result.message);
+            					}else{
+            						$.Loading.error(result.message);
+            					}
+            					savebtn.linkbutton("enable");
+            			 	},
+            			 	error : function(e) {
+            			 		$.Loading.error('出现错误，请重试');
+            			 		savebtn.linkbutton("enable");
+            				}
+            			};
+            		$('#applyForm').ajaxSubmit(options);	
+            	}
+            }
+            
+            /**
+             * 上传图片回调函数
+             */
+            function getImgPath(path) {
+            	$("#receipt_file").val(path);
+            	$("#img1").attr('src', path);
+            }
+            
+            
+            var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+            buttons.splice(1, 0, {
+                text: '清空',
+                handler: function(target){
+                    $('#start_time').datebox('setValue',"");
+                }
+            });
+
+            var e_buttons = $.extend([], $.fn.datebox.defaults.buttons);
+            e_buttons.splice(1, 0, {
+                text: '清空',
+                handler: function(target){
+                    $('#end_time').datebox('setValue',"");
+                }
+            });
+            
+    
+            
+            function searchApply(){
+                var searchtype = $("#Advanced").val();
+                var keyword = "";
+                var start_time = "";
+                var end_time = "";
+                var sn = "";
+                var store_name = "";
+                var trade_status = "";
+                if(searchtype==1){
+                    start_time = $('#start_time').datebox('getValue');
+                    end_time = $('#end_time').datebox('getValue');
+                    sn = $("#sn").val();
+                    store_name = $("#store_name").val();
+                    trade_status = $("#trade_status").val();
+                }else{
+                	keyword = $("#searchKeyword").val();
+                }
+                if(start_time>end_time){
+                    $.Loading.error("结束时间不能小于开始时间");
+                    return;
+                }
+               
+                $("#applyData").datagrid('load', {
+                    stype:searchtype,
+                    keyword:keyword,
+                    start_time:start_time,
+                    end_time:end_time,
+                    sn:sn,
+                    trade_status:trade_status,
+                    store_name:store_name,
+                    page:1
+                });
+            }
+
+            $(function(){
+                $(".searchAdvanced").hide();
+                //高级查询按钮
+                $("#aAdvanced").click(function () {
+                    if ($("#Advanced").val() == "0") {
+                        $("#Advanced").val(1);
+                        $("#simpleSearch").hide();
+                        //$("#aAdvanced").text("简单搜索")
+                        $("#aAdvanced").addClass("searchAdvancedS");
+                    } else {
+                        $("#Advanced").val(0);
+                        $("#simpleSearch").show();
+                        //$("#aAdvanced").text("高级搜索");
+                        $("#aAdvanced").removeClass("searchAdvancedS");
+                    }
+                    $(".searchAdvanced").slideToggle("slow");
+                });
+                $("#searchBtn").click(function(){
+                    $("#searchcbox").show();
+                });
+
+                $("#closeBtn").click(function(){
+                    $("#searchcbox").hide();
+                });
+            });
+        </script>
+
+        <div id="log"></div>
+
+        <#include '/admin/footer.html' >
+

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content=" width=1280,user-scalable=no;">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=document.documentElement.clientWidth+"px";
+    </script>
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.form-3.51.js"></script>
+
+    <style>
+        body{font-size: 12px!important; }
+        body * { max-height: 999999px; }
+        input,input:focus,input:active{user-select: text;}
+        footer{width: 90%;position: absolute;bottom: 0px;}
+         .list span { margin-left: 2%; cursor:pointer; padding:  2%; display: inline-block;  font-weight: 900;  font-size: 0.0228rem; border-radius: 15px;}
+         .app_bottom {  width: 30%;  background-color: #135481;  color: #ffffff;  font-size: 3em;  padding: 3%;  margin-left: 30%;  border-radius: 15px;  }
+        .bdc0{border: 3px solid #c0c0c0;color: #999;}
+        .bdc4{border: 3px solid #135481!important;color: #333333;}
+    </style>
+
+</head>
+
+<body class="mmt2" >
+<#assign zxCardGoodsListTag=newTag("zxCardGoodsListTag")/>
+<#assign goodsSpec=zxCardGoodsListTag()/>
+
+<div>
+    <div class="ff40 llhh90 tc "><span class="goBack " onclick="javascript:history.back(-1)"></span>购买</div>
+    <div class="ww98 mml1  bdfc tc ">
+        <div class=" ww100 m0 p10 " id="goodsImage">
+            <img src="${ctx}/themes/b2b2cv2/cardorder/images/1_2.png"  class="ww90 mm5" alt="">
+        </div>
+    </div>
+    <div class="  ">
+        <div id="date">
+            <form action="" id="dateForm" method="post">
+            	<input type="hidden" id="goods_id" value="${goodsSpec.goods.goods_id!''}"/>
+            	<input type="hidden" id="gg_spec_value_id"/>
+            	<input type="hidden" id="ta_spec_value_id"/>
+            	<input type="hidden" id="referee_code" name="referee_code" value="${referee_code!''}"/>
+                <div id="content" >
+                    <div class="mm5 ff26" >
+                        <p class="fb mmt2 ff30">${goodsSpec.goods.name!''}</p>
+                        <p class="mmt2 ff24 llhh35">${goodsSpec.goods.intro!''}</p>
+                        <!--<p class="cred ff24 llhh35">快递通知：春节期间暂不发货，2月6日后正常发货，谢谢理解！</p>-->
+                        <div class=" mm2">
+                       		<div class="list mt20" id="ggDiv">
+                       			<b class="ml0 border0">${goodsSpec.ggSpec.spec_name!''}：</b>
+                       			<#list goodsSpec.ggSpec.spec_value_list as spec_value>
+                       				<span class=" bdc0" id="${spec_value.spec_value_id!''}" onclick="getTaSpecList('${spec_value.spec_value_id!''}')">${spec_value.spec_value!''}</span>
+                       			</#list>
+                           	</div>
+                       		<div class="list mt20" id="taDiv">
+                       			<b class="ml0 border0">${goodsSpec.taSpec.spec_name!''}：</b>
+                       			<#list goodsSpec.taSpec.spec_value_list as spec_value>
+                       				<span class=" bdc0" id="${spec_value.spec_value_id!''}" onclick="getSelectTa('${spec_value.spec_value_id!''}')">
+                       				<img src="${spec_value.spec_image!''}" alt="" width="20" height="14" style="display:none">${spec_value.spec_value!''}
+                       				</span>
+                       			</#list>
+                           	</div>
+                            <div class="list mt20">
+                                <b class="ml0 border0">价格：</b>
+                                <span id="card_price">${goodsSpec.card_price!''}元</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="cb tc  date_bottom mt30 app_bottom cp" id="btnForm" onclick="orderCard()" style="">-->
+                    <div class="cb tc  date_bottom mt30 app_bottom cp" id="btnForm"  style="background-color: #c0c0c0;">
+                        暂停发售
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class=" cb   mm5 c999"  style="font-size: 0.024rem;line-height: 0.035rem;">
+        <!--<p>温馨提示：<br>-->
+            <!--请确认您预约信息，提交后将不能更改；<br>-->
+            <!--预约不代表购买成功，请在开放购买时访问购买。数量有限，先到先得!-->
+        <!--</p>-->
+    </div>
+    <div  style="font-size: 0.02rem; text-align: center;color: #999;" >
+        版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+//       度母套卡
+        $('.kept').click(function () {
+            $(this).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+            $(".dolma").removeClass('din').addClass("dip").removeClass("bdc0").addClass("bdc4");
+            $(".pisces").removeClass('dip').addClass("din");
+            $(".diamond").removeClass('dip').addClass("din");
+
+        });
+
+//       异形卡
+        $('.aliens').click(function () {
+            $(this).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+            $(".dolma").removeClass('dip').addClass("din");
+            $(".pisces").removeClass('din').addClass("dip");
+            $(".diamond").removeClass('din').addClass("dip");
+        });
+// 连号卡
+        $('.even').click(function () {
+            $(this).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+            $(".dolma").removeClass('dip').addClass("din");
+            $(".pisces").removeClass('din').addClass("dip");
+            $(".diamond").removeClass('din').addClass("dip");
+
+        });
+        $('.pisces').click(function () {
+            $(this).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+            if($(".kept").is(".bdc4")){
+                $('.kept').removeClass("bdc4").addClass("bdc0");
+                $(".aliens").addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+            }
+        });
+
+        $('.diamond').click(function () {
+            $(this).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+            if($(".kept").is(".bdc4")){
+                $('.kept').removeClass("bdc4").addClass("bdc0");
+                $(".aliens").addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+            }
+        });
+
+        $("#ggDiv").find("span").each(function(i, item){
+        	if(i == 0){
+        		$(item).removeClass('bdc0').addClass("bdc4");
+
+        		$("#gg_spec_value_id").val(item.id);
+        	}
+        });
+        
+        $("#taDiv").find("span").each(function(i,item){
+        	if(i == 0){
+        		$(item).removeClass('bdc0').addClass("bdc4");
+
+        		$("#ta_spec_value_id").val(item.id);
+        		
+        		$("#goodsImage").empty();
+        		var imgPath = $("#taDiv").find("img:first").attr("src");
+        		$("#goodsImage").append("<img src='"+ imgPath +"' class='ww90 mm5' alt=''>");
+        	}
+        });
+	
+        
+        
+    });
+    
+    //根据规格获取图案
+    function getTaSpecList(gg_spec_value_id){
+    	
+    	$("#gg_spec_value_id").val(gg_spec_value_id);
+    	$("#"+gg_spec_value_id).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+    	
+    	$.ajax({
+    		url : "${ctx}/api/b2b2c/goods!getTaSpecList.do?gg_spec_value_id="+gg_spec_value_id,
+    		type : "POST",
+    		dataType : "json",
+    		success : function(data){
+    			if(data.result == 0){
+					alert(data.message);
+				}else{
+					$("#taDiv").children("span").remove();
+					$("#taDiv").children("img").remove();
+					//$("#taDiv").append("<b class='ml0 border0'>${goodsSpec.taSpec.spec_name!''}：</b>");
+					$.each(data.taList, function(i, item){
+						if(i == 0){
+							$("#taDiv").append("  <span class='kept  bdc4' id='"+ item.spec_value_id +"' onclick='getSelectTa("+ item.spec_value_id +")'>"+ item.spec_value +"</span>");
+							$("#ta_spec_value_id").val(item.spec_value_id);
+							$("#goodsImage").empty();
+							$("#goodsImage").append("<img src='"+item.spec_image+"' alt='' class='ww90 mm5' >");
+							$("#card_price").empty();
+							$("#card_price").html(item.card_price+"元");
+						}else{
+							$("#taDiv").append("  <span  class='kept  bdc0' id='"+ item.spec_value_id +"' onclick='getSelectTa("+ item.spec_value_id +")'>"+ item.spec_value +"</span>");
+						}
+					});
+				}
+    		},
+    		error : function(){
+    			alert("请求出错");
+    		}
+    	});
+    }
+    
+    //获取选中的图案
+    function getSelectTa(ta_spec_value_id){
+    	$("#ta_spec_value_id").val(ta_spec_value_id);
+    	var gg_spec_value_id = $("#gg_spec_value_id").val();
+    	
+    	$.ajax({
+    		url : "${ctx}/api/b2b2c/goods!getTaPrice.do?gg_spec_value_id="+gg_spec_value_id+"&ta_spec_value_id="+ta_spec_value_id,
+    		type : "POST",
+    		dataType : "json",
+    		success : function(data){
+    			if(data.result == 0){
+					alert(data.message);
+				}else{
+					$("#goodsImage").empty();
+					$("#goodsImage").append("<img src='"+data.specObj.spec_image+"' alt=''>");
+					$("#card_price").empty();
+					$("#card_price").html(data.specObj.card_price+"元");
+				}
+    			$("#"+ta_spec_value_id).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+    		},
+    		error : function(){
+    			alert("请求出错");
+    		}
+    	});
+    }
+    
+    //选中后，跳转到预约页面
+    function orderCard(){
+    	var goods_id = $("#goods_id").val();
+    	var gg_spec_value_id = $("#gg_spec_value_id").val();
+    	var ta_spec_value_id = $("#ta_spec_value_id").val();
+		var referee_code = $("#referee_code").val();
+    	window.location = "${ctx}/cardorder/appointment_app.html?goods_id="+goods_id+"&gg_spec_value_id="+gg_spec_value_id+"&ta_spec_value_id="+ta_spec_value_id+"&referee_code="+referee_code;
+    }
+</script>
+</body>
+</html>

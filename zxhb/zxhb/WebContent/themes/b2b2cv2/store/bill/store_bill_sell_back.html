@@ -1,0 +1,33 @@
+<#assign storeBillSellBackListTag=newTag("storeBillSellBackListTag")>
+<#assign storeOrderList=storeBillSellBackListTag()>
+<!-- 退货申请订单列表详细 -->
+<table class="s_orderlist"  cellpadding="0" cellspacing="0">
+	<thead>
+		<tr class="s_orderlist_title">
+			<th >退货单号</th>
+			<th >订单号</th>
+			<th >会员名称</th>
+			<th >申请时间</th>
+		</tr>
+	</thead>
+ 	<#if storeOrderList.totalCount != 0 >
+ 		<tbody>
+ 		<#list storeOrderList.storeOrder.result as order>
+  		<tr>
+			<td>${order.tradeno}</td>
+			<td>${order.ordersn}</td>
+			<td>${order.sndto}</td>
+			<td>
+				<@dateformat time="${order.regtime?c}" pattern="yyyy-MM-dd HH:mm"/>
+			</td>
+		</tr>
+		</#list>
+		<tr>
+		</tr>		  		
+		</tbody>
+	</table>
+	<@ajaxpager pageno="${storeOrderList.page!'1'}" pagesize="${storeOrderList.pageSize}" totalcount="${storeOrderList.totalCount}" />
+	<#else>	
+	</table>
+	<p class="no_blank">暂无符合条件的数据记录</p>
+</#if> 

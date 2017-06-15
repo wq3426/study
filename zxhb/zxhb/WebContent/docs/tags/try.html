@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+	<title>Javashop标签亲自试一试</title>
+
+<#assign demoReader="com.enation.app.base.tag.DemoFileReadTag"?new()  />
+<#assign content=demoReader("{'filename':'${filename}'}")  />
+<script src="${staticserver}/js/common/jquery-1.8.3.min.js"></script>
+<script src="${staticserver}/js/common/jquery-form-2.33.js"></script>
+<link href="../stylecss.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" type="text/css" href="${ctx}/adminthemes/new/js/easy-ui/themes/gray/easyui.css"/>    
+<link rel="stylesheet" type="text/css" href="${ctx}/adminthemes/new/js/easy-ui/themes/icon.css"/>  
+<script type="text/javascript" src="${ctx}/adminthemes/new/js/easy-ui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${ctx}/adminthemes/new/js/easy-ui/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+<div class="diadiv" id="diadiv"></div>
+<div id="header">
+	<div class="header_top">
+		<h1><em>JavsShop</em>文档</h1>
+	</div>
+</div>
+<div id="key">
+	
+	<div class="entry">
+		<input type="button" value="登录" id="login"></input>
+		<input type="button" value="注销登录" id="loginout"></input>
+		<h1>请在这里输入参数并点提交按钮</h1>		
+	</div>
+	<form method="POST" style="width:100%;">
+		<div class="put_in">
+			<label>url参数：<input type="text" id="params"  autocomplete="off"  value="?" />请以?号开头</label>
+			<input type="button" value="提交" name="button"  id="prevBtn" class="prevbtn">
+		</div>
+		<input type="hidden" name="filename" id="filename" autocomplete="off"/>
+		<input type="hidden" name="content"  id="content" autocomplete="off"/>
+		<textarea style="width:100%;height:400px"  id="codepress2"  autocomplete="off"  class="codepress html autocomplete-off ">
+			${content?html}
+		</textarea>	
+		
+	</form>
+</div>
+<div id="at_last">
+	<div class="entry">
+		<h1>在这里会出现您的结果</h1>		
+	</div>
+	<iframe style="width:100%" id="frm" >
+	</iframe>
+</div>
+<script>
+$(function(){
+	$("#prevBtn").click(function(){
+		$("#content").val(codepress2.getCode());
+		 
+		$("form").ajaxSubmit({
+			url:"${ctx}/api/base/tagTestCreate.do",
+			method:"POST",
+			dataType:"json",
+			success:function(res){
+				if(res.result==1){
+					var filename= res.url;
+					$("#filename").val(filename);
+					$("#frm").attr("src","runtime/"+filename+$("#params").val())
+				}else{
+					alert(res.message);
+				}
+			}
+			
+		});
+	});
+})
+</script>
+
+<!--会员登录-->
+	<script>
+		$(function() {
+			$("#loginout").click(function() {
+				var apiurl = "/api/shop/member!logout.do";
+				$.ajax({
+					url : "${ctx}" + apiurl,
+					dataType : "json",
+					success : function(bb) {
+						if (bb.result == 1) {
+							alert("恭喜注销成功")
+						} else {
+							alert("已经注销过了错误")
+						}
+					},
+					error : function() {
+						alert("api地址错误，请检查");
+					}
+
+				});
+			});
+			
+			$("#login").click(function(){
+				$(".diadiv").dialog({
+					title :'登录',
+					width : 400,
+					top:100,
+					closed : false,
+					href:"../the_login.html",
+					buttons : [ {
+						text : '保存',
+						handler : function() {
+							submitForm();
+						}
+					}]
+				});
+			})
+		})
+		
+		function submitForm(){
+			
+			$("#loginForm").ajaxSubmit({
+				url:"${ctx}/api/shop/member!login.do?ajax=yes",
+				type:"post",
+				dataType:"json",
+				success:function(result){
+					 alert(result.message);
+				},
+				error:function(e){
+					alert("操作失败！");
+				}
+			});
+		}
+	</script>
+
+<script src="codepress/codepress.js" type="text/javascript"></script> 
+</body>
+</html>

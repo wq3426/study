@@ -1,0 +1,66 @@
+<style>
+.input_text {
+	width: 200px;
+}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<form id="editForm" method="post" class="validate">
+			<input type="hidden" name="pushMsg.id" value="${pushMsg.id}"/>
+			<input type="hidden" name="pushMsg.flag" value="${pushMsg.flag}"/>
+			<input type="hidden" name="pushMsg.status" value="${pushMsg.status}"/>
+			<table width="100%">
+				<tr>
+					<th>消息标题：</th>
+					<td><input type="text" value="${pushMsg.title}" name="pushMsg.title" maxlength="15" placeholder="标题最大长度为15字符" class="easyui-validatebox input_text" isrequired="true"></input></td>
+				</tr>
+				<tr>
+					<th>消息类型：</th>
+					<td>
+						<select class="easyui-validatebox" name="pushMsg.push_id">
+							<#if pushMsgTypeList ??>
+								<#list pushMsgTypeList as list>
+									<#if pushMsg.push_id==list.push_id>
+										<option value="${list.push_id}" selected="selected">${list.push_type}</option> 
+									<#else>
+										<option value="${list.push_id}">${list.push_type}</option> 
+									</#if>
+								</#list>
+							</#if>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>店铺名称：</th>
+					<td>
+						<select class="easyui-validatebox" name="pushMsg.storeId" >
+							<#if storeList??> 
+								<#if pushMsg.storeId = 0>
+										<option value ="${pushMsg.storeId}">所有店铺</option>
+									<#list storeList as list>
+										<option value="${list.store_id}">${list.store_name}</option> 
+									</#list> 
+								<#else>
+											<option value ="0">所有店铺</option>
+									<#list storeList as list>
+										<#if pushMsg.storeId==list.store_id>
+											<option value="${list.store_id}" selected="selected">${list.store_name}</option> 
+										<#else>
+											<option value="${list.store_id}">${list.store_name}</option> 
+										</#if>
+									</#list> 
+								</#if>
+							</#if>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>消息内容：</th>
+					<td>
+						<script id="editor" name="pushMsg.msg" type="text/plain" style="height:200px;width:350px;">${pushMsg.msg}</script>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

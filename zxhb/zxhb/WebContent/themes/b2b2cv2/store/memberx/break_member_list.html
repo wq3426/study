@@ -1,0 +1,346 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .date_21 {
+        display: inline-block;
+        float: left;
+        margin-top: 10px;
+    }
+
+    .date_21 select {
+        height: 26px;
+    }
+
+    .date_22 {
+        display: inline-block;
+        float: right;
+        margin-top: 10px;
+    }
+
+    .date_22 input {
+        width: 90px;
+        height: 20px;
+    }
+
+    .search_form tr td input {
+        padding: 3px;
+    }
+
+    .table_01 input {
+        padding: 3px;
+        margin-left: 10px;
+    }
+</style>
+<form id="myform">
+    <div class="store_center">
+        <#include '../left_menu.html' />
+        <div id="sotre_right_content" class="sotre_right_content">
+            <div class="path">
+                <span style="color:#999;">您的位置：</span>
+                <span>会员管理</span>
+                <span> > </span>解约用户
+            </div>
+            <#assign discontractMemberListTag=newTag("discontractMemberListTag")>
+                <#assign msdata=discontractMemberListTag()/>
+                <div class="store_right_main">
+                    <div class="tabmenu">
+                        <ul class="tab pngFix">
+                            <li class="active commont_list">
+                                <a hre="#">解约用户</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="data_20">
+                        <div class="date_21">
+                            <select class="select"  name="time_list" id="time_list" onchange="search()">
+                                <option value="0"
+                                <#if time_list?? && time_list == '0'>selected="selected"</#if>
+                                >时间由近到远</option>
+                                <option value="1"
+                                <#if time_list?? && time_list == '1'>selected="selected"</#if>
+                                >时间由远到近</option>
+                            </select>
+                            <!-- 
+                            <select class="select ml10" name="cost" id="cost" onchange="search()">
+                                <option value="0"
+                                <#if cost?? && cost == '0'>selected="selected"</#if>
+                                >费用由高到低</option>
+                                <option value="1"
+                                <#if cost?? && cost == '1'>selected="selected"</#if>
+                                >费用由低到高</option>
+                            </select>
+                             -->
+                        </div>
+                        <div class="date_22">
+                          <span class="prl60" >解约时间：</span>
+                            <div class="prl60" style="display: inline-block">
+                                <label><input class="text hasDatepicker" type="text" name="startTime"
+                                              onClick="WdatePicker()" value="${startTime!''}"/><span
+                                        class="storeorder_time"></span></label>
+                            </div>
+                            <i class="prl30" >-</i>
+
+                            <div  class="prl30" style="display: inline-block">
+                                <label ><input class="text hasDatepicker" type="text" name="endTime"
+                                              onClick="WdatePicker()" value="${endTime!''}"/><span
+                                        class="storeorder_time"></span></label>
+                            </div>
+                            <input type="button" class="submit submit search_btn" style="height: 29px;" id="btnSearch" value="搜 索">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 会员列表 -->
+
+                <div class="bonuslist s_commont_list " style="padding-top: 25px; ">
+                    <table class="list_table">
+                        <thead class="bl br">
+                        <tr>
+                            <th class="w190">车主信息</th>
+                            <th class="w430" rowspan="2" >车辆信息</th>
+                            <th class="w140">消费金额</th>
+                            <th class="w300">解约原因</th>
+                        </tr>
+                        </thead>
+                    </table>
+					<#if msdata.pageList.totalCount != 0 >
+                    <#list msdata.pageList.result as ms>
+                    <table class="mt10">
+                        <thead class="tac bgc_gray bdc_gray"><!--未到期用户-->
+                        <tr>
+                            <td style="text-align: left; padding: 5px 0;" colspan="7"><span class="ml15">签约时间: </span><b class="mr10" name="time">${ms.contract_time!''}</b>
+                                解约时间: <b>${ms.discontract_time!''}</b></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="w190">
+                                <ul>
+                                    <li>${ms.fullname!''}</li>
+                                    <li>${ms.username!''}</li>
+                                </ul>
+                            </td>
+                            <td class="w330" style="border-right: 0px">
+                                <ul class="w210 fl tal ml10">
+                                    <li>${ms.brand!''}-${ms.series!''}</li>
+                                    <li>${ms.model!''}</li>
+                                </ul>
+                            </td>
+                            <td class="w100" style="border-left: 0px;"><div class="w100 h60" style="line-height: 60px;">${ms.carplate!''}</div></td>
+                            <td class="w140">${ms.amount!''}</td>
+                            <td class="w300 ">${ms.discontract_reason!''}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                     </#list>
+                    <@pager pageno="${msdata.pageList.currentPageNo!'1'}" pagesize="${msdata.pageList.pageSize}" totalcount="${msdata.pageList.totalCount}" />
+                    <#else>
+                        </table>
+                        <p class="no_blank">暂无符合条件的数据记录</p>
+                	</#if>
+                </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        document.onkeydown = function (event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if (e && e.keyCode == 13) {
+                search();
+            }
+        }
+    });
+    var dialog;
+
+    function insurance(member_id) {
+        var map = {};
+        map["title"] = "购买保险";
+        map["html"] = "insurance.html?member_id=" + member_id;
+        map["url"] = "${ctx}/api/shop/memberx!insurance.do";
+        map["form"] = "#insurance_form";
+
+        openDialog(map);
+    }
+
+    function maintain(member_id) {
+        var map = {};
+        map["title"] = "保养服务";
+        map["html"] = "maintain.html?member_id=" + member_id;
+        map["url"] = "${ctx}/api/shop/memberx!maintain.do";
+        map["form"] = "#maintain_form";
+
+        openDialog(map);
+    }
+
+    function openDialog(map) {
+        dialog = $.dialog({
+            title: map["title"],
+            lock: true,
+            min: false,
+            max: false
+        });
+
+        $.ajax({
+            url: map["html"],
+            cache: false,
+            success: function (html) {
+                dialog.content(html);
+                dialog.button([{
+                    name: '保存',
+                    callback: function () {
+
+
+                        if (!$(map["form"]).validate()) {
+                            return false;
+                        }
+                        if (!$(map["form"]).checkall()) {
+                            return false;
+                        }
+
+                        formSubmit(dialog, map);
+
+                        this.button({
+                                    name: '保存',
+                                    disabled: true
+                                })
+                                .lock();
+                        return false;
+                    }
+                }, {
+                    name: '取消'
+                }]);
+            },
+            error: function () {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+
+    function formSubmit(dialog, map) {
+        var options = {
+            url: map["url"],
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    dialog.title('保存成功，2秒后关闭此窗口。').time(3);
+                    dialog.reload();
+                } else {
+                    dialog.title('保存失败，' + result.message);
+                    $("input[type='button']").each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $(map["form"]).ajaxSubmit(options);
+        return false;
+    }
+
+    //	$("#btnSearch").click(function(){
+    //	location.href="bonus_list.html?act=store&op=store_coupon&add_time_from="+add_time_from+"&add_time_to="+add_time_to+"&menu=promotion";
+    //	});
+    $("#btnSearch").click(function () {
+        search();
+    });
+    //	$("a[name='order_state']").click(function(){
+    //		$("#order_state").val($(this).attr("order_state"));
+    //		search();
+    //	});
+    function search() {
+        var time_list = $("#time_list").val();
+        var cost = $("#cost").val();
+        var startTime = $("input[name='startTime']").val();
+        var endTime = $("input[name='endTime']").val();
+        if (endTime < startTime) {
+            alert("开始时间不得大于结束时间！");
+            return;
+        }
+        location.href = "break_member_list.html?time_list=" + time_list + "&cost=" + cost + "&startTime=" + startTime + "&endTime=" + endTime + "&menu=member";
+    }
+
+
+    function sendBouns() {
+        var options = {
+            url: "${ctx}/api/shop/memberx!sendBouns.do",
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    $.alert(result.message);
+                } else {
+                    $.alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $("#myform").ajaxSubmit(options);
+    }
+    function updateStatus() {
+        var options = {
+            url: "${ctx}/api/shop/memberx!updateStatus.do",
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    $.alert(result.message);
+                } else {
+                    $.alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $("#myform").ajaxSubmit(options);
+    }
+    function sendMessage() {
+        var options = {
+            url: "${ctx}/api/shop/memberx!sendMessage.do",
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    $.alert(result.message);
+                } else {
+                    $.alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $("#myform").ajaxSubmit(options);
+    }
+
+</script>
+<script>
+    $(function () {
+        selectMenu(0);
+    })
+
+    function queryDevices() {
+        var options = {
+            url: "/api/mobile/device!queryDevices.do?devices=11:22:33:44:55:66,11:22:33:44:55:88",
+            type: "get",
+            dataType: "text",
+            success: function (result) {
+                alert(result);
+                alert("dev_addr: " + JSON.parse(result)[0].dev_addr);
+            },
+            error: function () {
+                alert("系统出错，请稍候重试");
+            }
+        }
+        $("#deviceInfoForm").ajaxSubmit(options);
+    }
+</script>
+<#include '/common/footer.html' />

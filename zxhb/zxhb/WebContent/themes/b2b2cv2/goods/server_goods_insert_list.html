@@ -1,0 +1,133 @@
+<#assign myGoodsListTag=newTag("myGoodsListTag")>
+<#assign storeGoods=myGoodsListTag()>
+<#-- 创建店铺商品分类标签 -->
+<#assign storeGoodsCatListTag= newTag("storeGoodsCatListTag") >
+<#-- 查询店铺商品分类列表 0表示查子分类 -->
+<#assign storeGoodsCatList= storeGoodsCatListTag("'type':0")!''>
+<#assign aa="${linkGoodsId}">
+<div id="server_iframe" class="h70 lh100 " style="height: 100%;">
+    <div class="head">
+        <div class="fr h70 lh70">
+        	<lable class="ml30">本店分类：</lable>
+ 				<td >
+ 					<select class="select" style="height: 28px" name="store_cat" onchange="search()" >
+ 					<option value="0">全部</option>
+					<#list storeGoodsCatList as cat>
+						<#if cat.store_cat_pid==0>
+							<option value="${cat.store_cat_id}"
+								<#if storeGoods.store_cat??>
+									<#if storeGoods.store_cat+""==cat.store_cat_id+"">
+										selected="selected"
+									</#if>
+								</#if>
+							>${cat.store_cat_name!''}</option>
+						</#if>
+						<#list storeGoodsCatList as childCat>
+							<#if childCat.store_cat_pid==cat.store_cat_id>
+								<option value="${childCat.store_cat_id}"
+									<#if storeGoods.store_cat??>
+										<#if storeGoods.store_cat+""==childCat.store_cat_id+"">
+											selected="selected"
+										</#if>
+									</#if>
+								>&nbsp;&nbsp;&nbsp;&nbsp;${childCat.store_cat_name!''}</option>
+							</#if>
+						</#list>
+					</#list>
+				</select>
+			</td>
+            <lable class="ml30">商品名称：</lable>
+            <input type="text" class="text" name="goodsName" maxlength="50" >
+            <input type="button" class="submit_1 mr10" value="搜索" onclick="searchGoods();"/>
+        </div>
+        <#if storeGoods.storegoods.result??>
+        <form id="storeGoodsForm" style="width: 98%;height:424px;overflow-y: auto;" class="ml10">
+            <table class="goodslist_bystore" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="w50 h30 ">选择</th>
+                    <th class="w150">图片</th>
+                    <th class="w180">名称</th>
+                    <th class="w120">价格</th>
+                    <th class="w100">总库存</th>
+                    <th class="w110">可用库存</th>
+                    <th class="w150">时间</th>
+                </tr>
+                </thead>
+                <tbody class="bbsTab">
+                	
+                </tbody>
+            </table>
+        </form>
+	  	<#else>
+	  	<p class="no_blank">暂无符合条件的数据记录</p>
+	  	</#if>
+    </div>
+</div>
+ 		<script>
+          $(function(){
+        	  getAllGoods();
+        	  document.onkeydown=function(event){
+        	 	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+        	 	      if(e && e.keyCode==13){ // enter 键
+        	 	    	  search();
+        	 	      }
+        	 	 };
+          });
+         function search(){
+      		searchGoods();
+      	}
+          
+      	function searchGoods(){
+      		var goodsName=$("input[name='goodsName']").val();
+      		var store_cat=$("select[name='store_cat']").val();
+      		getAllGoods(goodsName,store_cat);
+      	}
+          function getAllGoods(goodsName,store_cat){
+        	  $(".bbsTab").html("");
+        	  $.ajax({
+					url : "${ctx}/api/b2b2c/goods!getAllGoods.do",
+					type : "POST",
+					dataType : "json",
+					data : {"store_cat":store_cat,"goodsName":goodsName,"market_enable":1},
+					async:false,
+					success : function(data) {
+						var result=data.data.storegoods;
+						$.each( result, function(i, field){
+							if(field.thumbnail　!=''){
+								if(${aa} == field.goods_id){
+									var ss="<td><input type='radio'  name='goods_id' value='"+field.goods_id+","+field.name+"' checked='true'/></td>";
+								}else{
+									var ss="<td><input type='radio'  name='goods_id' value='"+field.goods_id+","+field.name+"'/></td>";
+								}
+								 $(".bbsTab").append("<tr>"+ss+
+								  			"<td><image src="+field.thumbnail+" alt="+field.name+" height='75' width='75' /></td>"+
+								  			"<td  style='line-height:25px;width: 230px;'><span  style='color:#005ea6;line-height: 20px;'>"+field.name+"</span></td>"+
+								  			"<td>"+field.price+"</td>"+
+								  			"<td>"+field.store+"件</td>"+
+								  			"<td>"+field.enable_store+"件</td>"+
+								  			"<td>"+field.create_time+"</td>"+
+								  			"</tr>") 
+							}else{
+								if(${aa} == field.goods_id){
+									var ss="<td><input type='radio'  name='goods_id' value='"+field.goods_id+","+field.name+"' checked='true'/></td>";
+								}else{
+									var ss="<td><input type='radio'  name='goods_id' value='"+field.goods_id+","+field.name+"'/></td>";
+								}
+								 $(".bbsTab").append("<tr>"+ss+
+								  			"<td>暂无图片</td>"+
+								  			"<td  style='line-height:25px;width: 230px;'><span  style='color:#005ea6;line-height: 20px;'>"+field.name+"</span></td>"+
+								  			"<td>"+field.price+"</td>"+
+								  			"<td>"+field.store+"件</td>"+
+								  			"<td>"+field.enable_store+"件</td>"+
+								  			"<td>"+field.create_time+"</td>"+
+								  			"</tr>") 
+							}
+						});
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						alert("出现错误，请重试");
+					}
+				}); 
+          }
+       </script>

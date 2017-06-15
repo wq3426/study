@@ -1,0 +1,1008 @@
+<#include '/store/store_header.html' />
+<!-- 调用地区标签 -->
+<#assign regionSelect = "com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+    <link rel="stylesheet" type="text/css" href="${ctx}/themes/b2b2cv2/css/uploadify.css"/>
+    <script type="text/javascript" src="${ctx}/themes/b2b2cv2/js/jquery.uploadify.min.js"></script>
+    <style>
+        input[type="file"] {
+            height: 20px;
+        }
+
+        .open_store_form {
+            width: 100%;
+        }
+
+        .bg_fen {
+            background-color: #ffe8d9;
+        }
+
+        .btn_yz {
+            background-color: #5bb75b;
+            border: 1px solid #d2d2d2;
+            color: #fff;
+            padding: 4px;
+            width: 100px;
+            text-align: center;
+            margin-left: 5px;
+
+        }
+
+        .btn_yz:hover {
+            background-color: #c8c8c8
+        }
+
+    </style>
+
+    <div class="store_main">
+        <div style="width: 1200px;margin: 0 auto;">
+            <div style="width: 200px">
+                <#include '/store/left_menu.html' />
+            </div>
+            <div class="sotre_right_content">
+                <div class="open_store_form">
+                    <form id="applyForm" class="validate">
+                        <div id="step1">
+                            <div class="bg_fen p5 f16 pl30 color_ju">企业基本信息 <span class="fr f12 cp pr10 " id="enterprise_btn">修改</span></div>
+                            <div class="dbk" id="enterprise_dbk">
+                                <dl>
+                                    <dt class="required">
+                                        <em class="pngFix"></em>店铺名称：
+                                    </dt>
+                                    <dd>
+                                        <p>${myStoreDetail.store_name!''}</p>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix" id="id_logo"></em>店铺logo:</dt>
+                                    <dd>
+                                        <img src="${myStoreDetail.store_logo!''}"
+                                             alt="logo" width="200px" height="100px">
+                                    </dd>
+                                </dl>
+                               <dl>
+                                    <dt class="required"><em class="pngFix"></em>所在地区：</dt>
+                                    <dd>${myStoreDetail.store_province} &nbsp;  ${myStoreDetail.store_city}
+                                    	 &nbsp; ${myStoreDetail.store_region}
+                                    </dd>
+
+                                </dl> 
+
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>详细地址：</dt>
+                                    <dd>${myStoreDetail.attr!''}</dd>
+                                </dl>
+
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>邮编：</dt>
+                                    <dd>${myStoreDetail.zip!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>客服电话：</dt>
+                                    <dd>${myStoreDetail.customer_phone!''}</dd>
+                                </dl>
+                            </div>
+
+                            <!--点击修改页面替换展示页面-->
+                            <div class="dbn" id="enterprise_dbn">
+                              <div style=" display:none"><!-- 下面的form不能删除 -->
+                                <form action="" id="enterprise_information_form" ></form></div>
+                                
+                                <!--点击修改页面替换展示页面 （新的）--> 
+                                 <form action="" id="enterprise_information1_form">
+                                    <dl>
+                                        <dt class="required">
+                                            <em class="pngFix"></em>店铺名称：
+                                        </dt>
+                                        <dd>
+                                            <p><input type="text" id="store_name" name="store_name" maxlength="20"
+                                                      class="text store_name_title"
+                                                      value="${myStoreDetail.store_name!''}" isrequired="true"/>
+                                            </p>
+                                            <p class="hint">请控制在20个字符以内</p>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix" id="id_logo"></em>店铺logo:<span id="id_imgText"></span></dt>
+		                                <dd>
+		                                    <div class="apply_id_img" status="id_img">
+		                                        <#if myStoreDetail.store_logo??>
+		                                            <@image src="${myStoreDetail.store_logo}" width="100" height="100"/>
+		                                        </#if>
+		                                    </div>
+		                                    <input type="file" id="id_img" status="id_img"/>
+		                                    &nbsp;&nbsp;<span class="applyPro">支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</span>
+		                                    <input type="hidden" name="store_logo" id="id_imgImg" value=""/>
+		                                    <input type="hidden" name="store_name_auth"
+		                                    <#if myStoreDetail??>value="2"
+		                                        <#else> value="0"
+		                                    </#if>
+		                                    id="id_imgStatus" />
+		                                </dd>
+                                    </dl>
+                                   <dl>
+                                        <dt class="required"><em class="pngFix"></em>所在地区：</dt>
+                                        <dd><@regionSelect province_name='store_province' city_name='store_city'
+                                   				 region_name='store_region' province_id="${myStoreDetail.store_provinceid!''}"
+                                    			 city_id="${myStoreDetail.store_cityid!''}"
+                                    			 region_id="${myStoreDetail.store_regionid!''}"/>
+                                        </dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>详细地址：</dt>
+                                        <dd><input type="text" name="attr" class="text w400" id="address"
+                                                   value="${myStoreDetail.attr!''}" isrequired="true"/></dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>邮编：</dt>
+                                        <dd><input type="text" name="zip" class="text w200" id="store_zip"
+                                                   dataType="post_code" value="${myStoreDetail.zip!''}"
+                                                   isrequired="true"/>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>客服电话：</dt>
+                                        <dd><input type="text" name="customer_phone" class="text w200"
+                                                   value="${myStoreDetail.customer_phone!''}" dataType="tel_num"
+                                                   id="service_tel" isrequired="true"/></dd>
+                                    </dl>
+                                    <dl class="bottom">
+                                        <dt>&nbsp;</dt>
+                                        <dd>
+                                            <p class="mb10">
+                                                <input type="button" class="submit" value="确 定"
+                                                       id="enterprise_information1" />
+                                            </p>
+                                        </dd>
+                                    </dl>
+                                </form>
+                            </div>
+
+							
+                            <div class="bg_fen p5 f16 pl30 color_ju">联系人信息 <span class="fr f12 cp pr10" id="contact_btn">修改</span></div>
+                            <div class="dbk" id="contact_dbk">
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>联系人姓名：</dt>
+                                    <dd>${myStoreDetail.contacts_name!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>联系方式：</dt>
+                                    <dd>${myStoreDetail.tel!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>办公电话：</dt>
+                                    <dd>${myStoreDetail.office_phone!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>电子邮箱：</dt>
+                                    <dd>${myStoreDetail.email!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>联系人身份证照片<br/>（正面）:</dt>
+                                    <dd>
+                                        <img src="${myStoreDetail.id_img!''}"
+                                             alt="id_img" width="200px" height="126px">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>联系人身份证照片<br/>（背面）:</dt>
+                                    <dd>
+                                        <img src="${myStoreDetail.contact_idimg_back!''}"
+                                             alt="id_img" width="200px" height="126px">
+                                    </dd>
+                                </dl>
+
+                            </div>
+                            
+                            <!--点击修改页面替换展示页面-->
+                            <div class="dbn" id="contact_dbn">
+                                <form action="" id="contact_information_form" >
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>联系人姓名：</dt>
+                                        <dd><input type="text" name="contacts_name" class="text w200"
+                                                   id="cellphone_name"
+                                                   isrequired="true" value="${myStoreDetail.contacts_name!''}"/></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>联系方式：</dt>
+                                        <dd><input type="text" name="tel" class="text w200" id="cellphone"
+                                                   dataType="mobile" value="${myStoreDetail.tel!''}" isrequired="true"/>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>办公电话：</dt>
+                                        <dd><input type="text" name="office_phone" class="text w200" id="office_phone"
+                                                   dataType="tel_num" isrequired="true" 
+                                                   value="${myStoreDetail.office_phone!''}"/>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>电子邮箱：</dt>
+                                        <dd><input type="text" name="email" class="text w200" id="email"
+                                                   dataType="email" value="${myStoreDetail.email!''}"
+                                                   isrequired="true"/></dd>
+                                    </dl>
+                                   
+                                   <dl>
+	                                  <dt class="required"><em class="pngFix"></em>上传联系人身份证照片（正面）:<span id="id_img_1Text"></span></dt>
+				                          <dd>
+				                             <div class="apply_id_img_1" status="id_img_1">
+				                                 <#if myStoreDetail.id_img??>
+				                                     <@image src="${myStoreDetail.id_img}" width="100" height="100"/>
+				                                 </#if>
+				                             </div>
+				                             <input type="file" id="id_img_1" status="id_img_1"/>
+				                             &nbsp;&nbsp;<span class="applyPro">支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</span>
+				                             <input type="hidden" name="contacts_id_img" id="id_img_1Img" value=""/>
+				                             <input type="hidden" name="store_name_auth"
+				                             <#if myStoreDetail??>value="2"
+				                                 <#else> value="0"
+				                             </#if>
+				                             id="id_img_1Status" />
+				                         </dd>
+		                          	</dl>
+                                    <dl>
+		                              	<dt class="required"><em class="pngFix"></em>上传联系人身份证照片（背面）:<span id="id_img_2Text"></span></dt>
+			                          	<dd>
+			                             	<div class="apply_id_img_2" status="id_img_2">
+			                                 	<#if myStoreDetail.contact_idimg_back??>
+			                                     	<@image src="${myStoreDetail.contact_idimg_back}" width="100" height="100"/>
+			                                 	</#if>
+			                             	</div>
+			                             	<input type="file" id="id_img_2" status="id_img_2"/>
+			                            	 &nbsp;&nbsp;<span class="applyPro">支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</span>
+			                             	<input type="hidden" name="contact_idimg_back" id="id_img_2Img" value=""/>
+			                             	<input type="hidden" name="store_name_auth"
+			                             	<#if myStoreDetail??>value="2"
+			                                 	<#else> value="0"
+			                             	</#if>
+			                             	id="id_img_2Status" />
+			                         	</dd>
+		                           </dl>
+                                    <dl class="bottom">
+                                        <dt>&nbsp;</dt>
+                                        <dd>
+                                            <p class="mb10">
+                                                <input type="button" class="submit" value="确 定"
+                                                       id="contact_information"/>
+                                            </p>
+                                        </dd>
+                                    </dl>
+                                </form>
+                            </div>
+
+
+                            <div class="bg_fen p5 f16 pl30 color_ju">经营范围<span class="fr f12 cp pr10 none" id="management_btn">修改</span></div>
+                            <div class="dbk" id="management_bdk">
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>企业法人姓名：</dt>
+                                    <dd>${myStoreDetail.corporation!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt >企业法人身份证号：</dt>
+                                    <dd>${myStoreDetail.corporation_id_number!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required">企业法人身份证照片（正面）:</dt>
+                                    <dd>
+                                        <img id="img3" src="<#if myStoreDetail.corporation_id_img??&&myStoreDetail.corporation_id_img!=''>${myStoreDetail.corporation_id_img!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" width="200px" height="126px"> 
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required">企业法人身份证照片（背面）:</dt>
+                                    <dd>
+                                        <img src="<#if myStoreDetail.corporate_idimg_back??&&myStoreDetail.corporate_idimg_back!=''>${myStoreDetail.corporate_idimg_back!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" width="200px" height="126px"> 
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>营业执照注册号：</dt>
+                                    <dd>${myStoreDetail.bussiness_license_number!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>营业执照照片:</dt>
+                                    <dd>
+                                        <img src="${myStoreDetail.license_img!''}"
+                                             alt="license_img" width="140px" height="200px">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>代理品牌：</dt>
+                                    <dd>${myStoreDetail.brand_name!''}</dd>
+                                </dl>
+                            </div>
+                            
+                            <!--点击修改页面替换展示页面-->
+                            <div class="dbn" id="management_bdn">
+                                <form action="" id="management_scope_form" ></form>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>企业法人姓名：</dt>
+                                    <dd><input type="text" id="corporations_name" name="corporation"
+                                               class="text w200"
+                                               value="${myStoreDetail.corporation!''}" isrequired="true"/></dd>
+                                </dl>
+                                <dl>
+                                    <dt ></em>企业法人身份证号：</dt>
+                                    <dd><input type="text" name="corporation_id_number"
+                                               class="text w200" id="corporate_identity_card_number"
+                                               value="${myStoreDetail.corporation_id_number!''}" isrequired="true"/>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                <dt >上传企业法人身份证照片:<span id="id_img_legalText"></span></dt>
+                                <dd>
+                                    <div class="apply_id_img_legal" status="id_img_legal">
+                                        <#if myStoreDetail.corporation_id_img??>
+                                            <@image src="${myStoreDetail.corporation_id_img}" width="100" height="100"/>
+                                        </#if>
+                                    </div>
+                                    <input type="file" id="id_img_legal" status="id_img_legal"/>
+                                    &nbsp;&nbsp;<span class="applyPro">支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</span>
+                                    <input type="hidden" name="corporation_img" id="id_img_legalImg" value=""/>
+                                    <input type="hidden" name="store_name_auth"
+                                    <#if myStoreDetail??>value="2"
+                                        <#else> value="0"
+                                    </#if>
+                                    id="id_img_legalStatus" />
+                                </dd>
+                            </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>营业执照注册号：</dt>
+                                    <dd><input type="text" name="bussiness_license_number"
+                                               class="text w200" id="license_number"
+                                               value="${myStoreDetail.bussiness_license_number!''}" isrequired="true"/>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                <dt class="required"><em class="pngFix"></em>上传营业执照照片:<span id="license_imgText"></span></dt>
+	                                <dd>
+	                                    <div class="apply_license_img" status="license_img">
+	                                        <#if myStoreDetail.license_img??>
+	                                            <@image src="${myStoreDetail.license_img}" width="100" height="100"/>
+	                                        </#if>
+	                                    </div>
+	                                    <input type="file" id="license_img" status="license_img"/>
+	                                    &nbsp;&nbsp;<span class="applyPro">支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</span>
+	                                    <input type="hidden" name="licenseImg" id="license_imgImg" value=""/>
+	                                    <input type="hidden" name="store_store_auth"
+	                                    <#if myStoreDetail??> value="2"
+	                                        <#else> value="0"
+	                                    </#if>
+	                                    id="license_imgStatus"/> 
+	                                </dd>
+	                            </dl>
+                                <#assign brandListTag = newTag("brandListTag") /> 
+								<#assign brandList = brandListTag() /> 
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>代理品牌：</dt>
+                                    <dd>
+                                        <select name="brand" id="agent_select" class="select">
+                                        	<option value="0">请选择</option>
+        							    	<#list brandList as brand >
+        							    	<option value="${brand.brand_id}">${brand.name!''}</option>
+        							    	</#list>
+                                        </select>
+                                    </dd>
+                                </dl>
+                                <dl class="bottom">
+                                    <dt>&nbsp;</dt>
+                                    <dd>
+                                        <p class="mb10">
+                                            <input type="button" class="submit" value="确 定" id="management_scope"/>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </div>
+
+
+                            <div class="bg_fen p5 f16 pl30 color_ju">账户信息<span class="fr f12 cp pr10 none" id="account_btn">修改</span></div>
+                            <div class="dbk" id="account_dbk">
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>银行开户名：</dt>
+                                    <dd>${myStoreDetail.bank_account_name!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>公司银行账号：</dt>
+                                    <dd>${myStoreDetail.bank_account_number!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>开户银行支行名称：</dt>
+                                    <dd>${myStoreDetail.bank_name!''}</dd>
+                                </dl>
+                                <!-- <dl>
+                                    <dt class="required"><em class="pngFix"></em>开户银行详细地址：</dt>
+                                    <dd>${myStoreDetail.bank_attr!''}</dd>
+                                </dl> -->
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>银行开户许可证:</dt>
+                                    <dd>
+                                        <img src="${myStoreDetail.bank_license_img!''}"
+                                             alt="bank_license_img" width="140px" height="200px">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt><em class="pngFix"></em>支付宝账号：</dt>
+                                    <dd>${myStoreDetail.alipay_account!''}</dd>
+                                </dl>
+                                <dl>
+                                    <dt><em class="pngFix"></em>微信账号：</dt>
+                                    <dd>${myStoreDetail.weichat_account!''}</dd>
+                                </dl>
+                            </div>
+                            <!--点击修改页面替换展示页面-->
+                            <div class="dbn" id="account_dbn">
+                                <form action="" id="account_information_form">
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>银行开户名：</dt>
+                                        <dd><input type="text" name="bank_account_name" class="text w300"
+                                                   value="${myStoreDetail.bank_account_name!''}" id="bank_account_name"
+                                                   isrequired="true"/></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>公司银行账号：</dt>
+                                        <dd><input type="text" onKeyUp="this.value=this.value.replace(/\D/g,'')"
+                                                   name="bank_account_number" class="text w300"
+                                                   value="${myStoreDetail.bank_account_number!''}"
+                                                   id="bank_account_number" isrequired="true"/>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>开户银行支行名称：</dt>
+                                        <dd><input type="text" name="bank_name" class="text w300"
+                                                   value="${myStoreDetail.bank_name!''}" id="bank_name"
+                                                   isrequired="true"/></dd>
+                                    </dl>
+                                    <!-- <dl>
+                                        <dt class="required"><em class="pngFix"></em>开户银行详细地址：</dt>
+                                        <dd><input value="${myStoreDetail.bank_attr!''}" id="bank_site" type="text" name="bank_attr"
+                                                   class="text w300" isrequired="true"/></dd>
+                                    </dl> -->
+                                    <dl>
+                                         <dt class="required"><em class="pngFix"></em>上传银行开户许可证:<span id="bank_license_imgText"></span></dt>
+		                                <dd>
+		                                    <div class="apply_bank_license_img" status="bank_license_img">
+		                                        <#if myStoreDetail.bank_license_img??>
+		                                            <@image src="${myStoreDetail.bank_license_img}" width="100" height="100"/>
+		                                        </#if>
+		                                    </div>
+		                                    <input type="file" id="bank_license_img" status="bank_license_img"/>
+		                                    &nbsp;&nbsp;<span class="applyPro">支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</span>
+		                                    <input type="hidden" name="bank_license_img" id="bank_license_imgImg" value=""/>
+		                                    <input type="hidden" name="store_store_auth" 
+		                                    <#if myStoreDetail??> value="2"
+		                                        <#else> value="0"
+		                                    </#if>
+		                                    id="bank_license_imgStatus"	/>
+		                               </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt><em class="pngFix"></em>支付宝账号：</dt>
+                                        <dd><input type="text" name="alipay_account" class="text w200"
+                                                   value="${myStoreDetail.alipay_account!''}" id="alipay"
+                                                   isrequired="true"/></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt><em class="pngFix"></em>微信账号：</dt>
+                                        <dd><input type="text" name="weichat_account" class="text w200"
+                                                   value="${myStoreDetail.weichat_account!''}" id="wechat"
+                                                   isrequired="true"/></dd>
+                                    </dl>
+                                    <dl class="bottom">
+                                        <dt>&nbsp;</dt>
+                                        <dd>
+                                            <p class="mb10">
+                                                <input type="button" class="submit" value="确 定"
+                                                       id="account_information"/>
+                                            </p>
+                                        </dd>
+                                    </dl>
+                                </form>
+                            </div>
+
+
+                            <div class="bg_fen p5 f16 pl30 color_ju">提现信息<span class="fr f12 cp pr10" id="present_btn">修改</span></div>
+                            <div class="dbk" id="present_dbk">
+                                <dl>
+                                    <dt class="required"><em class="pngFix"></em>提现人手机号：</dt>
+                                    <dd>${myStoreDetail.cashingouter_phone!''}</dd>
+                                </dl>
+                            </div>
+                            <!--点击修改页面替换展示页面-->
+                            <div class="dbn" id="present_dbn">
+                                <form action="" id="present_form">
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>提现人手机号：</dt>
+                                        <dd><input value="${myStoreDetail.cashingouter_phone!''}" type="text" name="cashingouter_phone" class="text w200" value=""
+                                                   dataType="mobile" id="expressive_phone" isrequired="true"/></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt class="required"><em class="pngFix"></em>手机验证码：</dt>
+                                        <dd><input type="text" name="checkCode" id="checkCode" class="text" style="width: 90px;" value=""  />
+                                            <input id="sendCheckCode" name="sendCheckCode" type="button" class="btn_yz cp " value="发送验证码"
+                                    			onclick="sentCheckCode()"></dd>
+                                    </dl>
+                                    <dl class="bottom">
+                                        <dt>&nbsp;</dt>
+                                        <dd>
+                                            <p class="mb10">
+                                                <input type="button" class="submit" value="确 定" id="present"/>
+                                            </p>
+                                        </dd>
+                                    </dl>
+                                </form>
+                            </div>
+
+                            <div class="bg_fen p5 f16 pl30 color_ju">对接人信息</div>
+                            <dl>
+                                <dt><em class="pngFix"></em>对接人姓名：</dt>
+                                <dd><span>${myStoreDetail.docker!''}</span></dd>
+                            </dl>
+                            <!-- <dl>
+                                <dt><em class="pngFix"></em>对接人工号：</dt>
+                                <dd><span>${myStoreDetail.docker_job_number!''}</span></dd>
+                            </dl> -->
+                            <dl>
+                                <dt><em class="pngFix"></em>联系方式：</dt>
+                                <dd><span>${myStoreDetail.docker_tel!''}</span></dd>
+                            </dl>
+                            <div class="bg_fen p5 f16 pl30 color_ju">结算信息</div>
+                            <dl>
+                                <dt><em class="pngFix"></em>经销商等级：</dt>
+                                <dd><#if myStoreDetail.store_level== 1>
+                                		<span>一级经销商</span>
+                                	</#if>
+                                	<#if myStoreDetail.store_level== 2>
+                                		<span>二级经销商</span>
+                                	</#if>
+                                	<#if myStoreDetail.store_level== 3>
+                                		<span>三级经销商</span>
+                                	</#if>
+                                	<#if myStoreDetail.store_level== 4>
+                                		<span>自营店铺专用等级</span>
+                                	</#if>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><em class="pngFix"></em>结算周期：</dt>
+                                <dd><span>${myStoreDetail.settlement_period!''}</span></dd>
+                            </dl>
+                            <dl>
+                                <dt><em class="pngFix"></em>签约用户保养折扣：</dt>
+                                <dd><span>${myStoreDetail.discountcontract!''}</span></dd>
+                            </dl>
+                            <dl>
+                                <dt><em class="pngFix"></em>非签约用户保养折扣：</dt>
+                                <dd><span>${myStoreDetail.discountnoncontract!''}</span></dd>
+                            </dl>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+//        修改企业基本信息
+        $("#enterprise_btn").click(function (){
+            $("#enterprise_btn").html("");
+            $("#enterprise_dbk").css("display","none");
+            $("#enterprise_dbn").css("display","block");
+        });
+//联系人信息
+        $("#contact_btn").click(function (){
+            $("#contact_btn").html("");
+            $("#contact_dbk").css("display","none");
+            $("#contact_dbn").css("display","block");
+        });
+//经营范围
+        $("#management_btn").click(function (){
+            $("#management_btn").html("");
+            $("#management_bdk").css("display","none");
+            $("#management_bdn").css("display","block");
+        });
+//账户信息
+        $("#account_btn").click(function (){
+            $("#account_btn").html("");
+            $("#account_dbk").css("display","none");
+            $("#account_dbn").css("display","block");
+        });
+//提现信息
+        $("#present_btn").click(function (){
+            $("#present_btn").html("");
+            $("#present_dbk").css("display","none");
+            $("#present_dbn").css("display","block");
+        });
+
+    </script>
+    <script type="text/javascript">
+
+        $(function () {
+           bindFileEvent($("#id_img"));
+           bindFileEvent($("#id_img_1"));
+           bindFileEvent($("#id_img_legal"));
+           bindFileEvent($("#license_img"));
+           bindFileEvent($("#bank_license_img"));
+           bindFileEvent($("#id_img_2"));
+            
+          //验证企业基本信息：表单一              
+            $("#enterprise_information1").click(function () {
+            	if ($("#store_name").val() == "") {
+                    alert("店铺名称不能为空");
+                    return false;
+                }
+                if (($("#store_province_id").val() == 0) || ($("#store_city_id").val() == 0) || ($("#store_region_id").val() == 0)) {
+                    alert("请设置店铺所在区域");
+                    return false;
+                } 
+                if ($("#address").val() == "") {
+                    alert("详细地址不能为空");
+                    return false;
+                }
+                if ($("#store_zip").val() == "") {
+                    alert("邮编不能为空");
+                    return false;
+                }
+                if ($("#service_tel").val() == "") {
+                    alert("客服电话不能为空");
+                    return false;
+                }
+               if (!$("#enterprise_information1_form").checkall())
+                   return false;
+                $("#enterprise_information1").attr({"disabled": "disabled"});
+                
+                var options = {
+                    url: "${ctx}/api/b2b2c/storeApi!editStore_1.do?ajax=yes",
+                    type: "POST",
+                    async: false,
+                    dataType: "json",
+                    data:{},
+                    success: function (json) {
+                        if (json.result == 0) {
+                            alert(json.message);
+                        } else {
+                            alert(json.message);
+                            location.href = "${ctx}/store/apply/reApply2.html?menu=store_set";
+                        }
+                       $("#enterprise_information1").removeAttr("disabled");
+                    },
+                    error: function (e) {
+                        alert("出现错误，请重试");
+                    }
+                };
+                $('#enterprise_information1_form').ajaxSubmit(options);
+            });
+            
+          //校验证联系人信息：表单二
+            $("#contact_information").click(function () {
+                if ($("#cellphone_name").val() == "") {
+                    alert("联系人姓名不能为空");
+                    return false;
+                }
+                if ($("#cellphone").val() == "") {
+                    alert("联系方式不能为空");
+                    return false;
+                }
+                if ($("#office_phone").val() == "") {
+                    alert("办公电话不能为空");
+                    return false;
+                }
+                if ($("#email").val() == "") {
+                    alert("电子邮箱不能为空");
+                    return false;
+                }
+                if (!$("#contact_information_form").checkall())
+                    return false;
+                $("#contact_information").attr({"disabled": "disabled"});
+                
+                var options = {
+                    url: "${ctx}/api/b2b2c/storeApi!editStore_2.do?ajax=yes",
+                    type: "POST",
+                    async: false,
+                    dataType: "json",
+                    data:{},
+                    success: function (json) {
+                        if (json.result == 0) {
+                            alert(json.message);
+                        } else {
+                            alert(json.message);
+                            location.href = "${ctx}/store/apply/reApply2.html?menu=store_set";
+                        }
+                        $("#contact_information").removeAttr("disabled");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    	//alert(jqXHR);
+                    	//alert(textStatus);
+                    	//alert(errorThrown);
+                        alert("出现错误，请重试");
+                    }
+                };
+                $('#contact_information_form').ajaxSubmit(options);
+            });
+       
+             //校验证经营范围：表单三
+             $("#management_scope").click(function () {
+                if ($("#corporations_name").val() == "") {
+                    alert("企业法人姓名不能为空");
+                    return false;
+                }
+                if ($("#corporate_identity_card_number").val() == "") {
+                    alert("企业法人身份证号不能为空");
+                    return false;
+                }
+                if ($("#license_number").val() == "") {
+                    alert("营业执照注册号不能为空");
+                    return false;
+                } 
+                if (($("#agent_select").val() == 0)) {
+                    alert("请设置代理品牌");
+                    return false;
+                }
+                if (!$("#management_scope_form").checkall())
+                    return false;
+                $("#management_scope").attr({"disabled": "disabled"});
+                
+                var data= {
+                		"corporation":$('#corporations_name').val(),
+                		"corporation_id_number":$('#license_number').val(),
+                		"bussiness_license_number":$('#corporate_identity_card_number').val(),
+                		"brand":$('#agent_select').val(),
+                		"corporation_img":$('#id_img_legalImg').val(),
+                		"licenseImg":$('#license_imgImg').val()
+                };
+               
+                var options = {
+                    url: "${ctx}/api/b2b2c/storeApi!editStore_3.do?ajax=yes",
+                    type: "POST",
+                    async: false,
+                    dataType: "json",
+                    data:data,
+                    success: function (json) {
+                        if (json.result == 0) {
+                            alert(json.message);
+                        } else {
+                            alert(json.message);
+                            location.href = "${ctx}/store/apply/reApply2.html?menu=store_set";
+                        }
+                        $("#management_scope").removeAttr("disabled");
+                    },
+                    error: function (e) {
+                        alert("出现错误，请重试");
+                    }
+                };
+                
+                $('#management_scope_form').ajaxSubmit(options);
+            }); 
+            
+          //校验账户信息：表单四
+            $("#account_information").click(function () {
+                if ($("#bank_account_name").val() == "") {
+                    alert("公司银行账号不能为空");
+                    return false;
+                }
+                if ($("#bank_account_number").val() == "") {
+                    alert("公司银行账号不能为空");
+                    return false;
+                }
+                if ($("#bank_name").val() == "") {
+                    alert("开户银行支行名称不能为空");
+                    return false;
+                }
+                if ($("#bank_site").val() == "") {
+                    alert("开户银行详细地址不能为空");
+                    return false;
+                }
+                if ($("#alipay").val() == "") {
+                    alert("支付宝账号不能为空");
+                    return false;
+                }
+                if (($("#wechat").val() == 0)) {
+                    alert("微信账号不能为空");
+                    return false;
+                }
+                if (!$("#account_information_form").checkall())
+                    return false;
+                $("#account_information").attr({"disabled": "disabled"});
+                
+                var options = {
+                    url: "${ctx}/api/b2b2c/storeApi!editStore_4.do?ajax=yes",
+                    type: "POST",
+                    async: false,
+                    dataType: "json",
+                    data:{},
+                    success: function (json) {
+                        if (json.result == 0) {
+                            alert(json.message);
+                        } else {
+                            alert(json.message);
+                            location.href = "${ctx}/store/apply/reApply2.html?menu=store_set";
+                        }
+                        $("#account_information").removeAttr("disabled");
+                    },
+                    error: function (e) {
+                        alert("出现错误，请重试");
+                    }
+                };
+                $('#account_information_form').ajaxSubmit(options);
+            });
+            
+            
+            //校验提现手机：表单五
+            $("#present").click(function () {
+            	if ($("#expressive_phone").val() == "") {
+                    alert("提现人手机号不能为空");
+                    return false;
+                }
+                if ($("#checkCode").val() == "") {
+                    alert("验证码不能为空");
+                    return false;
+                }
+                if (!$("#present_form").checkall())
+                    return false;
+                $("#present").attr({"disabled": "disabled"});              
+                var options = {
+                        url: "${ctx}/api/b2b2c/storeApi!editStore_5.do?ajax=yes",
+                        type: "POST",
+                        async: false,
+                        dataType: "json",
+                       	data:{},
+                        success: function (json) {
+                            if (json.result == 0) {
+                                alert(json.message);
+                            } else {
+                                alert(json.message);
+                                location.href = "${ctx}/store/apply/reApply2.html?menu=store_set";
+                            }
+                            $("#present").removeAttr("disabled");
+                        },
+                        error: function (e) {
+                            alert("出现错误，请重试");
+                        }
+                    };  
+                $('#present_form').ajaxSubmit(options);
+            });
+            
+            
+            $("#region_id").setValidator(function () {
+                var value = $("#region_id").val();
+                if (value == "" || value == "0") return "地区信息不完整";
+                else return true;
+            });
+
+            //checkStoreName();//校验店铺名是否重复
+        });
+
+        function bindFileEvent(obj) {
+            var status = $(obj).attr("status");
+            $(obj).uploadify({
+                'buttonText': '上传',		//显示文字
+                'fileObjName': 'image',		//文件对象名称
+                'fileTypeDesc': '请选择',//允许上传的文件类型的描述，在弹出的文件选择框里会显示
+                'fileTypeExts': '*.gif; *.jpg; *.png',//允许上传的文件类型，限制弹出文件选择框里能选择的文件
+                'uploader': '${ctx}/api/base/upload-image!storeImgUpload.do?subFolder=store',
+                'swf': '${ctx}/themes/b2b2cv2/uploadify.swf',
+                'height': '30',				//高度
+                'width': '80',
+                'multi': false,				//是否支持多文件上传
+                'progressData': 'percentage',//设置文件上传时显示的数据
+                //'uploadLimit': 3,
+                'onFallback': function () {				//falsh兼容
+                    alert("麻烦了，不兼容falsh!");
+                },
+                'onUploadSuccess': function (file, data, response) {
+                    var img = jQuery.parseJSON(data);
+                    //$("#" + status + "Text").html("已上传");
+                    $("#" + status + "Img").val(img.fsImg);
+                    $("#" + status + "Status").val(2);
+                    $(".apply_" + status).html("<img src='" + img.imgUrl + "'style='width:100px;height:100px'/>");
+                },
+                'onSelectError': function (file, errorCode, errorMsg) {
+                    if (errorCode == SWFUpload.QUEUE_ERROR.INVALID_FILETYPE) {
+                        this.queueData.errorMsg = "请上传正确的格式";
+                    }
+                }
+            });
+        }
+        
+        //检测身份证是否重复
+        function checkIDNumber(value) {
+            var type = 1;
+            var idNumber = $("#id_number").val();
+            var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+            if (!reg.test(idNumber)) {
+                alert("身份证格式不正确！");
+                $("#id_number").val("");
+                return;
+            }
+            $.ajax({
+                url: "${ctx}/api/b2b2c/storeApi!checkIdNumber.do?ajax=yes",
+                type: "POST",
+                async: false,
+                data: "id_number=" + idNumber,
+                dataType: "json",
+                success: function (json) {
+                    type = json.result;
+                }
+            });
+            if (type == 0) {
+                alert("身份证重复");
+                $("#id_number").val("");
+            }
+        }
+
+        //检查店铺名称是否重复
+        function checkStoreName(value) {
+            var storeName = $("#store_name").val();
+            var type = 1;
+            if (storeName.length > 20) {
+                alert("店铺名称请控制在20个字符以内");
+                return;
+            }
+            $.ajax({
+                url: "${ctx}/api/b2b2c/storeApi!checkStoreName.do?ajax=yes",
+                type: "POST",
+                data: "storeName=" + storeName,
+                async: false,
+                dataType: "json",
+                success: function (json) {
+                    type = json.result;
+                }
+            });
+            if (type == 0) {
+                return "店铺名称重复";
+                $("#store_name").val("");
+            }
+        }
+
+        /*获取验证码倒计时*/
+        var wait=60;
+        function time(o) {
+            if (wait == 0) {
+                o.removeAttribute("disabled");
+                o.value="免费获取验证码";
+                wait = 60;
+                $(".btn_yz").css("background-color","#5bb75b");
+                $(".btn_yz").css("color","#fff");
+            } else {
+                o.setAttribute("disabled", true);
+                o.value=wait+"s后"+"重新发送";
+                wait--;
+                setTimeout(function() {
+                    time(o)
+                }, 1000)
+                $(".btn_yz").css("background-color","#f1f1f1");
+                $(".btn_yz").css("color","#666");
+            }
+        }
+        $(".btn_yz").click(function(){
+            time(this);
+        });
+
+        //发送验证码
+        function sentCheckCode() {
+            var mobile = $("#expressive_phone").val();
+
+            //TODO 校验手机号码
+            if (mobile != "") {
+                if (!(/^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/.test(mobile))) {
+                    alert("请输入正确的手机号码!");
+                    return false;
+                }else {
+
+
+                    $.ajax({
+                        url: "${ctx}/api/b2b2c/storeApi!sendCheckCode.do?ajax=yes",
+                        type: "POST",
+                        data: "mobile=" + mobile,
+                        async: false,
+                        dataType: "json",
+                        success: function (json) {
+                        }
+                    });
+                }
+            }
+        }
+
+    </script>
+    <#include '/common/footer.html' />

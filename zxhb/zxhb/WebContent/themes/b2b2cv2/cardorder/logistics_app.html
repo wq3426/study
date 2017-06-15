@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content=" width=1280,user-scalable=no;">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon"/>
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <style>
+        body {
+            font-size: 12px !important;
+        }
+
+        body * {
+            max-height: 999999px;
+        }
+        input,input:focus,input:active{user-select: text;}
+        input {
+            border: 2px solid #999;
+            margin-left: 3% !important;
+            width: 50%;
+            height: 0.074rem;
+            font-size: 0.03rem;
+            line-height: 0.074rem;
+            padding-left: 0.02rem;
+        }
+
+        .info_app {
+            background-color: #135481;
+            color: #fff;
+            padding: 0.0088rem 0 !important;
+            width: 20% !important;
+            text-align: center;
+            margin-left: 2%;
+            display: inline-block;
+            border-radius: 10px;
+            font-size: 0.026rem;
+            line-height: 0.06rem;
+        }
+
+        .info_app:hover {
+            background-color: #c8c8c8;
+        }
+
+
+    </style>
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize = document.documentElement.clientWidth + "px";
+    </script>
+</head>
+
+<body>
+
+<#assign zxOrderTransInfoTag=newTag("zxOrderTransInfoTag")/>
+<#assign orderTransInfo=zxOrderTransInfoTag("'order_sn':'${order_sn!''}'")/>
+
+<div class="mm5 ">
+    <!-- <div class="ff40 llhh90 tc"><span class="goBack " onclick="javascript:history.back(-1)"></span>物流信息</div> -->
+    <div class="ff40 llhh90 tc"><span class="goBack " onclick="javascript:history.go(-1)"></span>物流信息</div>
+    <div class="ff24 llhh35" style="min-height: 1rem;margin-top: 0.1rem">
+        <#if orderTransInfo.result == 0>
+        	${orderTransInfo.message!''}
+        <#elseif orderTransInfo.result == 1>
+        	<p>${orderTransInfo.data.AcceptTime!''}</p><p>${orderTransInfo.data.AcceptStation!''}</p>
+        </#if>
+    </div>
+</div>
+
+</body>
+</html>

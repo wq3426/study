@@ -1,0 +1,425 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .date_21 {
+        display: inline-block;
+        float: left;
+        margin-top: 10px;
+    }
+
+    .date_21 select {
+        height: 26px;
+    }
+
+    .date_22 {
+        display: inline-block;
+        float: right;
+        margin-top: 10px;
+    }
+
+    .date_22 input {
+        width: 104px;
+        height: 20px;
+    }
+
+    .search_form tr td input {
+        padding: 3px;
+    }
+
+    .table_01 {
+        position: absolute;
+        bottom: 0px;
+        background-color: #F1F1F1;
+        width: 999px;
+        height: 50px;
+    }
+
+    .table_01 input {
+        padding: 3px;
+        margin-left: 10px;
+    }
+    .w60 {
+        border: 1px solid #dddddd;
+    }
+     .date_22 input.search_btn{width: 60px;height: 29px;margin-left: 5px;}
+    .ui_buttons{display: none;}
+    .ui_content{margin: 10px 20px;}
+    /*已到期用户但为到店续约*/
+    .dqt{border: 1px solid #f5a5a5;}
+    .dqb td{border: 1px solid #f5a5a5!important;}
+    /*三十天到期用户*/
+    .thirty{border: 1px solid #cceacc;}
+    .thirty_b td{border: 1px solid #cceacc!important;}
+</style>
+<form id="myform">
+	<#assign memberRepairListTag=newTag("memberRepairListTag")>
+	<#assign msdata=memberRepairListTag()/>
+    <div class="store_center">
+        <#include '../left_menu.html' />
+        <div id="sotre_right_content" class="sotre_right_content" style="position: relative">
+            <div class="path">
+                <span style="color:#999;">您的位置：</span>
+                <span>会员管理</span>
+                <span> > </span>保养管理
+            </div>
+                <div class="store_right_main">
+                    <div class="tabmenu">
+                        <ul class="tab pngFix">
+                            <li class="active commont_list">
+                                <a hre="#">保养管理</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="data_20">
+                        <div class="date_21">
+                            <select class="select" name="time_lest" id="time_list" onchange="search()">
+                                <option value="0" <#if time_list?? && time_list == '0'>selected="selected"</#if>>时间由近到远</option>
+                                <option value="1" <#if time_list?? && time_list == '1'>selected="selected"</#if>>时间由远到近</option>
+                            </select>
+                            <select class="select ml10" name="contract_status" id="contract_status" onchange="search()">
+                                <option value="0" <#if contract_status?? && contract_status == '0'>selected="selected"</#if>>已预约</option>
+                                <option value="1" <#if contract_status?? && contract_status == '1'>selected="selected"</#if>>未预约</option>
+                            </select>
+                        </div>
+                        <div class="date_22">
+                            <div class="text3">
+                                <label><input class="text hasDatepicker" type="text" name="startTime"  placeholder="起始日期"  onClick="WdatePicker()"
+                                       value="${startTime!''}"/> <i></i>
+                                <span class="storeorder_time"></span></label>
+                            </div>
+                            <i class="text2">-</i>
+                            <div class="text2">
+                                <label><input class="text hasDatepicker" type="text" name="endTime"  placeholder="截止日期" onClick="WdatePicker()"
+                                       value="${endTime!''}">
+                                <span class="storeorder_time"></span></label>
+                            </div>
+							<input type="button" class="submit search_btn"  id="btnSearch" value="搜 索">
+                        </div>
+
+                    </div>
+                </div>
+
+
+            <!-- 会员列表 -->
+            <div class="bonuslist s_commont_list " style="padding-top: 25px; ">
+                <table class="list_table">
+                    <thead class="bl br">
+                    <tr>
+                        <th class="w230">车主信息</th>
+                        <th class="w310">车辆信息</th>
+                        <th class="w100">预计保养费用</th>
+                        <th class="w100">上次保养地点</th>
+                        <th class="w100">操作</th>
+                        <th class="w100">提醒备注</th>
+                    </tr>
+                    </thead>
+                </table>
+                
+               	<#if msdata.pageList.totalCount != 0 >
+               	<#list msdata.pageList.result as ms>
+                <table class="mt10">
+                	<#if ms.flag?? && ms.flag == 0>
+                		<thead class="tac bgc_gray bdc_gray"><!--未到期用户-->
+                	<#elseif ms.flag?? && ms.flag == 1>
+                		<thead class="tac thirty bgc_blue bdc_gray"><!--三十天内到期用户-->
+                	<#elseif ms.flag?? && ms.flag == 2>
+                		<thead class="tac dqt bgc_pink bdc_gray"><!--已到期用户但未来续保用户-->
+                	</#if>
+                    
+                    <tr>
+                    	<#if contract_status?? && contract_status == '0'>
+							<td colspan="7" style="text-align: left;height: 30px"><span class="ml15" >预约保养时间:</span> <b class="mr10" name="time">${ms.order_date!''} ${ms.starttime!''}-${ms.endtime!''}</b></td>
+                    	<#elseif contract_status?? && contract_status == '1'>
+							<td colspan="7" style="text-align: left;height: 30px"><span class="ml15" >预计保养时间:</span> <b class="mr10" name="time">${ms.repairnexttime!''}</b></td>
+						<#else>
+							<td colspan="7" style="text-align: left;height: 30px"><span class="ml15" >预约保养时间:</span> <b class="mr10" name="time">${ms.order_date!''} ${ms.starttime!''}-${ms.endtime!''}</b></td>
+						</#if>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--保养到期但是没有续约的-->
+                    <!--<tr class="dqb">-->
+                    <!--三十天内到期用户-->
+                    <!--<tr class="thirty_b">-->
+                    <!--普通保险-->
+                    <#if ms.flag?? && ms.flag == 0>
+                		<tr ><!--未到期用户-->
+                	<#elseif ms.flag?? && ms.flag == 1>
+                		<tr class="thirty_b"><!--三十天内到期用户-->
+                	<#elseif ms.flag?? && ms.flag == 2>
+                		<tr class="dqb"><!--已到期用户但未来续保用户-->
+                	</#if>
+                    
+                        <td class="w60"><input type="checkbox" class="checkitem" name="username"
+                                               value="${ms.username!''}"></td>
+                        <td class="w170">
+                            <ul>
+                                <li>${ms.fullname!''}</li>
+                                <li>${ms.username!''}</li>
+                            </ul>
+                        </td>
+                        <td class="w310">
+                            <ul class="w200 fl tal ml10">
+                                <li>${ms.brand!''}-${ms.series!''}</li>
+                                <li>${ms.model!''}</li>
+                            </ul>
+                            <ul class="w100  fl">
+                                <li class="w100 h60" style="line-height: 60px">${ms.carplate!''}</li>
+                                <!-- 临时车牌盖戳   样式  temporary_img-->
+                            </ul>
+                        </td>
+                        <td class="w100">
+                            ${ms.repairestimatedfee!''}
+                        </td>
+                        <td class="w100">${ms.repair_source!''}</td>
+                        <td class="w100">
+                            <span class="tool2 cp" onclick="ejectMassage(${ms.username})">短信提醒</span>
+                            <span class="tool3 cp">发放优惠券</span>
+                            <span class="tool2 cp" onclick="showRepairHistory('${ms.car_id!''}')">历史记录</span>
+                        </td>
+                        <td class="w100 ">
+                            ${ms.repairtrack!''}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </#list>
+                	<@pager pageno="${msdata.pageList.currentPageNo!'1'}" pagesize="${msdata.pageList.pageSize}" totalcount="${msdata.pageList.totalCount}" />
+                <#else>
+                    </table>
+                    <p class="no_blank">暂无符合条件的数据记录</p>
+                </#if>
+                
+            </div>
+                <div style="margin: 20px 0 60px 20px;color: #000000;">
+                	<#if contract_status?? && contract_status == '0'>
+						注：<span style="color: #F75F05;font-size: 16px">红色</span>为未按预约时间到店保养用户。
+                   	<#elseif contract_status?? && contract_status == '1'>
+						注：<span style="color: #000000;font-size: 16px">黑色</span>为30天以外应该到店保养用户，
+                   			<span style="color: #58bd58;font-size: 16px">绿色</span>为预计30天内应该到店保养用户，
+                   			<span style="color: #F75F05;font-size: 16px">红色</span>为未按规定要求到店保养用户。
+                   	<#else>
+                   		注：<span style="color: #F75F05;font-size: 16px">红色</span>为未按预约时间到店保养用户。
+					</#if>
+                </div>
+                <table class="table_01" style=" ">
+                    <tbody>
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" class="checkall"/>&nbsp;&nbsp;&nbsp;&nbsp;全选
+                        </td>
+                        <td><input type="button" value="发放优惠卷"/></td>
+                        <td><input type="button" onclick="ejectMassage(1)" value="短信提醒"/></td>
+                        <td style="padding-left: 600px;"></td>
+                    </tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</form>
+<!-- 短信提醒弹出 -->
+<script type="text/javascript">
+		var dialog;
+		function ejectMassage(username) {
+			var map = {}; // 相当于Map map = new HashMap();
+			map["title"] = "短信提醒";
+			if(username != 1){
+				map["html"] = "ejectMassage.html?username="+username;
+			}else{
+				if(!$("input[type='checkbox']").is(':checked')){
+					alert("请选择要发送短信的车主！");
+					return false;
+				}else{
+					  var obj=document.getElementsByName('username');  //选择所有name="'username'"的对象，返回数组    
+					  //取到对象数组后，我们来循环检测它是不是被选中    
+					  var user='';    
+					  for(var i=0; i<obj.length; i++){    
+						  user+=obj[i].value+','; 
+					  }//如果选中，将value添加到变量s中 
+					  user = user.substring(0,user.length-1);
+					  map["html"] = "ejectMassage.html?username="+user;
+				}
+			}
+		    openDialogForSendNote(map);
+		}
+		
+		function openDialogForSendNote(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:570
+			});
+		
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '发送',
+						callback : function() {
+							//是否为新增短信内容
+							if($(".addMassage").css("display")=='block'){
+								if($("#note_name").val()==""){
+									alert("请选择短信名称！");
+			            			return false;
+								}else if($("#note_detail").val().replace(/(^\s*)|(\s*$)/g,'') ==''){
+									alert("请选择短信内容！");
+			            			return false;
+								}else{
+			                        var codes = "我操,我草,我日,你妈,你妹,你老母,法轮功,共产党,国民党,反政府,反国家,反人民,操,艹,赌,暴力,毒品";
+			                        var noteDetail = $("#note_detail").val().replace(/(^\s*)|(\s*$)/g,'');
+			                        if (codes.indexOf(noteDetail) != -1) {
+			                        	$.alert("短信内容中包含敏感汉字，请重新输入！");
+			                        	$("#note_detail").val('');
+			                      		return false;
+				               	     }
+								}
+								map["form"] = "#add_form";
+								map["url"] = "${ctx}/api/b2b2c/noteserver!addAndSendNoteInfo.do";
+							}else{
+								if(!$("input[type='radio']").is(':checked')){
+			            			alert("请选择短信内容！");
+			            			return false;
+			            		}
+			            		if(!confirm("确定发送短信吗？")){
+			            			return false;
+			            		}
+			            		map["form"] = "#send_form";
+			            		map["url"] = "${ctx}/api/b2b2c/noteserver!send_noteInfo.do";
+							}
+							noteSendFormSubmit(dialog, map);
+							this.button({
+										name: '发送',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function() {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+		
+		function noteSendFormSubmit(dialog, map) {
+			var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) { 
+						if(result.result==1){ 
+							dialog.title('发送成功，4秒后关闭此窗口。').time(4000); 
+							dialog.reload();
+						}else{
+							dialog.title('发送失败，'+result.message).time(4000);
+							$("input[type='button']").each(function(){ 
+								$(this).removeAttr("disabled");
+							});
+						}
+					},
+					error : function(e) {
+						alert("出现错误，请重试");
+					}
+				};
+				$(map["form"]).ajaxSubmit(options);
+				return false;
+		}
+
+</script>
+<!--加载弹出页面-->
+<script>
+    var dialog;
+
+    function showRepairHistory(car_id) {
+        var map = {}; // 相当于Map map = new HashMap();
+        map["title"] = "保养历史记录";
+        map["html"] = "maintain_history.html?car_id="+car_id;
+        openDialog(map);
+    }
+
+    function openDialog(map) {
+        dialog = $.dialog({
+            title : map["title"],
+            lock : true,
+            min : false,
+            max : false,
+            width:900
+        });
+
+        $.ajax({
+            url : map["html"],
+            cache : false,
+            success : function(html) {
+                dialog.content(html);
+                dialog.button([ {
+                    name : '保存',
+                    callback : function() {
+                        this.button({
+                                    name: '保存',
+                                    disabled: true
+                                })
+                                .lock();
+                        return false;
+                    }
+                }, {
+                    name : '取消'
+                } ]);
+            },
+            error : function() {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+</script>
+<!--全选功能-->
+<script>
+    $(".checkall").click(function(){
+
+        if($(this).attr("checked")=="checked"){
+            $(".checkitem").each(function(){
+                $(this).attr("checked",true);
+            })
+        }else{
+            $(".checkitem").each(function(){
+                $(this).attr("checked",false);
+            })
+        }
+
+    });
+	 document.onkeydown=function(event){
+    	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+    	      if(e && e.keyCode==13){ // enter 键
+    	    	  search();
+    	      }
+    };
+    
+    $("#btnSearch").click(function () {
+        search();
+    });
+    function search() {
+        var time_list = $("#time_list").val();
+        var contract_status = $("#contract_status").val();
+        var startTime = $("input[name='startTime']").val();
+        var endTime = $("input[name='endTime']").val();
+        
+        if(startTime != "" && endTime == ""){
+        	alert("请输入结束时间");
+        	return;
+        }
+        
+        if (endTime < startTime) {
+            alert("开始时间不得大于结束时间！");
+            return;
+        }
+
+		location.href="maintain.html?time_list="+time_list+"&contract_status="+contract_status+"&startTime="+startTime+"&endTime="+endTime+"&menu=maintenance";
+    }
+</script>
+<#include '/common/footer.html' />

@@ -1,0 +1,384 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .date_21 {
+        display: inline-block;
+        float: left;
+        margin-top: 10px;
+    }
+
+    .date_21 select {
+        height: 26px;
+    }
+
+    .date_22 {
+        display: inline-block;
+        float: right;
+        margin-top: 10px;
+    }
+
+    .date_22 input {
+        width: 90px;
+        height: 20px;
+    }
+
+    .search_form tr td input {
+        padding: 3px;
+    }
+
+    .table_01 {
+        position: absolute;
+        bottom: 0px;
+        background-color: #F1F1F1;
+        width: 999px;
+        height: 50px;
+    }
+
+    .table_01 input {
+        padding: 3px;
+        margin-left: 10px;
+    }
+
+    .mark_01 {
+        margin-left: 600px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #000000;
+    }
+
+    .mark_01 > span {
+        color: #F75F05;
+        font-size: 18px;
+
+    }
+</style>
+<form id="myform">
+	<#assign memberListTag=newTag("memberListTag")>
+	<#assign msdata=memberListTag()/>
+    <div class="store_center">
+        <#include '../left_menu.html' />
+        <div id="sotre_right_content" class="sotre_right_content">
+            <div class="path">
+                <span style="color:#999;">您的位置：</span>
+                <span>会员管理</span>
+               <span> > </span>签约用户
+            </div>
+                <div class="store_right_main">
+                    <div class="tabmenu">
+                        <ul class="tab pngFix">
+                            <li class="active commont_list">
+                                <a hre="#">签约用户</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="data_20">
+                        <div class="date_21">
+                            <select class="select" name="time_list" id="time_list" onchange="search()" >
+                                <option value="0" <#if time_list?? && time_list == '0'>selected="selected"</#if>>时间由近到远</option>
+                                <option value="1" <#if time_list?? && time_list == '1'>selected="selected"</#if>>时间由远到近</option>
+                            </select>
+                            <!-- 
+                            <select class="select ml10" name="cost" id="cost" onchange="search()" >
+                                <option value="0" <#if cost?? && cost == '0'>selected="selected"</#if>>费用由高到低</option>
+                                <option value="1" <#if cost?? && cost == '1'>selected="selected"</#if>>费用由低到高</option>
+                            </select>
+                             -->
+                        </div>
+                        <div class="date_22">
+                        <span class="prl60" >签约时间：</span>
+                            <div class="prl60" style="display: inline-block">
+                            <label><input class="text hasDatepicker" type="text" name="startTime"
+                                              onClick="WdatePicker()" value="${startTime!''}"/><span
+                                        class="storeorder_time"></span></label>
+                            </div>
+                            <i class="prl30" >-</i>
+                            <div class="prl30"  style="display: inline-block">
+                                <label><input class="text hasDatepicker" type="text" name="endTime"
+                                                      onClick="WdatePicker()" value="${endTime!''}"><span
+                                    class="storeorder_time"></span></label>
+                            </div>
+                            <input type="button" class="submit submit search_btn" style="height: 29px;" id="btnSearch" value="搜 索">
+                        </div>
+
+                    </div>
+                </div>
+            <!-- 会员列表 -->
+            <div class="bonuslist s_commont_list " style="padding-top: 25px; margin-bottom:100px; ">
+                <table class="list_table">
+                    <thead class="bl br ">
+                    <tr>
+                        <th class="w230">车主信息</th>
+                        <th class="w310">车辆信息</th>
+                        <th class="w100">消费金额</th>
+                        <th class="w100">车主来源</th>
+                        <th class="w100">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <#if msdata.pageList.totalCount != 0 >
+                    <#list msdata.pageList.result as ms>
+                        <table class="mt10">
+                            <#if ms.flag?? && ms.flag == 0>
+                                <thead class="tac bgc_gray bdc_gray"><!--未到期用户-->
+                                <#elseif ms.flag?? && ms.flag == 1>
+                                <thead class="tac bgc_blue bdc_blue"><!--三十天内到期用户-->
+                                <#elseif ms.flag?? && ms.flag == 2>
+                                <thead class="tac bgc_pink bdc_pink"><!--已到期用户但未来续保用户-->
+                            </#if>
+                            <tr  class="bgc_gray">
+                                <td style="text-align: left; padding: 5px 0;" colspan="7"><span class="ml15">签约时间: </span><b class="mr10" name="time">${ms.contracttime!''}</b>签约人: <span name="name">${ms.contract_name!''}</span></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <td class="w60"><input type="checkbox"  class="checkitem" name="member_ids" value=""></td>
+                            <td class="w170">
+                                <ul>
+                                    <li>${ms.fullname!''}</li>
+                                    <li>${ms.username!''}</li>
+                                </ul>
+                            </td>
+                            <td class="w310">
+                                <ul class="w200 fl tal ml10">
+                                    <li>${ms.brand!''}-${ms.series!''}</li>
+                                    <li>${ms.model!''}</li>
+                                </ul>
+                                <ul class="w100  fl">
+                                    <li class=" w100 h60" style="line-height: 60px">${ms.carplate!''}</li>
+                                </ul>
+                            </td>
+                            <td class="w100">${ms.amount!''}</td>
+                            <td class="w100">${ms.origin!''}</td>
+                            <td class="w100">
+                                <a href="javascript:void(0)" class="tool2" onclick="unboundObd('${ms.car_id!''}')">OBD解绑</a>
+                                <!--<a href="javascript:void(0)" class="tool2">发放优惠券</a>-->
+                            </td>
+                            </tbody>
+                        </table>
+                    </#list>
+                    <@pager pageno="${msdata.pageList.currentPageNo!'1'}" pagesize="${msdata.pageList.pageSize}" totalcount="${msdata.pageList.totalCount}" />
+                    <#else>
+                        </table>
+                        <p class="no_blank">暂无符合条件的数据记录</p>
+                </#if>
+            </div>
+                <table class="table_01" style=" ">
+                    <tbody>
+                    <tr>
+                        <!--<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" class="checkall"/>&nbsp;&nbsp;&nbsp;&nbsp;全选</td>-->
+                        <!--<td> <a href="javascript:void(0)" class="tool2">发放优惠卷</a></td>-->
+                        <!--<td> <a href="javascript:void(0)" class="tool2">提醒</a></td>-->
+                        <!--<td> <a href="javascript:void(0)" class="tool2">修改状态</a></td>-->
+                        <td>
+                            <div class="mark_01">
+                                	共计签约用户：<span>${msdata.pageList.totalCount}</span>人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                	消费金额：<span>${msdata.pageList.totalamount}</span>元&nbsp;&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</form>
+<script>
+    $(".checkall").click(function(){
+
+        if($(this).attr("checked")=="checked"){
+            $(".checkitem").each(function(){
+                $(this).attr("checked",true);
+            })
+        }else{
+            $(".checkitem").each(function(){
+                $(this).attr("checked",false);
+            })
+        }
+
+    });
+</script>
+<script>
+	document.onkeydown=function(event){
+	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+	      if(e && e.keyCode==13){ // enter 键
+	    	  search();
+	      }
+	 };
+	
+	
+    var dialog;
+    function unboundObd(car_id){
+    	$.ajax({
+    		url : "${ctx}/api/mobile/carinfo!unboundObdByCarplate.do?car_id="+car_id,
+    		type : "get",
+    		dataType : "json",
+    		success : function(data){
+    			alert(data.message);
+    			window.location.reload();
+    		},
+    		error : function(){
+    			alert("请求出错");
+    		}
+    	});
+    }
+
+    function insurance(member_id) {
+        var map = {};
+        map["title"] = "购买保险";
+        map["html"] = "insurance.html?member_id=" + member_id;
+        map["url"] = "${ctx}/api/shop/memberx!insurance.do";
+        map["form"] = "#insurance_form";
+
+        openDialog(map);
+    }
+
+    function maintain(member_id) {
+        var map = {};
+        map["title"] = "保养服务";
+        map["html"] = "maintain.html?member_id=" + member_id;
+        map["url"] = "${ctx}/api/shop/memberx!maintain.do";
+        map["form"] = "#maintain_form";
+
+        openDialog(map);
+    }
+
+    function openDialog(map) {
+        dialog = $.dialog({
+            title: map["title"],
+            lock: true,
+            min: false,
+            max: false
+        });
+
+        $.ajax({
+            url: map["html"],
+            cache: false,
+            success: function (html) {
+                dialog.content(html);
+                dialog.button([{
+                    name: '保存',
+                    callback: function () {
+
+
+                        if (!$(map["form"]).validate()) {
+                            return false;
+                        }
+                        if (!$(map["form"]).checkall()) {
+                            return false;
+                        }
+
+                        formSubmit(dialog, map);
+
+                        this.button({
+                            name: '保存',
+                            disabled: true
+                        })
+                                .lock();
+                        return false;
+                    }
+                }, {
+                    name: '取消'
+                }]);
+            },
+            error: function () {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+
+    function formSubmit(dialog, map) {
+        var options = {
+            url: map["url"],
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    dialog.title('保存成功，2秒后关闭此窗口。').time(3);
+                    dialog.reload();
+                } else {
+                    dialog.title('保存失败，' + result.message);
+                    $("input[type='button']").each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $(map["form"]).ajaxSubmit(options);
+        return false;
+    }
+    $("#btnSearch").click(function () {
+        search();
+    });
+    function search() {
+        var time_list = $("#time_list").val();
+        var cost = $("#cost").val();
+        var startTime = $("input[name='startTime']").val();
+        var endTime = $("input[name='endTime']").val();
+        if (endTime < startTime) {
+            alert("开始时间不得大于结束时间！");
+            return;
+        }
+//		var order_state=$("#order_state").val();
+		location.href="member_list.html?time_list="+time_list+"&cost="+cost+"&startTime="+startTime+"&endTime="+endTime+"&menu=member";
+    }
+
+
+    function sendBouns() {
+        var options = {
+            url: "${ctx}/api/shop/memberx!sendBouns.do",
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    $.alert(result.message);
+                } else {
+                    $.alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $("#myform").ajaxSubmit(options);
+    }
+    function updateStatus() {
+        var options = {
+            url: "${ctx}/api/shop/memberx!updateStatus.do",
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    $.alert(result.message);
+                } else {
+                    $.alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $("#myform").ajaxSubmit(options);
+    }
+    function sendMessage() {
+        var options = {
+            url: "${ctx}/api/shop/memberx!sendMessage.do",
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    $.alert(result.message);
+                } else {
+                    $.alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $("#myform").ajaxSubmit(options);
+    }
+
+</script>
+<#include '/common/footer.html' />

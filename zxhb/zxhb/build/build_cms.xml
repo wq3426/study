@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="jarcms" basedir="../">
+
+	<!--编译eop-->
+	<target name="jar_cms">
+		<mkdir dir="${build.dir}/cms" />
+		<!--编译cms目录下的类文件-->
+		<javac srcdir="." destdir="${build.dir}/cms" debug="true" includeantruntime="on">
+			<compilerarg line="-encoding UTF-8 " />
+			<classpath refid="buildpath" />
+			<include name="cms/**" />
+		</javac>
+
+		<!--拷贝资源文件-->
+		<copy todir="${build.dir}/cms">
+			<fileset dir="cms" >
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+
+		<!--生成cms.jar-->
+		<jar destfile="${tempdir}/lib/component-cms.jar">
+			<fileset dir="${build.dir}/cms" >
+				<exclude name="com/enation/app/cms/component/**"/>
+			</fileset>
+		</jar>
+		<!--生成cms核心组件jar-->
+		<jar destfile="${tempdir}/lib/component-cms-core.jar">
+			<fileset dir="${build.dir}/cms" >
+				<include name="com/enation/app/cms/component/**"/>
+			</fileset>
+		</jar>
+	</target>
+</project>

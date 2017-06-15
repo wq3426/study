@@ -1,0 +1,834 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<!--创建“订单详细”标签-->
+<#assign orderDetailTag = newTag("storeOrderDetailTag")>
+<!--调用“订单详细”标签，并传递参数-->
+<#assign orderDetail = orderDetailTag()!''> 
+<#if orderDetail?? && orderDetail!=''>
+
+<!--  订单状态 -->
+<#assign orderstatus="com.enation.app.shop.core.taglib.OrderStatusDirectiveModel"?new()>
+<!--创建“订单货物列表”标签-->
+<#assign orderItemListTag = newTag("orderItemListTag")>
+<!--调用“订单货物列表”标签，并传递参数-->
+<#assign orderItemList =
+orderItemListTag("{'orderid':${orderDetail.order_id}}")>
+<!-- 创建“发票标签” -->
+<#assign receiptTag = newTag("receiptTag")>
+<!-- 调用发票标签 -->
+<#assign orderreceipt =
+receiptTag("{'orderid':${orderDetail.order_id}}")>
+<!-- 获得商品META（快递、运费）信息 -->
+<#assign orderMetaTag = newTag("orderMetaTag")>
+<!-- 调用商品META（快递、运费）信息 -->
+<#assign orderMeta = orderMetaTag("{'orderid':${orderDetail.order_id}}")>
+<!-- 获取订单类型标签 -->
+<#assign orderTypeTag = newTag("orderTypeTag")>
+<#assign orderType = orderTypeTag()>
+<!-- 获取订单状态标签 -->
+<#assign orderStautsTag = newTag("orderStautsTag")>
+<!-- 调用订单状态标签 -->
+<#assign orderState = orderStautsTag()>
+<!-- 获取订单店铺信息 -->
+<#assign storeDetailTag=newTag("myStoreDetailTag")/> 
+<#assign storeDetail=storeDetailTag("{'type':'order','store_id':'${orderDetail.store_id}'}")>
+<!-- 获取订单优惠券信息 -->
+<#assign orderBonusDetailTag = newTag("orderBonusDetailTag")/>
+<#assign orderBonusDetail = orderBonusDetailTag()!''>
+<!-- 服务评价-->
+<#assign serviceCommentTag = newTag("serviceCommentTag")/>
+<#assign serviceComment = serviceCommentTag()!''>
+<!-- 保险订单详情 -->
+<#if orderDetail.order_type == 1 || orderDetail.order_type == 4>
+<#assign insureOrderTag= newTag("insureOrderTag")>
+<#assign insureOrderDetail= insureOrderTag("'order_id':${orderDetail.order_id}")!''>
+</#if>
+<!-- 保养订单详情 -->
+<#if orderDetail.order_type == 2>
+<#assign repairOrderTag = newTag("repairOrderTag")>
+<#assign repairOrderDetail = repairOrderTag("'order_id':${orderDetail.order_id}")!''>
+</#if>
+	<style>
+		.order_detail .order_intro dl dt{text-align: right;}
+	</style>
+<div class="store_center">
+	<#include '../left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color: #999;">您的位置：</span> <span>></span> <a href="#">
+				订单管理 </a><span>></span>订单详情
+		</div>
+		<input type="hidden" value="${order_state!''}" class="left_selected">
+		<div class="store_right_main">
+			<!-- 流程图 -->
+			<div class="flow ">
+					<#if orderDetail.order_type == orderType.ZA_INSURANCE || orderDetail.order_type == orderType.STORE_INSURANCE>
+						<div class="status1${orderDetail.status} no_insurance_arrive_order">s</div>
+					<#elseif orderDetail.order_type == orderType.REPAIR>
+						<div class="repair${orderDetail.status} no_arrive_order_repair">s</div>
+					<#elseif (orderDetail.order_type == orderType.STORE_GOODS || orderDetail.order_type == orderType.ZA_GOODS) && orderDetail.shipping_method ==1 >
+						<div class="shipping${orderDetail.status} shipping_order">s</div>
+					<#elseif orderDetail.order_type == orderType.ZA_GOODS && orderDetail.shipping_method==2>
+						<div class="zato4s${orderDetail.status} zato4s_order">s</div>
+					<#else>
+						<div class="status${orderDetail.status} no_arrive_order">s</div>
+					</#if>
+			</div>
+			<!-- 商品列表 -->
+			<div class="detail_goodslist">
+				<table cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<th class="w500">商品名称</th>
+							<th class="w100">单价(元)</th>
+							<th class="w100">数量</th>
+							<th class="w100">订单总计</th>
+							<th class="w100">状态</th>
+						</tr>
+					</thead>
+					<tbody style="text-align: center;border: 1px solid #dddddd;">
+							<#list orderItemList as item>
+									<tr>
+										<td  class="w500 bl tal">
+											<!--<a style="border: 1px solid #dddddd;margin: 10px;" class="fl" target="_blank" href="${ctx}/goods-${item.goods_id}.html"></a>-->
+											<img  class="fl mt15 ml15 mr15 mb15" height="50px" width="50px" src="${item.image!''}" style="cursor: pointer;" />
+											<div class="fl">
+												<div class="tal mt20">${item.name!''}</div>
+											</div>
+										</td>
+										<td class="w100 bl" >${item.price?string.currency}</td>
+										<td class="w100 bl">${item.num}</td>
+								<#if (orderItemList?size>1)>
+									<#if item_index==0>
+										<td class="w100 bl" rowspan = "${orderItemList?size}">${orderDetail.need_pay_money?string.currency}</td>
+										<td class="w100 bl" rowspan = "${orderItemList?size}"><@orderstatus order_type="${orderDetail.order_type}" status="${orderDetail.status}" type="order" /></td>
+									</#if>	
+								<#else>	
+										<td class="w100 bl" >${orderDetail.need_pay_money?string.currency}</td>
+										<td class="w100 bl" ><@orderstatus order_type="${orderDetail.order_type}" status="${orderDetail.status}" type="order" /></td>
+								</#if>	
+									</tr>
+							</#list>
+					</tbody>
+					<tfoot style="background-color: #f7f7f7;">
+						<tr>
+							<td colspan="3" style="height:80px" ></td>
+							<td>
+								<div class="tar">安全奖励抵扣：</div>
+								<div class="tar">店铺优惠券：</div>
+								<#if orderDetail.order_type == 2>
+								<div class="tar">保养币：</div>
+								</#if>
+								<div class="tar fw">实付款：</div>
+							</td>
+							<td>
+								<div><b>-&nbsp;</b><span>${orderDetail.gain?string.currency}</span></div>
+								<div><b>-</b><span><#if orderBonusDetail!=''>
+															${orderBonusDetail.bonus_money?string.currency}
+															<#else>
+															${0?string.currency}
+														</#if>
+														</span></div>
+								<#if orderDetail.order_type == orderType.REPAIR>
+								<div><b>-&nbsp;</b><span>${orderDetail.repair_coin?string.currency}</span></div>
+								</#if>
+								<div  class="fw red f16"><span >
+									<#if orderDetail.status==9 || orderDetail.status==0 || orderDetail.status==8>
+										${orderDetail.need_pay_money?string.currency}
+										<#else>
+										${orderDetail.paymoney?string.currency}
+									</#if>
+									
+								</span></div>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div class="order_detail">
+				<div class="order_intro">
+					<input type="hidden" value="${orderDetail.order_id}" id="orderId" />
+					<h1>订单信息</h1>
+					<div class="detail_list">
+						<!--<dl>-->
+							<!--<dt>收货地址：</dt>-->
+							<!--<dd>${orderDetail.shipping_area!''}-${orderDetail.ship_addr!''}</dd>-->
+						<!--</dl>-->
+						<dl>
+							<dt>车主姓名：</dt>
+							<dd>${orderDetail.ship_name!''}</dd>
+						</dl>
+						<!--<dl>-->
+							<!--<dt>邮政编码：</dt>-->
+							<!--<dd>${orderDetail.ship_zip!''}</dd>-->
+						<!--</dl>-->
+						<dl>
+							<dt>联系电话：</dt>
+							<dd><#if orderDetail.ship_mobile?exists && orderDetail.ship_mobile != ''> ${orderDetail.ship_mobile!''}
+								<#else> 
+									<#if orderDetail.ship_tel?exists && orderDetail.ship_tel!= ''> ${orderDetail.ship_tel!''} 
+									</#if> 
+								</#if></dd>
+						</dl>
+						<!--保养预约时间-->
+						<#if orderDetail.order_type == orderType.REPAIR>
+						<dl>
+							<dt>预约时间：</dt>
+							<dd>${repairOrderDetail.order_date!''} ${repairOrderDetail.starttime!''}-${repairOrderDetail.endtime!''}</dd>
+						</dl>
+						</#if>
+						<dl class="online">
+							<dt>订单编号：</dt>
+							<dd name="orderSn">${orderDetail.sn}</dd>
+						</dl>
+						<dl>
+							<dt>付款方式：</dt>
+							<dd>${orderDetail.payment_name!''}</dd>
+						</dl>
+						<dl>
+							<dt>下单时间：</dt>
+							<dd><@dateformat time="${orderDetail.create_time?c}"
+								pattern="yyyy-MM-dd HH:mm:ss"/></dd>
+						</dl>
+						<#if orderDetail.order_type != 1>
+						<dl>
+							<dt>服务时间：</dt>
+							<dd>
+							<#--orderDetail.status == orderState.ORDER_APPRAISE &&-->
+							<#if orderDetail.service_time?? && orderDetail.service_time!=0>
+							<@dateformat time="${orderDetail.service_time?c}"
+								pattern="yyyy-MM-dd HH:mm:ss"/>
+							<#else> 
+								--
+							</#if>	
+							</dd>
+						</dl>
+						</#if>
+						<dl>
+							<dt>完成时间：</dt>
+							<dd>
+							<#-- orderDetail.status == orderState.ORDER_COMPLETE && -->
+							<#if orderDetail.complete_time??  && orderDetail.complete_time!=0 >
+							<@dateformat time="${orderDetail.complete_time?c}"
+								pattern="yyyy-MM-dd HH:mm:ss"/>
+							<#else> 
+							--
+							</#if>
+							</dd>
+						</dl>
+						<#if orderDetail.shipping_method == 1>
+						<dl class="online">
+							<dt>物流公司：</dt>
+							<dd name="">${orderDetail.logi_name!'暂无'}</dd>
+						</dl>
+						<dl>
+							<dt>物流单号：</dt>
+							<dd name="">${orderDetail.ship_no!'暂无'}</dd>
+						</dl>
+						<dl>
+							<dt class="tar">收货人：</dt>
+							<dd name="">${orderDetail.ship_name!''},&nbsp;&nbsp;${orderDetail.ship_mobile!''}</dd>
+						</dl>
+						<dl>
+							<dt class="tar">地址：</dt>
+							<dd name="">${orderDetail.shipping_area!''}</dd>
+						</dl>
+						<#else>
+						<dl class="online">
+							<dt></dt>
+							<dd name=""></dd>
+						</dl>
+						<dl>
+							<dt></dt>
+							<dd name=""></dd>
+						</dl>
+						<dl>
+							<dt></dt>
+							<dd name=""></dd>
+						</dl>
+						<dl>
+							<dt></dt>
+							<dd name=""></dd>
+						</dl>
+						</#if>
+					</div>
+				</div>
+				<div class="intro_staus"><!-- 订单状态 -->
+					<div class="orderdetail">
+						<i class="<#if orderDetail.status==8>order_no<#else> order_ok</#if>"></i>
+						订单状态：
+						 <#if orderDetail.isCod && orderDetail.status == orderState.ORDER_COMPLETE && orderDetail.pay_status==orderState.PAY_NO> 
+						 	<@orderstatus order_type="${orderDetail.order_type}" status="${orderState.ORDER_ROG}" type="order" /> 
+						 <#else>
+							<@orderstatus order_type="${orderDetail.order_type}" status="${orderDetail.status}" type="order" />
+						</#if>
+					</div>
+					<#if orderDetail.order_type == orderType.ZA_INSURANCE || orderDetail.order_type == orderType.STORE_INSURANCE>
+					<!--汽车保险-->
+					<ul>
+						<li>1、车牌号码：${insureOrderDetail.carplate!''}</li>
+						<li>2、<span class="pl10">车架号：</span>${insureOrderDetail.carvin!''}</li>
+						<li>3、发动机号：${insureOrderDetail.carengineno!''}</li>
+						<li>4、车辆信息：${insureOrderDetail.brand!''}${insureOrderDetail.series!''}-${insureOrderDetail.nk!''}款${insureOrderDetail.discharge!''}</li>
+						<li><span class="fl">5、保险内容：</span>
+							<table class="fl">
+								<tbody>
+								<#list insureOrderDetail.insure_content as itemname>
+		                        <tr><td>${itemname!''}</td></tr>
+		                        </#list>
+								<tr><td>合计支付:${orderDetail.paymoney?string.currency}</td></tr>
+								</tbody>
+							</table>
+						</li>
+						<!--<li>5、物流信息：<a-->
+						<!--href="order_exp_info.html?ordersn=${orderDetail.sn}&menu=transaction"-->
+						<!--style="color: red;">点击查看</a></li>-->
+					</ul>
+					<#elseif orderDetail.order_type == orderType.REPAIR>
+					<!--汽车保养-->
+					<ul>
+						<li>1、车辆信息：${repairOrderDetail.brand!''}${repairOrderDetail.series!''}-${repairOrderDetail.nk!''}款${repairOrderDetail.discharge!''}</li>
+						<li>2、保养时间：${repairOrderDetail.order_date!''} ${repairOrderDetail.starttime!''}-${repairOrderDetail.endtime!''}</li>
+						<li><span class="fl">3、保养项目：</span>
+							<table class="fl">
+								<tbody>
+									<#list repairOrderDetail.orderRepairItems as repairItem>
+									<tr><td>${repairItem.itemname!''}</td><td class="pl10">${repairItem.item_price!''}</td></tr>
+					              	</#list>
+									<tr><td>工时费:</td><td class="pl10">${repairOrderDetail.repair_total_price!''}</td></tr>
+									<tr><td>合计支付:${orderDetail.paymoney?string.currency}</td></tr>
+								</tbody>
+							</table>
+						</li>
+						<!--<li>5、物流信息：<a-->
+						<!--href="order_exp_info.html?ordersn=${orderDetail.sn}&menu=transaction"-->
+						<!--style="color: red;">点击查看</a></li>-->
+					</ul>
+					</#if>
+					
+					<div class="order_help">
+						<#if orderDetail.status==orderState.ORDER_NOT_CONFIRM>
+							<a class="order-btn3" href="javascript:void(0);" name="operation" action="confirm">确认订单</a> 
+						</#if>
+						<#if orderDetail.status==orderState.ORDER_NOT_CONFIRM || orderDetail.status == orderState.ORDER_NOT_PAY> 
+							<!-- <a class="order-btn3" href="javascript:void(0);" name="editOrderInfo">修改收件人信息</a>  -->
+							<#if orderDetail.order_type == orderType.ZA_INSURANCE || orderDetail.order_type == orderType.STORE_INSURANCE>
+                   	  			<a href="javascript:void(0);" onclick="javascript:updateInsureHistory1('${orderDetail.order_id}')">修改价格</a><br/>
+                   	  		<#else>
+                   	  			<a class="order-btn3" href="javascript:void(0);" name="editOrderPrice">调整价格</a>
+                   	  		</#if>
+						<#elseif orderDetail.status == orderState.ORDER_PAY_CONFIRM >
+							<#if orderDetail.order_type == orderType.ZA_INSURANCE || orderDetail.order_type == orderType.STORE_INSURANCE>
+							<a href="javascript:void(0);" onclick="javascript:updateInsureHistory2('${orderDetail.order_id}')">保单生成</a>
+							<#elseif orderDetail.order_type == orderType.REPAIR >
+							<a href="javascript:void(0);" onclick="javascript:updateRepairHistory('${orderDetail.order_id}', '${orderDetail.create_time}')">更新保养内容</a><br/>
+							<#elseif orderDetail.order_type == orderType.STORE_GOODS >
+                                <#if orderDetail.shipping_method == 1><#--经销商寄到用户地址-->
+                                <a href="javascript:void(0);"  onclick="logistics('${orderDetail.logi_id!''}','${orderDetail.ship_no!''}','${orderDetail.order_id}')">上传物流信息</a>
+                                <#elseif orderDetail.shipping_method ==2><#--经销商到经销商-->
+                                <a href="javascript:void(0);" onclick="javascript:stockUpComplete('${orderDetail.order_id}')">确认备货</a><br/>
+                              </#if>
+							<#elseif orderDetail.order_type == orderType.ZA_GOODS >
+                                 	<a href="javascript:void(0);" onclick="logistics('${orderDetail.logi_id!''}','${orderDetail.ship_no!''}','${orderDetail.order_id}')">上传物流信息</a>
+							<#else>
+								<a href="javascript:void(0);" onclick="javascript:stockUpComplete('${orderDetail.order_id}')">确认备货</a>
+							</#if>
+						<#elseif orderDetail.status == orderState.ORDER_SHIP >
+                             <#if orderDetail.order_type == orderType.ZA_GOODS && orderDetail.shipping_method ==2> <#--中单商品到4S店需要4S店处理-->
+                        	 	<a href="javascript:void(0);" onclick="javascript:stockUpComplete('${orderDetail.order_id}')">确认备货</a>
+                             </#if>
+						<#elseif orderDetail.status == orderState.ORDER_SERVECE>
+							<#if orderDetail.order_type != orderType.ZA_INSURANCE && orderDetail.order_type != orderType.STORE_INSURANCE>
+                   	  		<a href="javascript:void(0);" onclick="javascript:confirmService('${orderDetail.order_id}')">服务完成</a><br/>
+                   	  		</#if>
+						</#if>
+						<#if (orderDetail.order_type == orderType.STORE_GOODS || orderDetail.order_type == orderType.ZA_INSURANCE || orderDetail.order_type == orderType.STORE_INSURANCE || orderDetail.order_type == orderType.ZA_GOODS ) && orderDetail.shipping_method == 1 && orderDetail.status gt orderState.ORDER_PAY_CONFIRM  && orderDetail.status lt orderState.ORDER_COMPLETE>
+                        	 <a href="javascript:void(0);" onclick="logistics('${orderDetail.logi_id!''}','${orderDetail.ship_no!''}','${orderDetail.order_id}')">编辑物流信息</a>
+                        <#elseif orderDetail.order_type == orderType.ZA_GOODS  && orderDetail.shipping_method == 2 && orderDetail.status gt orderState.ORDER_PAY_CONFIRM && orderDetail.status lt orderState.ORDER_SERVECE >
+                          	 <a href="javascript:void(0);" onclick="logistics('${orderDetail.logi_id!''}','${orderDetail.ship_no!''}','${orderDetail.order_id}')">编辑物流信息</a>
+                        </#if>
+					</div>
+				</div>
+			</div>
+			<div class="w957 h80 bdc_d8 mt10">
+			<#if serviceComment??>
+				<#list serviceComment as item>
+					<p class="mt10 ml10"><span>服务评价&nbsp;&nbsp;</span><span class="pjxx${item.service_grade?substring(0,1)} dip"></span><i class="dip pjxx"><@dateformat time="${item.time?c}"
+								pattern="yyyy-MM-dd HH:mm:ss"/></i></p>
+					<p class="ml10"><lable class="fl">评价内容&nbsp;:&nbsp;</lable> <span class="dip fl w880">${item.content!''}</span></p>
+				</#list>
+			</#if>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	var orderSn = $("dd[name='orderSn']").text();
+	//订单操作
+	$("a[name='operation']").click(function(){
+		var action= $(this).attr("action");
+		var orderId=$("#orderId").val();
+		var url="";
+		if(action=="pay"){
+			showPay();
+			return false;
+		}else{
+			url="${ctx}/api/store/storeOrder!"+action+".do?orderId="+orderId+"&backstage=1";
+		}
+		if(window.confirm("确认吗")){
+			$.ajax({
+		    	type:"POST",
+		    	url:url ,
+		        dataType: "json",
+		        success: function(data){
+		        		alert(data.message);
+					if(data.result==1){
+						location.reload();
+					}
+		        },error:function(e){
+					alert("出现错误请重试");        	
+		        }
+		    });
+		}
+	});
+	//修改订单信息
+	$("a[name='editOrderInfo']").click(function(){
+			dialog = $.dialog({
+				title : "修改收件人信息",
+				width : 475,
+				height : 312,
+				lock : true,
+				min : false,
+				max : false
+			});
+			 $.ajax({
+				url : "orderInfo.html?ordersn="+orderSn,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '修改',
+						callback : function() {
+							ok();
+							return false;
+						}
+					}]);
+				},
+				error : function() {
+					$.alert("出现错误，请重试");
+				},
+				cache : false
+			});	
+	});
+	$("a[name='editOrderPrice']").click(function(){
+		dialog = $.dialog({
+			title : "调整价格",
+			lock : true,
+			min : false,
+			max : false
+		});
+		$.ajax({
+			url : "orderPriceInfo.html?ordersn="+orderSn,
+			success : function(html) {
+				dialog.content(html);
+				dialog.button([ {
+					name : '修改',
+					callback : function() {
+						editPrice();
+						return false;
+					}
+				}]);
+			},
+			error : function() {
+				$.alert("出现错误，请重试");
+			},
+			cache : false
+		});	
+	});
+	$("input[name='ship']").click(function(){
+		$("input[name='ship']").attr({"disabled":"disabled"});
+		var logi_id=$(this).attr("logi_id");
+		var logi_name=$(this).attr("logi_name");
+		var shipNo=$("input[name='shipNo'][logi_id="+logi_id+"]").val();
+		var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
+		
+		if(shipNo==""){
+			$.Loading.message("请填写快递单号");
+			$("input[name='ship']").removeAttr("disabled");
+			return false;
+		}
+		if(reg.test(shipNo)){
+			$.Loading.message("请填写正确的快递单号");
+			$("input[name='ship']").removeAttr("disabled");
+			return false;
+		}
+		 $.ajax({
+			dataType:"json",
+			type:"post",
+			url:"${ctx}/api/store/storeOrder!ship.do",
+			data:{"order_id":${orderDetail.order_id},"shipNos":shipNo,"logi_id":logi_id,"logi_name":logi_name},
+			success:function(json){
+				$.Loading.message(json.message);
+				if(json.result==1){
+					location.reload();
+				}
+			},
+			error:function(){
+				$.Loading.message("出现意外错误");
+				$("input[name='ship']").removeAttr("disabled");
+			}
+		}); 
+	});
+})
+//提交修改收件人信息
+function ok(){
+	//判断手机格式
+	if($("#ship_mobile").val()!=""){
+		 var tel = $("#ship_mobile").val();
+		 var reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
+		 if(reg.test(tel)==false){
+			 $.Loading.message("手机格式错误");
+			 return false;
+		 }
+	}
+	//判断真是姓名
+	if($("#ship_name").val()==""){
+		$.Loading.message("姓名不能为空");
+		return false;
+	}
+	if(isNaN($("#ship_zip").val())!==false){
+		$.Loading.message("邮编必须为纯数字");
+		return false;
+	}
+	var options = {
+			url : "${ctx}/api/store/storeOrder!saveConsigee.do",
+			type : "POST",
+			dataType : 'json',
+			success : function(data) {	
+				alert(data.message);
+				if(data.result==1){
+					location.reload();
+				}
+			},
+			error : function(e) {
+				alert("出现错误 ，请重试");
+			}
+		};
+	$("#orderInfo").ajaxSubmit(options);
+}
+function editPrice(){
+	var options = {
+			url : "${ctx}/api/store/storeOrder!savePrice.do",
+			type : "POST",
+			dataType : 'json',
+			success : function(data) {
+				alert(data.message);
+				if(data.result==1){
+					location.reload();
+				}
+			},
+			error : function(e) {
+				alert("出现错误 ，请重试");
+			}
+		};
+	$("#orderPriceForm").ajaxSubmit(options);
+}
+function pay(){
+	var options = {
+			url : "${ctx}/api/store/storeOrder!pay.do",
+			type : "POST",
+			dataType : 'json',
+			success : function(data) {
+				alert(data.message);
+				if(data.result==1){
+					location.reload();
+				}
+			},
+			error : function(e) {
+				alert("出现错误 ，请重试");
+			}
+		};
+	$("#payForm").ajaxSubmit(options);
+}
+function showRogInfo(logino,logicode){
+ 	$("#store_content").load('${ctx}/api/shop/order!orderKuaidi.do?ajax=yes&logino='+logino+'&code='+logicode,function(){});
+}
+function showPay(){
+	dialog = $.dialog({
+		title : "订单付款",
+		width : 475,
+		height : 312,
+		lock : true,
+		min : false,
+		max : false
+	});
+	$.ajax({
+		url : "pay.html?ordersn="+${ordersn},
+		success : function(html) {
+			dialog.content(html);
+			dialog.button([ {
+				name : '结算',
+				callback : function() {
+					pay();
+					return false;
+				}
+			}]);
+		},
+		error : function() {
+			$.alert("出现错误，请重试");
+		},
+		cache : false
+	});	
+}
+//打印发货单
+function printShip(){
+	$.ajax({
+		url:"${ctx}/b2b2c/admin/storeOrderPrint!shipScript.do?order_id=${orderDetail.order_id}",
+		success:function(json){
+			 LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM') );
+			 LODOP.PRINT_INIT("发货单打印");
+			 LODOP.SET_PRINT_PAGESIZE(1,2400,1400,"");
+			 eval(json);
+			 LODOP.PRINT();
+		},error : function(e) {
+	 		alert('出现错误，请重试');
+		}
+	});
+}
+function stockUpComplete(orderId){
+	$.ajax({
+		url:"${ctx}/api/store/storeOrder!stockUpComplete.do?orderId="+orderId,
+		dataType:"json",		
+		success:function(data) {
+			alert(data.message);
+			if(data.result==1){
+				location.reload();
+			}
+		},
+		error : function(e) {
+			alert("出现错误 ，请重试");
+		}
+	});
+}
+function confirmService(orderId){
+	$.ajax({
+		url:"${ctx}/api/store/storeOrder!confirmService.do?orderId="+orderId,
+		dataType:"json",		
+		success:function(data) {
+			alert(data.message);
+			if(data.result==1){
+				location.reload();
+			}
+		},
+		error : function(e) {
+			alert("出现错误 ，请重试");
+		}
+	});
+}
+function finishOrder(orderId){
+	$.ajax({
+    	type:"POST",
+    	url:url="${ctx}/api/store/storeOrder!finishOrder.do?orderId="+orderId,
+        dataType: "json",
+        success: function(data){
+        		alert(data.message);
+			if(data.result==1){
+				location.reload();
+			}
+        },error:function(e){
+			alert("出现错误请重试");        	
+        }
+    });
+}
+
+
+</script>
+<!--<script>-->
+		<!--$(function(){-->
+			<!--var leftselect = $(".left_selected").val();-->
+			<!--if(leftselect=="wait_ship"){-->
+				<!--selectMenu(1);-->
+			<!--}else{-->
+				<!--selectMenu(0);-->
+			<!--}-->
+		<!--})-->
+	<!--</script>-->
+
+</#if>
+ <!--增加物流信息-->
+    <script>
+        var dialog;
+        function logistics(logi_id,ship_no,order_id) {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "编辑物流信息";
+            map["html"] = "addLogistics.html?logi_id="+logi_id+"&ship_no="+ship_no;
+            map["url"] = "${ctx}/api/store/storeOrder!saveLogistics.do?order_id="+order_id;
+            map["form"] = "#logistics_form";
+            openDialog(map);
+        }
+        
+      	//更新保险订单记录-保养币和价格
+        function updateInsureHistory1(order_id) {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保险服务订单记录更新";
+            map["html"] = "Renewal_insurance1.html?order_id="+order_id;
+            map["form"] = "#insure_form";
+            map["url"] = "${ctx}/api/store/storeOrder!saveInsureInfo.do?order_id="+order_id;
+            openDialog(map, 1);
+        }
+        
+        //更新保险订单记录-保单号
+        function updateInsureHistory2(order_id) {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保险服务订单记录更新";
+            map["html"] = "Renewal_insurance2.html?order_id="+order_id;
+            map["form"] = "#insure_form";
+            map["url"] = "${ctx}/api/store/storeOrder!saveInsureInfo.do?order_id="+order_id;
+            openDialog(map, 2);
+        }
+        
+      	//更新保养订单记录
+        function updateRepairHistory(order_id, create_time) {
+        	$("#repair_create_time").val(create_time);
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保养服务订单记录更新";
+            map["html"] = "Renewal_maintain.html?order_id="+order_id;
+            map["form"] = "#repair_form";
+            map["url"] = "${ctx}/api/store/storeOrder!saveRepairInfo.do?order_id="+order_id;
+            openDialog(map, 3);
+        }
+
+        function openDialog(map, type) {
+            dialog = $.dialog({
+                title : map["title"],
+                lock : true,
+                min : false,
+                max : false,
+                width:600
+            });
+
+            $.ajax({
+                url : map["html"],
+                cache : false,
+                success : function(html) {
+                    dialog.content(html);
+                    dialog.button([ {
+                        name : '保存',
+                        callback : function() {
+                            formSubmit(dialog, map, type);
+
+                            this.button({
+                                        name: '保存',
+                                        disabled: false
+                                    })
+                                    .lock();
+                            return false;
+                        }
+                    }, {
+                        name : '取消'
+                    } ]);
+                },
+                error : function() {
+                    $.alert("出现错误,请重试！");
+                }
+            });
+        }
+
+        function formSubmit(dialog, map, type) {
+        	if(type == 1){//更新保养币、订单价格
+        		var repair_coin = $("#repair_coin").val();
+        	    var insure_need_pay_money = $("#insure_need_pay_money").val();
+
+        	    if(repair_coin == "" || !/[0-9]/.test(repair_coin)){
+        			alert("请输入要赠送的保养币");
+        			return;
+        		}
+        	    
+        	    if(insure_need_pay_money == "" || insure_need_pay_money < 0){
+        	    	alert("请输入保险订单金额");
+        	    	return;
+        	    }
+        	}
+        	
+        	if(type == 2){//更新保单号
+        		var policy_no = $("#policy_no").val();
+            	if(policy_no == "" || !/^[0-9a-zA-Z]+$/.test(policy_no)){
+            		alert("请填写正确的保单号");
+            		return;
+            	}
+        	}
+        	
+        	if(type == 3){//更新保养记录
+        		var flag = false;
+        		var repair_create_time = $("#repair_create_time").val()*1000;
+        		var repair_time = $("#repair_time").val();
+        		var repair_time_longvalue = new Date(repair_time).getTime();
+        		if(repair_create_time > repair_time_longvalue){
+        			alert("服务时间不能早于订单生成时间，请重新输入");
+        			return;
+        		}
+        		$("#repair_service").find("input").each(function(){
+        			var id = $(this).attr("id");
+        			var discount = $(this).val();
+                	if(discount == ""){
+                		if(id == "repair_mile"){
+                			alert("请输入'保养里程'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "repair_price"){
+                			alert("请输入'保养价格'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "repair_source"){
+                			alert("请输入'保养地点'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "service_timelength"){
+                			alert("请输入'服务工时'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "engineer"){
+                			alert("请输入'技师名称'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "repair_time"){
+                			alert("请输入'服务时间'");
+                			flag = true;
+                			return false;
+                		}
+                	}
+        		});
+        		if(flag) return;
+        	}
+        	
+            var options = {
+                url : map["url"],
+                type : "POST",
+                dataType : 'json',
+                success : function(result) {
+                    if(result.result==1){
+                        dialog.title('保存成功，2秒后关闭此窗口。').time(3);
+                        dialog.reload();
+                    }else{
+                        dialog.title('保存失败，'+result.message);
+                        $("input[type='button']").each(function(){
+                            $(this).removeAttr("disabled");
+                        });
+                    }
+                },
+                error : function(e) {
+                    alert("出现错误，请重试");
+                }
+            };
+            $(map["form"]).ajaxSubmit(options);
+            return false;
+        }
+    </script>
+
+<#include '/common/footer.html'/>

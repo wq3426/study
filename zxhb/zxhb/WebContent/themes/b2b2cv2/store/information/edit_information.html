@@ -1,0 +1,30 @@
+<#assign noteServerByNoteIdTag=newTag("noteServerByNoteIdTag")> 
+<#assign noteServer=noteServerByNoteIdTag('"noteId":${noteId}')/>
+<div style="height:270px;width:360px;" >
+	<form id="edit_form"  method="post" class="validate" >
+	<input type="hidden" name="noteServer.note_id" class="text" value="${noteServer.note_id!''}">
+	<input type="hidden" name="noteServer.store_id" class="text" value="${noteServer.store_id!''}">
+	<input type="hidden" name="noteServer.status" class="text" value="${noteServer.status!''}">
+	<input type="hidden" name="noteServer.send_count" class="text" value="${noteServer.send_count!''}">
+	<input type="hidden" name="noteServer.create_time" class="text" value="${noteServer.create_time!''}">
+	<input type="hidden" name="noteServer.send_time" class="text" value="${noteServer.send_time!''}">
+		<table>
+			<tr>
+				<td>短信名称：</td>
+				<td><input name="noteServer.note_name" type="text" class="w250 h30 amount" value="${noteServer.note_name!''}"  maxlength="10" placeholder="请输入10个字以内"></td>
+			</tr>
+			<tr class="mt10">
+				<td><span style="position: relative;top: -40px">短信内容：</span></td>
+				<td>
+					<div>
+						<p class="ml15" style="text-align: left;">尊敬的用户:</p>
+				 	 	<textarea name="noteServer.note_detail" id="note_detail" style="max-width:248px; max-height: 120px;min-width: 247px;min-height: 120px; " cols="35" rows="5" >${noteServer.note_detail!''}</textarea>
+					</div>
+				</td>
+			</tr>
+			<tr>
+			<td colspan="2" class="tal f12 lh20 " style="color: #dabfbf;"><span class="f14 color_r pr5">*</span>每条短信内容70字符以内，超过七十字符按 两条计算 每条短信内容70字符以内，超过七十字符按 两条计算</td>
+		</tr>
+		</table>
+	</form>
+</div>

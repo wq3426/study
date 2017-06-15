@@ -1,0 +1,154 @@
+<#include '/store/store_header.html' />
+<!--营销类型免费申请和购买列表-->
+<#assign saleAuditTag=newTag("saleAuditTag")>
+<#assign saleAudit=saleAuditTag()>
+
+<script  src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .search_store_commont {
+        padding: 0px 0px 0px 20px;}
+    .clear_1{
+        padding: 3px 15px;
+        background-color: #F1F1F1;
+        border: 1px solid #A5A5A5;
+    }
+    .bgc_gray {  background-color: #F7F7F7;  }
+    .date_22 input {  width: 90px;  height: 20px;  }
+    .date_22 select{width: 125px;  height: 30px;line-height: 30px;border: 1px solid #d5d5d5;border-radius: 0px; }
+    .store_right_main { padding: 20px 20px 10px 20px;  }
+</style>
+<div class="store_center">
+    <#include '../left_menu.html' />
+    <div id="sotre_right_content" class="sotre_right_content">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>营销管理</span>
+            <span> > </span>购买记录
+        </div>
+        <div class="store_right_main">
+            <div class="tabmenu">
+                <ul class="tab pngFix">
+                    <li class="active commont_list">
+                        <a href="${ctx}/store/information/information.html?menu=promotion">免费发放/购买记录</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="date_22 mt20 tar">
+                <span>营销类型：</span>
+	                <select name="saleType" onchange="search()">
+                  		<option value=""  <#if saleType??> <#if saleType==""> selected="selected" </#if> </#if>>全部</option>
+	                    <option value="1" <#if saleType??> <#if saleType=="1"> selected="selected" </#if> </#if>>短信数量</option>
+	                    <option value="2" <#if saleType??> <#if saleType=="2"> selected="selected" </#if> </#if>>专栏管理</option>
+	                    <option value="3" <#if saleType??> <#if saleType=="3"> selected="selected" </#if> </#if>>专栏管理栏位数</option>
+	                    <option value="4" <#if saleType??> <#if saleType=="4"> selected="selected" </#if> </#if>>信息服务</option>
+	                    <option value="5" <#if saleType??> <#if saleType=="5"> selected="selected" </#if> </#if>>信息服务栏位数</option>
+	                    <option value="6" <#if saleType??> <#if saleType=="6"> selected="selected" </#if> </#if>>优惠券数量</option>
+	                </select>
+                <span class="pl20">方式：</span>
+	                <select name="isFree" onchange="search()">
+	                	<option value=""  <#if isFree??> <#if isFree==""> selected="selected" </#if> </#if>>全部</option>
+	                    <option value="0" <#if isFree??> <#if isFree=="0"> selected="selected" </#if> </#if>>免费发放</option>
+	                    <option value="1" <#if isFree??> <#if isFree=="1"> selected="selected" </#if> </#if>>购买</option>
+	                </select>
+                <span class="prl45">日期：</span>
+               <div class="prl45" style="display: inline-block">
+                    <label><input class="text hasDatepicker" type="text" placeholder="起始日期" name="startTime"
+                                  onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})" value="${startTime!''}"/><span
+                            class="storeorder_time"></span></label>
+                </div>
+                <i class="prl20" >-</i>
+                <div class="prl20"  style="display: inline-block">
+                    <label><input class="text hasDatepicker" type="text" placeholder="截止日期" name="endTime"
+                                  onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})" value="${endTime!''}"><span
+                            class="storeorder_time"></span></label>
+                </div>
+                <input type="button" class=" submit search_btn ml0" style="height: 29px;" id="btnSearch" value="搜 索" onclick="searchPurchase();">
+            </div>
+        </div>
+
+        <div class="bonuslist s_commont_list">
+        		<#if saleAudit.auditList.result??>
+                <table class="list_table">
+                    <thead>
+	                    <tr>
+	                        <th class="w160 bl">营销类型</th>
+	                        <th class="w160">方式</th>
+	                        <th class="w180">免费发放/购买时间</th>
+	                        <th class="w120">免费发放/购买数量</th>
+	                       <!--  <th class="w180 br">使用期限</th> -->
+	                        <th class="w160 br">状态</th>
+	                    </tr>
+                    </thead>
+                    <tbody class="bbsTab">
+                    	<#list saleAudit.auditList.result as saleAudit>
+                            <tr>
+                                <td>${saleAudit.type_name}</td>
+                                <td>
+                               		<#if saleAudit.isFree=='0'>
+                                		免费申请
+                                    <#else>
+                                    	购买
+                                    </#if>
+                                </td>
+                                <td><@dateformat time="${saleAudit.apply_date?c}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                                <td>${saleAudit.audit_num}</td>
+                               <!--  <td>${saleAudit.limit_date}个月</td> -->
+                                <td>
+                                	<#if saleAudit.audit_status=='0'>
+                                		待审核
+                                    <#elseif saleAudit.audit_status=='1'>
+                                    	审核通过
+                                    <#elseif saleAudit.audit_status=='2'>
+                                    	审核未通过
+                                    <#elseif saleAudit.audit_status=='3'>
+                                    	购买成功
+                                    </#if>
+                                </td>
+                            </tr>
+                        </#list>
+                    </tbody>
+                </table>
+			  	<@pager pageno="${saleAudit.page!'1'}" pagesize="${saleAudit.auditList.pageSize}" totalcount="${saleAudit.totalCount}" />
+			  	<#else>
+			  	<p class="no_blank">暂无符合条件的数据记录</p>
+			  	</#if>
+        	</div>
+        </div>
+    </div>
+</div>
+    <script>
+        $(".list_table tr:even").addClass("bgc_gray");
+        $(function(){
+       	 document.onkeydown=function(event){
+        	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+        	      if(e && e.keyCode==13){ // enter 键
+        	    	  search();
+        	      }
+        	 };
+        })
+        function search(){
+			searchPurchase();
+		}
+	
+		function searchPurchase(){
+			var saleType=$("select[name='saleType']").val();
+		    var isFree=$("select[name='isFree']").val();
+			var startTime=$("input[name='startTime']").val();
+			var endTime=$("input[name='endTime']").val();
+			if(startTime != "" && endTime !=""){
+				if(startTime > endTime){
+					alert("起始日期不能大于截至日期！");
+					$("input[name='startTime']").val("");
+					return;
+				}
+			}
+			var url_parame = "";
+			<#if type??>
+				url_parame = "&type=${type}&mark=${mark}&tagId=${tagId}";
+			</#if>
+	
+			location.href="purchaseHistory.html?saleType="+saleType+"&isFree="+isFree+"&status="+status+"&startTime="+startTime+"&endTime="+endTime+"&menu=promotion"+url_parame; 
+		}
+    </script>
+
+<#include '/common/footer.html' />

@@ -1,0 +1,43 @@
+<#include '/store/store_header2.html' />
+<script type="text/javascript">
+	$(function(){
+		if("${myStoreDetail.auditstatus!''}" == "2") {
+			//ajax查询审核失败原因
+			$.ajax({
+	             url: "${ctx}/api/b2b2c/storeApi!queryStoreAuditReason.do?ajax=yes",
+	             type: "POST",
+	             data: "store_id=" + ${myStoreDetail.store_id!''},
+	             async: false,
+	             dataType: "json",
+	             success: function (json) {
+	            	 var message = json.message;
+	            	 //alert(message);
+	            	 $("#fileReason").html(message);
+	             }
+	         });	
+		}
+	}); 
+</script>
+<div class="store_main">
+	<div style="width: 1200px;margin: 0 auto;">
+		<div class="sotre_right_content2">
+			<div class="open_store_form tac" >
+				<!--<p class="evaluation_lc"></p>-->
+				<p class="no_write_img"></p>
+				<p class="f14">审核未通过!</p>
+				<p class="no_write mt30"><a href="${ctx}/store/apply/reApply.html?menu=store_set11">返回商家设置 </a></p>
+			</div>
+			<div style="width:1100px;margin-left: 50px;">
+				<div class="mt30 bde6"></div>
+				<div class="tal mt20 ml20">
+					<div><b class="fl w30">原因: </b><p class="fl w1050" id="fileReason"></p></div>
+					<div class="pt20 cb">如有疑问请联系我们: 010-64860396</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<#include '/common/footer.html' />

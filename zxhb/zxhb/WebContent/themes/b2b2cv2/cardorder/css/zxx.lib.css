@@ -1,0 +1,56 @@
+﻿/**
+ * 通用CSS样式库
+ */
+
+.z {
+*zoom:1;
+}
+/*块状元素水平居中*/
+.auto {
+	margin-left: auto;
+	margin-right: auto;
+}
+/*清除浮动*/
+.fix {
+*zoom:1;
+}
+.fix:after {
+	display: block;
+	content: "clear";
+	height: 0;
+	clear: both;
+	overflow: hidden;
+	visibility: hidden;
+}
+/*基于display:table-cell的自适应布局*/
+.cell {
+	display: table-cell;
+*display:inline-block;
+	width: 2000px;
+*width:auto;
+}
+/*双栏自适应cell部分连续英文字符换行*/
+.cell_bk {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+/*单行文字溢出虚点显示*/
+.ell {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+/*ie浏览器块状显示*/
+.ie_dib {
+*zoom:1;
+	display: inline-block;
+*display:inline;
+}
+/* 设为border-box */
+*, *:before, *:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}

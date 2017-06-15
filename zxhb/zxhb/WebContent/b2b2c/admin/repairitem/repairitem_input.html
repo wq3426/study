@@ -1,0 +1,34 @@
+<style>
+	.input_text {
+		width: 210px;
+	}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="addForm" method="post" class="validate">
+			<table width="100%">
+				<tr>
+					<th style="width:200px">项目名称：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="repairItem.itemname" id="item_name"/>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">是否必选：</th>
+					<td>
+						<select name="repairItem.is_necessary">
+							<option value="0">否</option>
+							<option value="1">是</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>排序号：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="repairItem.sort" id="item_sort" value="0"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

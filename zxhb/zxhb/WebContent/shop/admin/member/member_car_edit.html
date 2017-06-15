@@ -1,0 +1,149 @@
+<#include '/admin/header.html' >
+	<style>
+		.w40{width: 40px!important;}
+	</style>
+<div class="member_car_detail" style="margin: 20px;">
+			<form id="carEditForm">
+				<div class="car_one"><h3 class="fw900 pl20 pt10">车辆信息</h3>
+					<table>
+						<tr>
+							<th>车牌号码:</th>
+							<td><input type="text" name="carplate" class="text" value="${carInfo.carplate}"></td>
+						</tr>
+						<tr>
+							<th>品牌:</th>
+							<td><select id="brandId" name="brandId" class="text easyui-validatebox" onchange="getSeries()">
+									<#if brand_List??> 
+										<#list brand_List as bl>
+											<option value="${bl.brand_id!''}" <#if carInfo.brand_id==bl.brand_id>selected="selected"</#if> >${bl.name }</option> 
+										</#list> 
+									</#if>
+								</select>
+							</td>
+							<th class="w40">车系:</th>
+							<td>
+								<select id="car_series" name="series" class="text" onchange="getNk()">
+									<option value="${carInfo.series}">${carInfo.series}</option></select></td>
+							</td>
+							<th class="w40">年款:</th>
+							<td>
+								<select id="car_nk" name="nk" class="text" >
+									<option value="${carInfo.nk}">${carInfo.nk}</option></select></td>
+							</td>
+						</tr>
+						<tr>
+							<th>发动机号:</th>
+							<td><input type="text" name="carengineno" class="text" value="${carInfo.carengineno}" ></td>
+						</tr>
+						<tr>
+							<th>车架号:</th>
+							<td><input type="text" name="carvin" class="text" value="${carInfo.carvin}" ></td>
+						</tr>
+						<tr>
+							<th>使用性质:</th>
+							<td>
+								<select name="car_use_type" class="text" >
+									<#if carUsetypeList??> 
+										<#list carUsetypeList as cutl>
+											<option value="${cutl.id!''}" <#if carInfo.car_use_type==cutl.id>selected="selected"</#if> >${cutl.type_name!''}</option> 
+										</#list> 
+									</#if>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="online_b"></td>
+							<td></td>
+							<td colspan="11" class="online_b">
+								<input type="button" class="button" value="保存" onclick="submitForm()">
+							</td>
+						</tr>
+					</table>
+				</div>
+				<input type="hidden" name="carinfoid" value="${carInfo.carinfoid!''}" />
+				<input type="hidden" name="carmodelid" value="${carInfo.carmodelid!''}" />
+			</form>
+</div>
+
+<script>
+
+	//表单提交
+	function submitForm() {
+		
+		//TODO 表单校验 	
+		var options = {
+                url: "${ctx}/shop/admin/member!saveCarInfo.do?ajax=yes",
+                type: "POST",
+                async: false,
+                dataType: "json",
+               	data:{},
+                success: function (json) {
+                    if (json.result == 0) {
+                        alert(json.message);
+                    } else {
+                        alert(json.message);
+                        
+                     	//TODO 关闭选项卡
+                    }
+                },
+                error: function (e) {
+                    alert("出现错误，请重试");
+                }
+            };  
+        $('#carEditForm').ajaxSubmit(options);
+	}
+		
+	//根据品牌获取车系列表
+	function getSeries(){
+		var brand_id = $("#brandId").val();
+		$.ajax({
+			url : "${ctx}/shop/admin/member!getCarSeriesOrNKList.do?ajax=yes",
+			type : "POST",
+			dataType : 'json',
+			data: "brand_id=" + brand_id,
+			success : function(result) {
+				if (result.result == 1) {
+					$("#car_series").empty();
+					$("#car_series").append("<option value='0'>----请选择车系----</option>");
+					$.each(result.data, function(i, item){
+						$("#car_series").append("<option value='"+ item.series +"'>"+ item.series +"</option>");
+					});
+				}
+			},
+			error : function(e) {
+				$.Loading.error("出现错误，请重试");
+			}
+		});
+	}
+	
+	//根据品牌、车系获取年款列表
+	function getNk(){
+		var brand_id = $("#brandId").val();
+		var series = $("#car_series").val();
+		var data = {
+			brand_id : brand_id,
+			series : series
+		};
+		$.ajax({
+			url : "${ctx}/shop/admin/member!getCarSeriesOrNKList.do?ajax=yes",
+			type : "POST",
+			dataType : 'json',
+			data : data,
+			success : function(result) {
+				if (result.result == 1) {
+					$("#car_nk").empty();
+					$("#car_nk").append("<option value='0'>----请选择年款----</option>");
+					$.each(result.data, function(i, item){
+						$("#car_nk").append("<option value='"+ item.nk +"'>"+ item.nk +"</option>");
+					});
+				}
+			},
+			error : function(e) {
+				$.Loading.error("出现错误，请重试");
+			}
+		});
+	}
+
+</script>
+
+<#include '/admin/footer.html' >

@@ -1,0 +1,67 @@
+<style>
+   div.ui_content{line-height: 25px;}
+</style>
+<#assign repairOrderTag = newTag("repairOrderTag")>
+<#assign repairOrderDetail = repairOrderTag("'order_id':${order_id}")!''>
+<div id="maintain" style="width: 650px;" class="tal">
+<form action="" id="repair_form">
+        <div class="ml30 " style="height: 200px;" id="repairItem">
+        	<input type="hidden" name="repair_spec_id" value="${repairOrderDetail.spec_id!''}"/>
+            <div class="fl w390 mt5">
+                <span class="fl">店铺保养项目：</span><br/>
+              	<#list repairOrderDetail.orderRepairItems as repairItem>
+              	<ul class="fl">
+              		<li class="fl w150">${repairItem.itemname!''}</li>
+                	<!-- <li class="fl w150"><input class="mr5" type="checkbox" id="item_${repairItem.id!''}" name="items" value="${repairItem.id!''}">${repairItem.itemname!''}</li> -->
+               	</ul>
+              	</#list>
+            </div>
+        </div>
+        <input type="hidden" id="items" value="${repairOrderDetail.items!''}">
+		<div class="ml15 mr15" style="border-bottom: 1px dashed #D6D6D6"></div>
+		<div class="mt10">预约时间：${repairOrderDetail.order_date!''} ${repairOrderDetail.starttime!''}-${repairOrderDetail.endtime!''}</div>
+		<div class="mt10 h150" id="repair_service">
+            <div class="fl tcl w310 ">
+                <p><lable>保养里程：</lable><input type="text" class="w180 h30 amount" id="repair_mile" name="repair_mile" value="${repairOrderDetail.repair_mile!''}"></p>
+                <p class="mt10"><lable>保养价格：</lable><input type="text" class="w180 h30 decimal" id="repair_price" name="repair_price" value="${repairOrderDetail.repair_price!''}"></p>
+                <p class="mt10"><lable>保养地点：</lable><input type="text" class="w180 h30" id="repair_source" name="repair_source" value="${repairOrderDetail.repair_source!''}"></p>
+            </div>
+            <div class="fr tcr w310 ">
+                <p class="ml10"><lable>服务工时：</lable><label><input style="margin-right: 22px" type="text" class="w180 h30 decimal" id="service_timelength" name="service_timelength" value="${repairOrderDetail.service_timelength!''}"></label></p>
+                <p class="mt10 ml10"><lable>技师名称：</lable><label><input style="margin-right: 22px" type="text" class="w180 h30" id="engineer" name="engineer" value="${repairOrderDetail.engineer!''}"></label></p>
+                <p class="ml10"><lable>服务时间：</lable><label><input type="text" class="w180  h30" id="repair_time" name="repair_time" value="${repairOrderDetail.repair_time!''}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"><span style="left:-32px;" class="storeorder_time1" ></span></label></p>
+            </div>
+		</div>
+	    <div class="ml15 mr15" style="border-bottom: 1px dashed #D6D6D6"></div>
+		<div class="mt10">
+			<span class="fl w70 tar">备注：</span><textarea class="fl" style="width: 530px;max-width: 530px;max-height: 200px;" name="repair_remarks" placeholder="在保养过程中如有增项或者减项,请填写其中..." id="" cols="30" rows="10">${repairOrderDetail.repair_remarks!''}</textarea>
+		</div>
+</form>
+</div>
+
+
+<script>
+/**
+	var items = '${repairOrderDetail.items!''}';
+	$("#repairItem").find("input[type='checkbox']").each(function(){
+		var id = $(this).attr("id");
+		var item_value = $(this).val();
+		if(items.indexOf(item_value) != -1){//如果包含，则选中
+			$(this).attr("checked", "checked");
+		}
+	});
+**/
+    $(".decimal").on("blur",function(money){
+		var discount = $.trim($(this).val());
+		var total;
+		if(discount < 0 || isNaN(discount)){
+			return $(this).val("");
+		}else if(discount!==''&&!isNaN(discount)){
+			total = parseFloat(discount);
+			total = total.toFixed(2) + "";
+			var re=/(\d{1,3})(?=(\d{3})+(?:$|\.))/g;
+			var n=total.replace(re,"$1,");
+			return  $(this).val(n);
+		}
+	 });
+</script>

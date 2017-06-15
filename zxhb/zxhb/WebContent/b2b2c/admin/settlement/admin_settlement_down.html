@@ -1,0 +1,26 @@
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<div style="padding: 10px 20px 10px 10px;">
+			&nbsp;&nbsp;选择期号：
+			<select id="stage_no"  name = "stage_no">
+				<#if result??>
+					<#list result.settledList as settled>
+						<option id="${settled.stage_no}">${settled.stage_no}</option>
+					</#list>
+				</#if>
+			</select>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input  class="button" type="button" value="下载" onclick="javascript:downExcel();"/>
+		</div>
+	</div>
+</div> 
+<script type="text/javascript">
+	function downExcel(){
+		var stage_no = $("#stage_no").val();
+		window.location = "${ctx}/b2b2c/admin/adminReckoning!settledDownExcel.do?store_id=${store_id}&stage_no="+stage_no;		
+	}
+</script>

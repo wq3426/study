@@ -1,0 +1,135 @@
+<#assign title="登录" /> 
+<#include '/common/header.html' />
+<link rel="stylesheet" type="text/css" href="${ctx}/themes/b2b2cv2/css/login.css" />
+<div class="index_logo">
+	<a href="${ctx}/store/business_center.html?menu=store_index"><div class="index_logo_yellow" style="width:240px;height:60px; " ></div></a>
+</div>
+<!--登录界面-->
+<div id="login_wrapper">
+	<!--左侧登录界面-->
+	<div class="login_img">
+	</div>
+	<div class="login_tools">
+		<form method="post" class="validate" id="login_form">
+			<input type="hidden" name="action" value="login" /> 
+			<h1>用户登录</h1>
+			<div class="login_content">
+				<label>
+					<span>用户名：</span>
+					<input type="text" tabindex="1"  name="username"  class="definition_small same_input" id="username" isrequired="true" />
+				</label>
+				<label>
+					<span>密&nbsp;&nbsp;&nbsp;码：</span>
+					<input type="password" vtype="password" tabindex="2"  name="password" id="password"  class="definition_small same_input"  isrequired="true" />
+				</label>
+				<label style="min-height: 40px">
+					<span>验证码：</span>
+					<div class="m_account" id="verification_num">
+						<input type="text" tabindex="3" name="validcode"  size="8"  class="m_small" id="validcode" />
+						<img src="${ctx}/validcode.do?vtype=memberlogin" alt="会员登录验证码" class="code_img">
+						<div class="m_forget">
+							<a href="javascript:;">看不清楚换个图片</a>
+						</div>
+					</div>
+				</label>
+				<!-- 
+					<div class="m_week">
+						<input type="checkbox" name="remember" class="satisfied" value="1" />
+						<span>两周内免登录</span>
+					</div>
+				 -->
+				<!--<div>-->
+					<!--<a href="${ctx}/findpasswordByEmail.html">邮箱找回</a>&nbsp;&nbsp;-->
+					<!--<a href="${ctx}/findpasswordByMobile.html">手机找回</a>-->
+				<!--</div>-->
+				<div class="m_submit">
+					<span class="m_register btn">
+						<input type="button" tabindex="4" value="登  录" class="regis_ent">
+						<a href="${ctx}/findpasswordByEmail.html">邮箱找回</a>&nbsp;&nbsp;
+					</span>
+					<!--<span class="goregister">-->
+						<!--还不是本站会员？立即-->
+						<!--<#if sms_isopen==0>-->
+							<!--<span>-->
+								<!--<a href="${ctx}/store/register.html?forward=${forward!''}" class="go_register">注册</a>-->
+							<!--</span>-->
+						<!--<#else>-->
+							<!--<span>-->
+								<!--<a href="${ctx}/store/register_phone.html?forward=${forward!''}" class="go_register">注册</a>-->
+							<!--</span>-->
+						<!--</#if>-->
+					<!--</span>-->
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!--登录界面结束-->
+	<input type="hidden" id="forward" value="${forward!''}"/>
+<script>
+$(function(){
+	$(".m_forget a").click(function(){
+		$(".m_account img").attr("src","${ctx}/validcode.do?vtype=memberlogin&r="+new Date().getTime());
+	});
+	$(".code_img").click(function(){
+		$(this).attr("src","${ctx}/validcode.do?vtype=memberlogin&r="+new Date().getTime());
+	});
+	var options = {
+		url : "${ctx}/api/shop/member!login.do?ajax=yes",
+		dataType : 'json',
+		success : function(data) {
+			if(data.result==1){
+				var forward=$("#forward").val();
+				if(forward==""){
+					//location.href ="../index.html";
+					location.href ="${ctx}/store/business_center.html?menu=store_index";
+				}
+				else if(forward=="checkout.html"){
+					location.href ="../cart.html";
+				}
+				else{
+					location.href=forward;
+				}
+			}
+			else{
+				alert(data.message);
+				$.Loading.hide();
+				$(".code_img").attr("src","${ctx}/validcode.do?vtype=memberlogin&r="+new Date().getTime());	//未通过校验，刷新验证码
+			}
+		},
+		error : function(e) {
+			$.alert("出现错误 ，请重试");
+			$(".code_img").attr("src","${ctx}/validcode.do?vtype=memberlogin&r="+new Date().getTime());		//出现错误，刷新验证码
+		}
+	};
+	
+	$(".regis_ent").click(function(){
+			if (!$("#login_form").checkall()) {
+				return false;
+			}
+			if($("#validcode").val()==""){
+				alert("请输入验证码！");
+				return false;
+			}
+			$.Loading.show("正在登录，请稍候...");
+			$('#login_form').ajaxSubmit(options);	
+	});
+	
+	
+	
+	$("#login_form").keydown(function(event) {
+			if (event.keyCode == 13) {
+				if (!$("#login_form").checkall()) {
+					return false;
+				}
+				if($("#validcode").val()==""){
+					alert("请输入验证码！");
+					return false;
+				}
+				$.Loading.show("正在登录，请稍候...");
+				$('#login_form').ajaxSubmit(options);
+			}
+		});
+	});
+</script>
+<#include '/common/footer.html' />

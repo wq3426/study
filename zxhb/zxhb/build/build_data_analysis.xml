@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="jardataanalysis" basedir="../">
+
+	<!--编译fastdfs-->
+	<target name="jar_data_analysis">
+		<mkdir dir="${build.dir}/data-analysis" />
+		<!--编译shop目录下的类文件-->
+		<javac  srcdir="." destdir="${build.dir}/data-analysis" debug="true" includeantruntime="on">
+			<compilerarg line="-encoding UTF-8 " />
+			<classpath refid="buildpath" />
+			<include name="data-analysis/**" />
+		</javac>
+
+		<!--拷贝资源文件-->
+		<copy todir="${build.dir}/data-analysis">
+			<fileset dir="data-analysis">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+		<!--生成shop.jar-->
+		<jar destfile="${tempdir}/lib/component-data-analysis.jar">
+			<fileset dir="${build.dir}/data-analysis">
+				<exclude name="com/enation/app/data-analysis/component/**" />
+			</fileset>
+		</jar>
+
+		<!--生成shop核心组件jar-->
+		<jar destfile="${tempdir}/lib/component-data-analysis-core.jar">
+			<fileset dir="${build.dir}/data-analysis">
+				<include name="com/enation/app/data-analysis/component/**" />
+			</fileset>
+		</jar>
+	</target>
+</project>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=1280">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+</head>
+
+<body >
+<header>
+    <div class="box">
+        <a href="${ctx}/cardorder/index.html"><div class="logo w250 h70"></div></a>
+        <div class="nav ">
+            <ul class="fl tc">
+                <li class="fl ml160"><a href="${ctx}/cardorder/index.html">首页</a></li>
+                <li class="fl selected"><a href="${ctx}/cardorder/selecting.html">立即购买</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/order_list.html">订单查询</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/about_us.html">关于我们</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<#assign zxCardGoodsListTag=newTag("zxCardGoodsListTag")/>
+<#assign goodsSpec=zxCardGoodsListTag()/>
+
+<div class="box cb pt60">
+    <div class="w430 h265 bdfc fl">
+        <div class=" m0 p10 " id="goodsImage">
+            <img src="${ctx}/themes/b2b2cv2/cardorder/images/add_1_03.png" alt="">
+        </div>
+    </div>
+    <div class="fr w550 ">
+        <div id="date">
+            <form action="" id="dateForm" method="post">
+            	<input type="hidden" id="goods_id" value="${goodsSpec.goods.goods_id!''}"/>
+            	<input type="hidden" id="gg_spec_value_id"/>
+            	<input type="hidden" id="ta_spec_value_id"/>
+            	<input type="hidden" id="referee_code" name="referee_code" value="${referee_code!''}"/>
+                <div id="content">
+                    <div class=" lh25">
+                        <p class="f16 fb ">${goodsSpec.goods.name!''}</p>
+                        <p class="f14 ">${goodsSpec.goods.intro!''}</p>
+                        <!--<p class="cred">通知：春节期间暂不发货，2月6日后正常发货，谢谢理解！</p>-->
+                        <div>
+                       		<div class="list mt20" id="ggDiv">
+                       		<b class="ml0 border0">${goodsSpec.ggSpec.spec_name!''}：</b>
+                       			<#list goodsSpec.ggSpec.spec_value_list as spec_value>
+                       				<span class="dip bdc0" id="${spec_value.spec_value_id!''}" onclick="getTaSpecList('${spec_value.spec_value_id!''}')">${spec_value.spec_value!''}</span>
+                       			</#list>
+                           	</div>
+                       		<div class="list mt20" id="taDiv">
+                       		<b class="ml0 border0">${goodsSpec.taSpec.spec_name!''}：</b>
+                       			<#list goodsSpec.taSpec.spec_value_list as spec_value>
+                       				<span class="dip bdc0" id="${spec_value.spec_value_id!''}" onclick="getSelectTa('${spec_value.spec_value_id!''}')">
+                       				<img src="${spec_value.spec_image!''}" alt="" width="20" height="14" style="display:none">${spec_value.spec_value!''}
+                       				</span>
+                       			</#list>
+                           	</div>
+                           	<div class="list mt20">
+                       		<b class="ml0 border0">价格：</b>
+                       			<span id="card_price">${goodsSpec.card_price!''}元</span>
+                           	</div>
+                        </div>
+                    </div>
+                    <!-- 
+                    <div class=" lh25">
+                        <p class="f16 fb ">西藏交通一卡通纪念卡</p>
+                        <p class="f14 ">5万套交通纪念卡限量发售，以救度佛母二十一种礼赞经为背景，其中部分纪念卡为班禅活佛开光，极具收藏价值！</p>
+                        <div>
+                            <b class="ml0 border0">规格：</b>
+                            <div class="list mt20">
+                                <span class="kept bdc4" >纪念卡(10张/套)</span>
+                                <span class="aliens bdc0">异形卡</span>
+                                <span class="even bdc0">连号套卡(2张/套)</span>
+
+                            </div>
+                            <b class="ml0 border0 ">图案：</b>
+                            <div class="list mt20">
+                                <span class="dolma bdc4 dip"><i></i>度母像卡</span>
+                                <span class="pisces bdc4 din"><i></i>双鱼异形卡</span>
+                                <span  class="diamond bdc0 din"><i></i>菱形异形卡</span>
+                            </div>
+                        </div>
+                    </div>
+                     -->
+                    <!--<div class="cb tc w270 date_bottom mt30 cp" id="btnForm" onclick="orderCard()"><span class="bg13 dip w120 h40 lh40 br5 ff16 cfff">立即购买</span></div>-->
+                    <div class="cb tc w270 date_bottom mt30 cp" id="btnForm" ><span class="bg13 dip w120 h40 lh40 br5 ff16 cfff" style="background-color: #c0c0c0;">暂停发售</span></div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+    <div class=" cb pt15 c999">
+        <!--<p>温馨提示：<br>-->
+            <!--请确认您购买信息，提交后将不能更改；<br>-->
+            <!--预约不代表购买成功，请在开放购买时访问购买。数量有限，先到先得!-->
+        <!--</p>-->
+    </div>
+</div>
+<footer class="tc f14 mt100">
+    版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+</footer>
+<script>
+    $(document).ready(function () {
+//       度母套卡
+        $('.kept').click(function () {
+            $(this).addClass('bdc4').siblings().removeClass('bdc4').addClass("bdc0");
+            $(".dolma").removeClass('din').addClass("dip").removeClass("bdc0").addClass("bdc4");
+            $(".pisces").removeClass('dip').addClass("din");
+            $(".diamond").removeClass('dip').addClass("din");
+
+        });
+
+//       异形卡
+        $('.aliens').click(function () {
+            $(this).addClass('bdc4').siblings().removeClass('bdc4').addClass("bdc0");
+            $(".dolma").removeClass('dip').addClass("din");
+            $(".pisces").removeClass('din').addClass("dip");
+            $(".diamond").removeClass('din').addClass("dip");
+        });
+// 连号卡
+        $('.even').click(function () {
+            $(this).addClass('bdc4').siblings().removeClass('bdc4').addClass("bdc0");
+            $(".dolma").removeClass('dip').addClass("din");
+            $(".pisces").removeClass('din').addClass("dip");
+            $(".diamond").removeClass('din').addClass("dip");
+
+        });
+        $('.pisces').click(function () {
+            $(this).addClass('bdc4').siblings().removeClass('bdc4').addClass("bdc0");
+            if($(".kept").is(".bdc4")){
+                $('.kept').removeClass("bdc4").addClass("bdc0");
+                $(".aliens").addClass('bdc4').siblings().removeClass('bdc4').addClass("bdc0");
+            }
+        });
+
+        $('.diamond').click(function () {
+            $(this).addClass('bdc4').siblings().removeClass('bdc4').addClass("bdc0");
+            if($(".kept").is(".bdc4")){
+                $('.kept').removeClass("bdc4").addClass("bdc0");
+                $(".aliens").addClass('bdc4').siblings().removeClass('bdc4').addClass("bdc0");
+            }
+        });
+
+        $("#ggDiv").find("span").each(function(i, item){
+        	if(i == 0){
+        		$(item).removeClass('bdc0').addClass("bdc4");
+
+        		$("#gg_spec_value_id").val(item.id);
+        	}
+        });
+        
+        $("#taDiv").find("span").each(function(i,item){
+        	if(i == 0){
+        		$(item).removeClass('bdc0').addClass("bdc4");
+
+        		$("#ta_spec_value_id").val(item.id);
+        		
+        		$("#goodsImage").empty();
+        		var imgPath = $("#taDiv").find("img:first").attr("src");
+        		$("#goodsImage").append("<img src='"+ imgPath +"' alt=''>");
+        	}
+        });
+
+    });
+    
+    //根据规格获取图案
+    function getTaSpecList(gg_spec_value_id){
+    	
+    	$("#gg_spec_value_id").val(gg_spec_value_id);
+    	$("#"+gg_spec_value_id).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+    	
+    	$.ajax({
+    		url : "${ctx}/api/b2b2c/goods!getTaSpecList.do?gg_spec_value_id="+gg_spec_value_id,
+    		type : "POST",
+    		dataType : "json",
+    		success : function(data){
+    			if(data.result == 0){
+					alert(data.message);
+				}else{
+					$("#taDiv").children("span").remove();
+					$("#taDiv").children("img").remove();
+					$.each(data.taList, function(i, item){
+						if(i == 0){
+							$("#taDiv").append("  <span class='dip bdc4' id='"+ item.spec_value_id +"' onclick='getSelectTa("+ item.spec_value_id +")'>"+ item.spec_value +"</span>");
+							$("#ta_spec_value_id").val(item.spec_value_id);
+							$("#goodsImage").empty();
+							$("#goodsImage").append("<img src='"+item.spec_image+"' alt=''>");
+							$("#card_price").empty();
+							$("#card_price").html(item.card_price+"元");
+						}else{
+							$("#taDiv").append("  <span class='dip bdc0' id='"+ item.spec_value_id +"' onclick='getSelectTa("+ item.spec_value_id +")'>"+ item.spec_value +"</span>");
+						}
+					});
+				}
+    		},
+    		error : function(){
+    			alert("请求出错");
+    		}
+    	});
+    }
+    
+    //获取选中的图案
+    function getSelectTa(ta_spec_value_id){
+    	$("#ta_spec_value_id").val(ta_spec_value_id);
+    	var gg_spec_value_id = $("#gg_spec_value_id").val();
+    	
+    	$.ajax({
+    		url : "${ctx}/api/b2b2c/goods!getTaPrice.do?gg_spec_value_id="+gg_spec_value_id+"&ta_spec_value_id="+ta_spec_value_id,
+    		type : "POST",
+    		dataType : "json",
+    		success : function(data){
+    			if(data.result == 0){
+					alert(data.message);
+				}else{
+					$("#goodsImage").empty();
+					$("#goodsImage").append("<img src='"+data.specObj.spec_image+"' alt=''>");
+					$("#card_price").empty();
+					$("#card_price").html(data.specObj.card_price+"元");
+				}
+    			$("#"+ta_spec_value_id).addClass('bdc4').siblings("span").removeClass('bdc4').addClass("bdc0");
+    		},
+    		error : function(){
+    			alert("请求出错");
+    		}
+    	});
+    }
+    
+    //选中后，跳转到预约页面
+    function orderCard(){
+    	var goods_id = $("#goods_id").val();
+    	var gg_spec_value_id = $("#gg_spec_value_id").val();
+    	var ta_spec_value_id = $("#ta_spec_value_id").val();
+    	var referee_code = $("#referee_code").val();
+    	window.location = "${ctx}/cardorder/appointment.html?goods_id="+goods_id+"&gg_spec_value_id="+gg_spec_value_id+"&ta_spec_value_id="+ta_spec_value_id+"&referee_code="+referee_code;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<div class="easyui-panel" style="border-style:none;" >
+	<div style="padding: 10px 0 10px 60px">
+		<form id="storeInfoForm" method="post" class="validate" >
+		<input type="hidden" name="storeId" value="${store.store_id}"/>
+		<input type="hidden" name="member_id" value="${store.member_id}">
+		<table>
+			<tr>
+				<td>店铺名称：</td>
+				<td>${store.store_name}</td>
+			</tr>
+			<#if store.disabled==0>
+				<tr>
+					<td>店铺申请是否通过：</td>
+					<td>
+						<input type="radio" value="1" checked="checked" name="pass"/>是
+						<input type="radio" value="0" name="pass"/>否
+					</td>
+				</tr>
+				<tr>
+					<td>店铺佣金比例：</td>
+					<td>
+						<input class="easyui-numberbox input_text" style="width: 80px;" type="text" name="commission" data-options="required:true" isrequired="true" />
+						如果输入10.平台佣金为订单价格的百分之10
+					</td>
+				</tr>
+			</#if>
+			<tr>
+				<td>身份证号：</td>
+				<td>${store.id_number}</td>
+			</tr>
+			<#if store.name_auth==2>
+				<tr>
+					<td>店主身份认证：</td>
+					<td>
+						<img alt="" src="${store.id_img!''}" height="120px" width="150px;">
+					</td>
+				</tr>
+				<tr>
+					<td>店主身份认证是否通过：</td>
+					<td>
+						<input type="radio" value="1" name="name_auth"/>是
+						<input type="radio" value="0" name="name_auth" checked="checked"/>否
+					</td>
+				</tr>
+			</#if>
+			<#if store.store_auth==2>
+				<tr>
+					<td>店铺认证</td>
+					<td>
+						<img alt="" src="${store.license_img!''}" height="120px" width="150px;">
+					</td>
+				</tr>
+				<tr>
+					<td>店铺认证是否通过：</td>
+					<td>
+						<input type="radio" value="1" name="store_auth"/>是
+						<input type="radio" value="0" name="store_auth" checked="checked"/>否
+					</td>
+				</tr>
+			</#if>
+		</table>
+		</form>
+	</div>
+</div>

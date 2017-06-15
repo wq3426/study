@@ -1,0 +1,330 @@
+<#include '/store/store_header.html' />
+
+<!-- 店铺其他信息标签 test -->
+<#assign myStoreDetailOtherTag=newTag("myStoreDetailOtherTag")>
+<#assign myStoreDetailOther=myStoreDetailOtherTag()>
+<!-- 消息中心-->
+<#assign pushMsgTag=newTag("pushMsgTag") />
+<#assign pushMsgList=pushMsgTag()>
+
+
+<div class="store_center">
+	<#include 'left_menu.html'/>
+	<div class="sotre_right_content" id="sotre_right_content">
+		<div class="path">
+			<a href="${ctx}/store/business_center.html?menu=store_index">商家中心 </a>
+		</div>
+		<div class="store_right_main f14">
+			<div class="intro">
+				<div class="intro_left mt30 ml15">
+					<div class="store_intro_pic">
+						<div class="store_intro_up store_intro_upimg">
+						<span class="thumb">
+							<@image src="${myStoreDetail.store_logo!''}" id="logo"/>
+						</span>
+						</div>
+					</div>
+					<div class="store_name" style="margin:10px 0px 0px 220px">
+						<div class="store_name1" style="width: 480px;"><h1>${myStoreDetail.store_name!''}</h1></div>
+						<div class="" style="top:20px;">
+							<h2>电话：${myStoreDetail.customer_phone!''}</h2>
+							<div class="w450 ofh" style="top: 20px;">地址：${myStoreDetail.store_province!''}&nbsp;${myStoreDetail.store_city!''}&nbsp;${myStoreDetail.store_region!''}</div>
+							<div class="w450 ofh" style="top: 40px;">用户评分：<span class="pjxx dip"></span>
+								<span>
+							<#if myStoreDetail.comment_grade?? && (myStoreDetail.comment_grade>-1) >
+								${myStoreDetail.comment_grade!''}
+							<#else>
+								暂无评价
+							</#if>	
+							</span>
+							<a href="${ctx}/store/service_evaluation.html?menu=store_index"">查看详情</a></div>
+						</div>
+					</div>
+				</div>
+				<div class="store_intro_fraction">
+					<ul class="f14">
+						<li class="h40"><span class="ml25">已提现金额：</span><label class="red"><#if myStoreDetailOther.settlementCountHistory??>${myStoreDetailOther.settlementCountHistory?string.currency}</#if></label></li>
+						<li class="h40"><span class="ml25">待结算金额：</span><label class="red"><#if myStoreDetailOther.noSettlementCount??>${myStoreDetailOther.noSettlementCount?string.currency}</#if> </label>
+						  <a class=" store_btn2 bdc_d5 bgc_f9 mr10 mt5 fr" style="font-size: 14px; display:inline-block;"  id="no_settlement" onclick="javascript:void(0)" >未结算账单</a>
+						</li>
+						<li style="height: 86px;"><span class="fl ml40 mt10">账户金额：</span><label class="fl red mt10"><#if myStoreDetailOther.yetSettlementCount??>${myStoreDetailOther.yetSettlementCount?string.currency}</#if></label>
+							<div class="fr">
+								<a href="${ctx}/store/capital/thisPeriod.html?menu=store_index" class="dip store_btn2 bdc_d5 bgc_f9 mr10 mt5" style="font-size: 14px;">查看明细</a>
+								<input class="store_btn bgc_green color_w mr10 mt10" style="font-size: 14px;width: 82px;"  type="button" value="提现" onclick="saveOrUpdate()">
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="store_index">
+				<div class="store_index_goods store_index_same">
+					<h1>店铺提示<span class="fr">历史结算总额：<i class="color_b">${myStoreDetailOther.yetSeetlementOrder!'0'}</i></span></h1>
+					<div class="store_index_content">
+						<div class="store_rompt"><a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">出售中的商品：<span>${myStoreDetailOther.ingMarket!'0'}</span></a></div>
+						<ul class="store_index_list">
+							<li>
+								<a href="${ctx}/store/order/StoreOrder.html?order_type=2&startTime=${myStoreDetailOther.todayDate!'0'}&endTime=${myStoreDetailOther.todayDate!'0'}&order_state=wait_ship&menu=transaction">
+									今日保养服务
+									<strong id="tj_goods_storage">${myStoreDetailOther.repairOrder!'0'}</strong>
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									平台信息
+									<strong id="tj_consult">${myStoreDetailOther.notReply!'0'}</strong>
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									客户服务信息
+									<strong >${myStoreDetailOther.notReply!'0'}</strong>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- 签约用户 -->
+				<div class="store_index_same store_index_notice">
+					<h1>签约用户<span class="fr">用户活跃率：<i class="color_b">${myStoreDetailOther.activeRatio!'0%'}</i></span>
+						<span class="fr">用户消费率：<i class="color_b">${myStoreDetailOther.consumeRatio!'0%'}</i></span>
+					</h1>
+					<div class="store_index_content">
+						<div class="store_rompt"><a href="${ctx}/store/memberx/member_list.html?menu=member">签约用户总数量：<span>${myStoreDetailOther.carTotalCount!'0'}</span></a></div>
+						<ul class="store_index_list">
+							<li>
+								<a href="${ctx}/store/memberx/member_list.html?menu=member">
+									本周增加用户
+									<strong>${myStoreDetailOther.contractCurrentWeek!'0'}</strong>
+								</a>
+							</li>
+							<li>
+								<a class="bdc_red" href="${ctx}/store/memberx/break_member_list.html?menu=member">
+									本周流失用户
+									<strong class="tow">${myStoreDetailOther.discontractCurrentWeek!'0'}</strong>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- 服务订单 -->
+				<div class="store_index_goods store_index_same bt0 br0">
+					<h1>店铺订单<span class="fr"><a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">
+						订单总数：<i class="color_b">${myStoreDetailOther.storeAllOrder!'0'}</i></a></span></h1>
+					<div class="store_index_content">
+						<ul class="store_index_list">
+							<li>
+								<a href="${ctx}/store/order/StoreOrder.html?order_state=wait_pay&menu=transaction">待支付
+										<strong id="tj_pending">${myStoreDetailOther.orderNotPay!'0'}</strong></a>
+							</li>
+							<li>
+								<a href="${ctx}/store/order/StoreOrder.html?order_state=wait_ship&menu=transaction">待服务
+										<strong id="tj_shipped">${myStoreDetailOther.orderNotShip!'0'}</strong></a>
+							</li>
+							<li>
+								<a href="${ctx}/store/order/StoreOrder.html?order_state=yet_service&menu=transaction">已服务
+										<strong id="tj_shipping">${myStoreDetailOther.orderShiped!'0'}</strong></a>
+							</li>
+							<li>
+								<a class="bdc_red" href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">已取消订单
+										<strong class="tow">${myStoreDetailOther.orderCancle!'0'}</strong></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- 消息中心 -->
+				<div class="store_index_same store_index_mobile bt0">
+					<h1>消息中心</h1>
+					<ul class="store_index_mobile">
+						<#if pushMsgList  ?? >
+							<#list pushMsgList.list as list>
+								<li  style="width:100%;" class="list_head current marketing"><i></i>
+									<#if pushMsgList.PINGTAI_MSG == list.push_id>
+										<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;${list.title!''}&nbsp;&nbsp;
+									<#elseif pushMsgList.SYSTEM_MSG == list.push_id>
+										<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;您有一条未读的系统消息&nbsp;&nbsp;
+									<#elseif pushMsgList.ORDER_MSG == list.push_id>
+										<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;您有一笔未处理的订单&nbsp;&nbsp;
+									<#elseif pushMsgList.CARERROR_CODE == list.push_id>
+										<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;您的顾客车辆检测出严重故障&nbsp;&nbsp;
+									</#if>
+									<a href="${ctx}/store/message/message_unread.html?menu=store_set" class="red scalability">查看详情&gt;&gt;</a>
+								</li>
+							</#list>
+						</#if>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	<!--提现弹出框-->
+	<script>
+		var dialog;
+
+		function saveOrUpdate() {
+			var map = {}; // 相当于Map map = new HashMap();
+			map["title"] = "提现申请";
+			map["html"] = "${ctx}/store/capital/withdraw.html";
+			map["url"] = "${ctx}/api/reckoning/storeReckoning!drawMoneyApply.do";
+			map["form"] = "#adt_form";
+			openDialog(map);
+		}
+
+		function openDialog(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:590
+			});
+
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '保存',
+						callback : function() {
+							var draw_money = $("#draw_money");
+		                    var balance = ${myStoreDetailOther.yetSettlementCount!0};
+		                	if(draw_money.val() > balance){
+		            			alert("您提现的金额不能大于您的账户余额");	
+		            			return false;
+		            		}
+							if(!$(map["form"]).validate()){
+								return false;
+							}
+							if(!$(map["form"]).checkall()){
+								return false;
+							}
+							formSubmit(dialog, map);
+							this.button({
+										name: '保存',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function() {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+		function formSubmit(dialog, map) {
+			var options = {
+				url : map["url"],
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if(result.result==1){
+						dialog.title('申请成功，2秒后关闭此窗口。').time(3);
+						dialog.reload();
+					}else{
+						dialog.title('申请失败，'+result.message);
+						$("input[type='button']").each(function(){
+							$(this).removeAttr("disabled");
+						});
+					}
+				},
+				error : function(e) {
+					alert("出现错误，请重试");
+				}
+			};
+			$(map["form"]).ajaxSubmit(options);
+			return false;
+		}
+
+		
+
+	
+
+	</script>
+<script type="text/javascript">
+$(function(){
+	$(".store_intro_upimg").mouseover(function(){
+		$(this).find("#storeLogoForm").show();
+	})
+	$(".store_intro_upimg").mouseleave(function(){
+		$(this).find("#storeLogoForm").hide();
+	})
+	$("#storeLogo").change(function(){
+		var options = {
+			url : "${ctx}/api/base/upload-image.do?subFolder=storeLogo",
+			type : "POST",
+			dataType:"json",
+			success : function(data) {
+				if(data.fsimg!=null){
+					$.ajax({
+				    	type:"POST",
+				    	url:"${ctx}/api/b2b2c/storeApi!editStoreLogo.do?logo="+data.fsimg ,
+				        dataType: "json",
+				        success: function(result){
+				        	if(result.result==1){
+								$("#logo").attr("src",data.img);
+				        	}else{
+				        		alert(result.message);
+				        	}
+				        },error:function(e){
+							alert("出现错误请重试");        	
+				        }
+			    	});
+				}else{
+					alert(data.message);
+				}
+		 	},
+		 	error : function(e) {
+		 		alert('出现错误，请重试');
+			}
+		};
+		$("#storeLogoForm").ajaxSubmit(options);	
+	});
+	
+	
+	// 如果没有店铺名称 就说明他是未设置过店铺信息
+	if("${myStoreDetail.auditstatus!''}" == "0") {
+		alert("店铺信息未设置，请先设置店铺信息");
+		window.location = "${ctx}/store/apply/reApply.html?menu=store_set11";
+	}
+	if("${myStoreDetail.auditstatus!''}" == "1") {
+		alert("店铺信息正在审核中，请您耐心等待，如有疑问请联系中安");
+		window.location = "${ctx}/store/apply/store_audit_process.html?menu=store_set11";
+	}
+	if("${myStoreDetail.auditstatus!''}" == "2") {
+		//ajax校验审核结果
+		$.ajax({
+             url: "${ctx}/api/b2b2c/storeApi!queryStoreAuditResult.do?ajax=yes",
+             type: "POST",
+             data: "store_id=" + ${myStoreDetail.store_id!''},
+             async: false,
+             dataType: "json",
+             success: function (json) {
+            	 if(json.result == 1) {
+                     var data = json.data;
+                     var auditResult = data.audit_result;
+                     if(auditResult == '0') {
+                    	 //跳转到审核驳回页面
+                    	 alert("信息审核驳回，请您重新填写信息，如有疑问请联系中安");
+                    	 window.location = "${ctx}/store/apply/store_audit_reject.html?menu=store_set11";
+                     }
+            	 }
+             }
+         });	
+	}
+});
+
+
+
+$("#no_settlement").click(function(){
+  	location.href = "${ctx}/store/capital/transactionDetail.html?trade_status=1&menu=store_index" ;
+
+  });
+</script>
+<#include '/common/footer.html' />
+
+

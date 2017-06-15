@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content=" width=1280,user-scalable=no;">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=document.documentElement.clientWidth+"px";
+    </script>
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script type="text/javascript" src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.form-3.51.js"></script>
+    <style>
+        body{font-size: 12px!important; }
+        body * { max-height: 999999px; }
+        input,input:focus,input:active{user-select: text;}
+        #date #content .date_2 {
+            width: 100%;
+            color: #666;
+        }
+        #date #content .date_2 .date_left {
+            margin-top: 3%;
+            float: left;
+            width: 23%;
+        }
+        #date #content .date_2 .date_left li {
+            text-align: right;
+             width: 100% !important;
+            font-size: 0.032rem;
+            line-height: 0.1rem;
+        }
+        #date #content .date_2 .date_right {
+            margin-top: 3%;
+            float: left;
+            width: 77%;
+        }
+        #date #content .date_2 .date_right li {
+            width: 100% !important;
+            line-height: 0.1rem;
+        }
+        #date #content .date_2 .date_right li input {
+            border: 2px solid #999;
+            margin-left: 3%!important;
+            width: 80%;
+            height: 0.074rem;
+            font-size: 0.03rem;
+            line-height: 0.074rem;
+           padding-left:0.02rem;
+        }
+
+        .btn_yz {
+            background-color: #135481;
+            border: 0px solid #d2d2d2;
+            color: #fff;
+            padding: 0.009rem 0!important;
+             width: 30%!important;
+            text-align: center;
+            margin-left: 5px;
+            display: inline-block;
+            border-radius: 10px;
+            float: right;
+            margin-right: 17%;
+            font-size: 0.026rem;
+            line-height: 0.06rem;
+            margin-top: 0.012rem;
+        }
+        .minus2, .addition2 {
+            float: left;
+            margin-left: 3%;
+            text-align: center;
+            display: inline-block;
+            background-color: #135481;
+            color: #ffffff;
+            border-radius: 10px;
+                width: 0.1rem;
+    height: 0.076rem;
+    line-height: 0.076rem;
+    font-size: 0.034rem;
+        }
+        .app_bottom{margin-left: 15%;padding: 0%!important;font-size:0.032rem;background-color: #135481;}
+        #address{       border: 2px solid #999;  width: 80%;  margin-left: 3%; margin-top: 3%; font-size: 0.03rem;  line-height: 0.054rem; height: 0.162rem;}
+    </style>
+</head>
+
+<body >
+<#assign zxCardGoodsInfoTag=newTag("zxCardGoodsInfoTag")/>
+<#assign goodsInfo=zxCardGoodsInfoTag("'goods_id':'${goods_id!''}', 'gg_spec_value_id':'${gg_spec_value_id!''}', 'ta_spec_value_id':'${ta_spec_value_id!''}'")/>
+<div class="ww100 cb ">
+    <div class="ff40 llhh90 tc bb3"><span class="goBack " onclick="javascript:history.back(-1)"></span>购买信息</div>
+
+    <div class="ww100  fl   " >
+        <div class="fl mm2 bdfc  ">
+            <img style="width: 0.4rem;" src="${goodsInfo.ta_image!''}" alt="">
+        </div>
+		
+		<div class="fl ww40 mmt2 mml2 mmb llhh40" >
+            <p class="fb " style="font-size:0.034rem;">${goodsInfo.goods.name!''}</p>
+            <!--<p class=" mmt2">${goodsInfo.goods.intro!''}</p>-->
+            <div class="mmt2" style="font-size: 0.028rem;"><span>规格：${goodsInfo.gg_value!''}</span></div>
+            <div style="font-size: 0.028rem;"><span>图案：${goodsInfo.ta_value!''}</span></div>
+            <div style="font-size: 0.028rem;"><span>金额：${goodsInfo.card_price!''}元</span></div>
+        </div>
+		<!-- 
+        <div class="fl ml20 lh25 f14">
+            <p class="f16 fb mt20">西藏交通一卡通纪念卡</p>
+            <p class=" ">5万套交通纪念卡限量发售，以救度佛母二十一种礼赞经为背景，其中部分纪念卡为班禅活佛开光，极具收藏价值！</p>
+            <div><span>规格：异形卡</span></div>
+            <div><span>图案：双鱼异形卡</span></div>
+        </div>
+         -->
+    </div>
+    <div class="">
+        <div id="date">
+            <form action="" id="dataForm" method="post">
+
+            	<input type="hidden" name="goods_id" id="goods_id" value="${goods_id!''}"/>
+            	<input type="hidden" name="gg_spec_value_id" id="gg_spec_value_id" value="${gg_spec_value_id!''}"/>
+            	<input type="hidden" name="ta_spec_value_id" id="ta_spec_value_id" value="${ta_spec_value_id!''}"/>
+            	<input type="hidden" id="referee_code" name="referee_code" value="${referee_code!''}"/>
+                <div id="content">
+                    <div class="date_2 ">
+                        <ul class="date_left">
+                            <li>联系人 <span>*</span></li>
+                            <li>手机号 <span>*</span></li>
+                            <li>验证码 <span>*</span></li>
+                            <li>数 量 <span>*</span></li>
+                            <li>金 额 <span>*</span></li>
+                            <li>邮寄地址<span>*</span></li>
+                        </ul>
+                        <ul class="date_right">
+                            <li>
+                            	<input type="text" id="contactName" name="contactName" placeholder="&nbsp;联系人姓名" maxlength="20">
+                            	<span id="contactName_span"></span></li>
+                            <li>
+                            	<input type="number" id="mobile" name="contactPhone" placeholder="&nbsp;请输入手机号" maxlength="11">
+                            	<span id="phone_span"></span>
+                            </li>
+                            <li>
+                            	<input type="number" id="checkCode" name="checkCode" style="width: 40%;" placeholder="&nbsp;请输入验证码"  maxlength="6">
+                                <span class="btn_yz cp ">获取短信验证码</span>
+                            	<span id="checkCode_span"></span>
+                            </li>
+                            <li style="    margin-top: 2%;">
+                                <span> <span class="minus2" style="font-size: 0.04rem">—</span>
+                                <input type="number" id="order_count" style="margin-left: 1%!important;" name="order_count" class="ww20 fl numbers" value="1" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4"/>
+                                <span class="addition2 f18" style="margin-left: 1%!important;" >＋</span></span>
+                            	<span class="c999" style="font-size: 0.025rem;float: left;line-height: 0.08rem">（单位：张/套）</span>
+                            </li>
+                            <li class="cb">
+                                <span class="ml20" style="font-size: 0.032rem;margin-left: 20px;" id="total_price">${goodsInfo.card_price!''}元</span>
+                            </li>
+                            <li>
+                                <textarea name="address" id="address" cols="30" rows="10" style="padding-left: 0.02rem;" placeholder="请输入邮寄地址"></textarea>
+                            	<span id="address_span"></span>
+                            </li>
+                            <li>
+                                <div class="cb tc  date_bottom app_bottom" style="width: 40%" id="btnForm" >提&nbsp;&nbsp;&nbsp;&nbsp;  交</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div style=" margin-left: 11%; line-height: 0.035rem; font-size: 0.024rem;">
+    <div class=" cb c999 ww98"  >
+            <p>温馨提示：</p>
+            <p>请确认您购买信息，提交后将不能更改；</p>
+            <p>本纪念卡一经售出除质量外概不退换；</p>
+            <p>本纪念卡可在加入全国交通一卡通城市的公交、地铁等公共交通上进行使用，目前仅限在发卡地区进行充值。</p>
+    </div>
+</div>
+<footer style="font-size: 0.02rem;margin-top: 0.03rem;text-align: center;">
+    版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+</footer>
+<script>
+
+	//提交按钮,所有验证通过方可提交
+	$('#btnForm').click(function () {
+		var contactName = $("#contactName").val();
+	    var mobile = $("#mobile").val();
+	    var address = $("#address").val();
+	    var checkCode = $("#checkCode").val();
+	    
+	    var flag = false;
+		
+		if (contactName==""||contactName==null){
+	        $("#contactName_span").addClass("error_no");
+	        flag = true;
+	    }
+		if (checkCode==""||checkCode==null){
+	        $("#checkCode_span").addClass("error_no");
+	        flag = true;
+	    }
+		if (contactName==""||contactName==null){
+	        $("#contactName_span").addClass("error_no");
+	        flag = true;
+	    }
+	    if (mobile==""||mobile==null){
+	        $("#phone_span").addClass("error_no");
+	        flag = true;
+	    }
+	    if (address==""||address==null){
+	        $("#address_span").addClass("error_no");
+	        flag = true;
+	    }
+	    
+	    if(flag){
+	    	return false;
+	    }
+
+	    var options = {
+             url: "${ctx}/api/b2b2c/storeApi!createUserAndOrder.do?ajax=yes",
+             type: "POST",
+             async: false,
+             dataType: "json",
+             success: function (json) {
+                 if (json.result == 0) {
+                     alert(json.message);
+                 } else {
+                     //alert(json.message);
+                     //window.location.href = "future_app.html";
+                	 window.location.href = "${ctx}/cardorder/payment_app.html?mobile="+json.mobile+"&order_id="+json.order_id;
+                 }
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+             	//alert(jqXHR);
+             	//alert(textStatus);
+             	//alert(errorThrown);
+                 alert("出现错误，请重试");
+             }
+        };
+        $("#dataForm").ajaxSubmit(options);
+	});
+
+    //var isMob = /^1[34578]\d{9}$/;
+    var isMob = /^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/;
+
+    // 联系人
+    $('#contactName').blur(function () {
+        if ($(this).val().length >= 2 && $(this).val().length <= 20 && $(this).val() != '') {
+            $(this).next().removeClass('error_no').addClass('correct');
+        } else {
+            $(this).next().removeClass('correct').addClass('error_no');
+        }
+
+    });
+    //联系电话
+    $('#mobile').blur(function () {
+        var phone= $("#mobile").val();
+        if(isMob.test(phone)){
+            $(this).next().removeClass('error_no').addClass('correct');
+        } else {
+            $(this).next().removeClass('correct').addClass('error_no');
+        }
+
+    });
+ 	// 验证码
+    $('#checkCode').blur(function () {
+        if ($(this).val().length >= 2 && $(this).val().length <= 6 && $(this).val() != '') {
+            $(this).next().next().removeClass('error_no').addClass('correct');
+        } else {
+            $(this).next().next().removeClass('correct').addClass('error_no');
+        }
+
+    });
+    //地址
+    $('#address').blur(function () {
+        var address= $("#address").val();
+        if(address!="" && address!=null){
+            $(this).next().removeClass('error_no').addClass('correct');
+        } else {
+            $(this).next().removeClass('correct').addClass('error_no');
+        }
+
+    });
+
+    
+	//数字加减法
+    $('.minus2').click(function () {
+    	var numbers=$("#order_count").val();
+        if(numbers>1){
+            numbers -- ;
+            $("#order_count").val(numbers);
+        }else {
+            $("#order_count").val("1");
+        }
+    });
+    $('.addition2').click(function () {
+    	var numbers=$("#order_count").val();
+        numbers ++ ;
+        if(numbers > 9999){
+        	$("#order_count").val(9999);
+        }else{
+        	$("#order_count").val(numbers);
+        }
+    });
+
+    /*获取验证码倒计时*/
+    var wait=60;
+    function time(o) {
+        if (wait == 0) {
+            o.removeAttribute("disabled");
+            o.innerText="获取短信验证码";
+            wait = 60;
+            $(".btn_yz").css("background-color","#135481");
+            $(".btn_yz").css("color","#fff");
+        } else {
+            o.setAttribute("disabled", true);
+            o.innerText=wait+"s后"+"重新发送";
+            wait--;
+            setTimeout(function() {
+                time(o)
+            }, 1000);
+            $(".btn_yz").css("background-color","#f1f1f1");
+            $(".btn_yz").css("color","#666");
+        }
+    }
+
+    $(".btn_yz").click(function(){
+        var mobile = $("#mobile").val();
+        if(mobile == ""){
+            alert('请输入要发送验证码的手机号码');
+            return false;
+        }
+        if(!/^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/.test(mobile)){
+            alert('请输入正确的手机号码');
+            return false;
+        }
+        time(this);
+
+        $.ajax({
+            url: "${ctx}/api/b2b2c/storeApi!sendOrderCheckCode.do?ajax=yes",
+            type: "POST",
+            data: "mobile=" + mobile,
+            async: false,
+            dataType: "json",
+            success: function (json) {
+
+            }
+        });
+    });
+    
+</script>
+
+</body>
+</html>

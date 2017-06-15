@@ -1,0 +1,116 @@
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text {
+	width: 180px;
+}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="editForm" method="post" class="validate">
+			<input type="hidden" name="carmodel.id" value="${carmodel.id!''}"/>
+			<input type="hidden" name="carmodel.brand" value="${carmodel.brand!''}"/>
+			<input type="hidden" name="carmodel.brandimage" value="${carmodel.brandimage!''}"/>
+			<input type="hidden" name="carmodel.model" value="${carmodel.model!''}"/>
+			<input type="hidden" name="carmodel.modelimage" value="${carmodel.modelimage!''}"/>
+			<table width="100%">
+				<tr>
+					<th style="width:200px">首字母：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" id="car_capital" name="carmodel.capital" value="${carmodel.capital!''}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>汽车品牌：</th>
+					<td>
+						<select class="input_text" name="carmodel.brand_id" id="car_brand">
+							<option value="0">----请选择品牌----</option>
+							<#list carbrandList as brand>
+							<option value="${brand.brand_id}">${brand.name}</option> 
+							</#list>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>类型：</th>
+					<td>
+						<select class="input_text" name="carmodel_type" id="car_type">
+							<option value="0">----请选择类型----</option>
+							<option value="1" <#if carmodel.type?? && carmodel.type == '国产'>selected="selected"</#if>>国产</option>
+							<option value="2" <#if carmodel.type?? && carmodel.type == '进口'>selected="selected"</#if>>进口</option> 
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>变速箱类型：</th>
+					<td>
+						<select class="input_text" name="carmodel.gearboxtype" id="car_gearboxtype">
+							<option value="0">----请选择类型----</option>
+							<option value="1" <#if carmodel.gearboxtype?? && carmodel.gearboxtype == 1>selected="selected"</#if>>手动</option>
+							<option value="2" <#if carmodel.gearboxtype?? && carmodel.gearboxtype == 2>selected="selected"</#if>>自动</option> 
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>车系：</th>
+					<td colspan="3">
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.series" id="car_series" value="${carmodel.series!''}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>汽车年款：</th>
+					<td colspan="3">
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.nk" id="car_nk" value="${carmodel.nk!''}"/>年
+					</td>
+				</tr>
+				<tr>
+					<th>销售名称：</th>
+					<td colspan="3">
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.sales_name" id="car_salesName" value="${carmodel.sales_name!''}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>车型图片:</th>
+					<td>
+						<input type="file" class="input_text" data-options="required:true"  name="data" id="car_modelimage"/>
+					</td>
+				</tr>
+				<tr>
+					<th>核定载客数：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.seats" id="car_seats" value="${carmodel.seats!''}"/>座
+					</td>
+				</tr>
+				<tr>
+					<th>排量：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.discharge" id="car_discharge" value="${carmodel.discharge!''}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>新车购置价：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.price" id="car_price" value="${carmodel.price!''}"/>万元
+					</td>
+				</tr>
+				<tr>
+					<th>保养间隔里程：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.repairinterval" id="car_repairinterval" value="${carmodel.repairinterval!''}"/>公里
+					</td>
+				</tr>
+				<tr>
+					<th>保养间隔时间：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.repairintervaltime" id="car_repairintervaltime" value="${carmodel.repairintervaltime!''}"/>个月
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#car_brand").val('${carmodel.brand_id}');
+	});
+</script>

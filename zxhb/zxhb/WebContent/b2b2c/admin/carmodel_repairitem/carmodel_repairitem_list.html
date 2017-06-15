@@ -1,0 +1,453 @@
+<#include '/admin/header.html' >  
+<#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text{
+	width: 95%;
+}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="carmodelform">
+		<div class='buttonArea' style="height: auto">
+		     <span><a id="import" class="button blueButton" onclick="append(id)" href="javascript:void();" type="file">导入Excel</a></span>
+			 <span><a href="javascript:void(0)" class="button" onclick="append(id)">添加</a></span>
+			 <span><a href="javascript:void(0)" class="button" onclick="del()">删除</a></span>
+			 <span style="float: right;"> 
+			 	<span id="simpleSearch"> 
+				 	<input id="searchKeyword" class="input_text" type="text" value="${keyword!''}" size="30" style="width: 300px" placeholder="请输入品牌或销售名称" name="searchKeyWord">
+					<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchOrder()">搜索</a>
+				</span> 
+				<a href="javascript:void(0)" class="button" data-options="plain:true" id="aAdvanced">高级搜索</a> 
+			</span>
+		</div>
+
+		<div style="display: block;" class="searchAdvanced">
+			<input id="Advanced" name="Advanced" type="hidden" value="0" />
+			<table width="98%" border="0" cellspacing="0" cellpadding="8">
+				<tr>
+					<td width="70" align="right">首字母</td>
+					<td><input type="text" value="" id="sn" class="input_text">
+					</td>
+
+					<td width="100" align="right">年款（上市年份）</td>
+					<td><input class="easyui-datebox" style="width: 90px;height: 28px;"
+						id="nk"/></td>
+					<td width="70" align="right">品牌</td>
+					<td>
+						<select id="status" class="inputSelect valid">
+							<option value="">---所有---</option>
+						</select>
+					</td>
+
+					<td width="70" align="right">排量</td>
+					<td><input type="text" value="${name!''}" id="ship_name"
+						class="input_text"></td>
+				</tr>
+				<tr>
+					<td width="70" align="right">车系</td>
+					<td>
+						<select id="paystatus" class="inputSelect valid" style="width: 145px;">
+							<option value="">---所有---</option>
+						</select>
+					</td>
+					<td width="70" align="right">销售名称</td>
+					<td><input type="text" value="${store_name!''}" id="store_name" class="input_text"></td>
+					<td width="70" align="right">座位数</td>
+					<td><input type="text" value="${store_name!''}" id="store_nme" class="input_text"></td>
+
+			
+				</tr>
+				<tr>
+					<td width="70" align="right"></td>
+					<td colspan="7" align="center"><a id="searchAdvance"
+						class="button blueButton" onclick="searchOrder()"
+						href="javascript:;">开始搜索</a></td>
+				</tr>
+				
+			</table>
+		</div>
+
+		<div class="clear height10"></div>
+
+		<div class="shadowBoxWhite tableDiv">
+			<table class="easyui-datagrid"
+				data-options="url:'${ctx}/b2b2c/admin/carInsureAndRepair!listCarmodelRepairItemJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+				pagination="true" width="width" id="carmodeldata" sortName="capital" sortOrder="asc">
+				<thead>
+					<tr>
+						<th data-options="field:'id',checkbox:true,width:100"></th>
+						<th data-options="field:'capital',width:100">首字母</th>
+						<th data-options="field:'brand',width:100">品牌</th>
+						<th data-options="field:'type',width:100,sortable:true">品牌类型</th>
+						<th data-options="field:'series',width:100,sortable:true">车系</th>
+						<th data-options="field:'nk',width:100,sortable:true">汽车年款</th>
+						<th data-options="field:'sales_name',width:200">销售名称</th>
+						<th data-options="field:'gearboxtype',width:100">变速器类型</th>
+						<th data-options="field:'itemname',width:100">保养项目</th>
+						<th data-options="field:'repair_interval',width:100,sortable:true">保养间隔里程(km)</th>
+						<th data-options="field:'repair_interval_time',width:100,sortable:true">保养间隔时间(月)</th>
+						<th data-options="field:'action',width:100" formatter="formatOperation">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</form>
+	
+	<div id="divdia" style="display: none;"></div>
+</div>
+	<!--添加按钮调用的JS-->
+	<script type="text/javascript">
+		function append(id) {
+			var map = {}; 
+			if (!id) {
+				map["href"] = "carInsureAndRepair!addCarmodelRepairItem.do";
+				map["formId"] = "#addForm";
+				map["url"] = "carInsureAndRepair!addCarmodelRepairItemSave.do?ajax=yes";
+				map["title"] = "添加车型保养项目";
+				map["loadshow"] = "正在添加......";
+			} else {
+				if(id=="import"){
+					map["href"] = "carInsureAndRepair!toImportCarRepairItemExcel.do";
+					map["formId"] = "#importForm";
+					map["url"] = "carInsureAndRepair!importCarRepairItemExcelData.do?ajax=yes";
+					map["title"] = "导入车型保养项目Excel表格";
+					map["loadshow"] = "正在导入......";
+				}else{
+					map["href"] = "carInsureAndRepair!editCarmodelRepairItem.do?id=" + id;
+					map["formId"] = "#editForm";
+					map["url"] = "carInsureAndRepair!editCarmodelRepairItemSave.do?ajax=yes";
+					map["title"] = "修改车型保养项目";
+					map["loadshow"] = "正在修改......";
+				}
+			}
+			map["divDialog"] = "#divdia";
+			map["gridreload"] = "#carmodeldata";
+
+			if(id=="import"){
+				addImportDialog(map);
+			}else{
+				addDialog(map);
+			}
+		}
+		function addDialog(map) {
+			$(map["divDialog"]).show();
+			$(map["divDialog"]).dialog({
+				title : map["title"],
+				width : 540,
+				height : 480,
+				closed : false,
+				cache : false,
+				href : map["href"],
+				modal : true,
+				buttons : [ {
+					text : '保存',
+					iconCls : 'icon-ok',
+					handler : function() {
+						var savebtn = $(this);
+						var disabled = savebtn.hasClass("l-btn-disabled");
+						if(!disabled){
+							submitForm(map,savebtn);
+						}
+					}
+				}, {
+					text : '取消',
+					handler : function() {
+						$(map["divDialog"]).dialog('close');
+					}
+				} ]
+			});
+		}
+		function addImportDialog(map) {
+			$(map["divDialog"]).show();
+			$(map["divDialog"]).dialog({
+				title : map["title"],
+				width : 510,
+				height : 200,
+				closed : false,
+				cache : false,
+				href : map["href"],
+				modal : true,
+				buttons : [ {
+					text : '保存',
+					iconCls : 'icon-ok',
+					handler : function() {
+						var savebtn = $(this);
+						var disabled=savebtn.hasClass("l-btn-disabled");
+						if(!disabled){
+							submitForm(map,savebtn);
+						}
+					}
+				}, {
+					text : '取消',
+					handler : function() {
+						$(map["divDialog"]).dialog('close');
+					}
+				} ]
+			});
+		}
+		function submitForm(map,savebtn) {
+			var carmodel_id = $("#carmodel_id").val();//车型id
+			var car_repairItem = $("#car_repairItem").val();//保养项目id
+			var car_repairinterval = $("#car_repairinterval").val();//保养间隔里程
+			var car_repairintervaltime = $("#car_repairintervaltime").val();//保养间隔时间
+			
+			if(map["formId"] == "#addForm"){
+            	if(carmodel_id == ""){
+    				alert("请选择车型名称");
+    				return;
+    			}
+            	if(car_repairItem == 0){
+    				alert("请选择保养项目名称");
+    				return;
+    			}
+			}
+			
+			if(map["formId"] != "#importForm"){
+				if(!/^[1-9]\d*$/.test(car_repairinterval)){
+					alert("请输入正确的保养间隔里程(整数)");
+					return;
+				}
+				if(!/^[1-9]\d*$/.test(car_repairintervaltime)){
+					alert("请输入正确的保养间隔时间(整数)");
+					return;
+				}
+			}
+			
+			var formflag = $(map["formId"]).form().form('validate');
+			if (formflag) {
+				$.Loading.show(map["loadshow"]);
+				savebtn.linkbutton("disable");
+				var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) {
+						if (result.result == 1) {
+							$(map["divDialog"]).dialog('close');
+							$(map["gridreload"]).datagrid('reload');
+							$.Loading.success(result.message);
+						}
+						if (result.result == 0) {
+							$.Loading.error(result.message);
+						}
+						savebtn.linkbutton("enable");
+					},
+					error : function(e) {
+						$.Loading.error("出现错误 ，请重试");
+						savebtn.linkbutton("enable");
+					}
+				};
+				$(map["formId"]).ajaxSubmit(options);
+			}
+		}
+		function clearForm(map) {
+			$(map["formId"]).form('clear');
+		}
+		function formatOperation(value, row, index) {
+			var val = "<a class='edit' title='修改' href='javascript:void(0);' onclick='append(" + row.id + ")' ></a>";
+
+			return val;
+		}
+		
+		//删除
+		function del() {
+			var rows = $("#carmodeldata").datagrid("getSelections");
+			if (rows.length < 1) {
+				$.Loading.error('请选择要删除的记录');
+				return;
+			}
+			if (!confirm("确认要将这些记录删除吗？")) {
+				return;
+			}
+			var options = {
+				url : "carInsureAndRepair!deleteCarmodelRepairItem.do?ajax=yes",
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$.Loading.success('删除成功');
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					location.reload();
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			};
+			$('#carmodelform').ajaxSubmit(options);
+		}
+		
+		//根据品牌获取类型列表
+		function getType(brand_id){
+			$.ajax({
+				url : "carInsureAndRepair!getCarmodelRelateList.do?ajax=yes&getparam=type&brand_id="+brand_id,
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$("#car_type").empty();
+						$("#car_type").append("<option value='0'>----请选择类型----</option>");
+						$.each(result.data, function(i, item){
+							var type = item.type;
+							if(type == "国产"){
+								$("#car_type").append("<option value='1'>国产</option>");
+							}
+							if(type == "进口"){
+								$("#car_type").append("<option value='2'>进口</option>");
+							}
+						});
+					}
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			});
+		}
+		
+		//根据品牌、类型获取车系列表
+		function getSeries(type){
+			var brand_id = $("#car_brand").val();
+			$.ajax({
+				url : "carInsureAndRepair!getCarmodelRelateList.do?ajax=yes&getparam=series&brand_id="+brand_id+"&type="+type,
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$("#car_series").empty();
+						$("#car_series").append("<option value='0'>----请选择车系----</option>");
+						$.each(result.data, function(i, item){
+							$("#car_series").append("<option value='"+ item.series +"'>"+ item.series +"</option>");
+						});
+					}
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			});
+		}
+		
+		//根据品牌、类型、车系获取年款列表
+		function getNk(series){
+			var brand_id = $("#car_brand").val();
+			var type = $("#car_type").val();
+			$.ajax({
+				url : "carInsureAndRepair!getCarmodelRelateList.do?ajax=yes&getparam=nk&brand_id="+brand_id+"&type="+type+"&series="+series,
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$("#car_nk").empty();
+						$("#car_nk").append("<option value='0'>----请选择年款----</option>");
+						$.each(result.data, function(i, item){
+							$("#car_nk").append("<option value='"+ item.nk +"'>"+ item.nk +"</option>");
+						});
+					}
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			});
+		}
+		
+		//根据品牌、类型、车系、年款获取车型名列表
+		function getSalesName(nk){
+			var brand_id = $("#car_brand").val();
+			var type = $("#car_type").val();
+			var series = $("#car_series").val();
+			$.ajax({
+				url : "carInsureAndRepair!getCarmodelRelateList.do?ajax=yes&getparam=sales_name&brand_id="+brand_id+"&type="+type+"&series="+series+"&nk="+nk,
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$("#car_salesName").empty();
+						$("#car_salesName").append("<option value='0'>----请选择车型----</option>");
+						$.each(result.data, function(i, item){
+							$("#car_salesName").append("<option value='"+ item.sales_name +"'>"+ item.sales_name +"</option>");
+						});
+					}
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			});
+		}
+		
+		//根据品牌、类型、车系、年款、车型名称获取车型id
+		function getCarmodel(sales_name){
+			var brand_id = $("#car_brand").val();
+			var type = $("#car_type").val();
+			var series = $("#car_series").val();
+			var nk = $("#car_nk").val();
+			$.ajax({
+				url : "carInsureAndRepair!getCarmodelRelateList.do?ajax=yes&getparam=carmodel_id&brand_id="+brand_id+"&type="+type+"&series="+series+"&nk="+nk+"&sales_name="+sales_name,
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$("#carmodel_id").val(result.data);
+					}
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			});
+		}
+		
+	</script>
+
+<script type="text/javascript">
+	function forMoney(value, row, index) {
+		var val = "￥" + value;
+		return val;
+	}
+	
+	$(function(){
+		$(".searchAdvanced").hide();
+		//高级查询按钮
+	    $("#aAdvanced").click(function () {
+	        if ($("#Advanced").val() == "0") {
+	            $("#Advanced").val(1);
+	            $("#simpleSearch").hide();
+	            //$("#aAdvanced").text("简单搜索")
+	            $("#aAdvanced").addClass("searchAdvancedS");
+	        } else {
+	            $("#Advanced").val(0);
+	            $("#simpleSearch").show();
+	            //$("#aAdvanced").text("高级搜索");
+	            $("#aAdvanced").removeClass("searchAdvancedS");
+	        }
+	        $(".searchAdvanced").slideToggle("slow");
+	    });
+	})
+	
+	function searchOrder(){
+	var searchtype = $("#Advanced").val();
+	var keyword = $("#searchKeyword").val();
+	
+	//var start_time = $('#start_time').datebox('getValue');
+	//var end_time = $('#end_time').datebox('getValue');  
+	var status = $("#status").val();
+	var sn = $("#sn").val();
+	var ship_name = $("#ship_name").val();
+	var paystatus =	$("#paystatus").val();
+	var	shipstatus = $("#shipstatus").val();
+	var	shipping_type = $("#shipping_type").val();
+	var	payment_id = $("#payment_id").val();
+	var store_name=$("#store_name").val();
+	var parent_sn=$("#parent_sn").val();
+
+	$("#carmodeldata").datagrid('load', {
+		 stype:searchtype,
+		 keyword:keyword,
+		 
+		 page:1
+    });
+}
+</script>
+
+<#include '/admin/footer.html' >
+
+

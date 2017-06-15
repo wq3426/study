@@ -1,0 +1,89 @@
+<style>
+#server_iframe .head {style="widht:100%;margin-left：0;"}
+</style>
+<div id="server_iframe" class="h70 lh100 " style="height: 100%;">
+    <div class="head" >
+        <div class="fr h70 lh70 tal" style="width: 98%;">
+	      	<span class="ml15"><input type="checkbox"  class="checkall" id="all"/>&nbsp;&nbsp;全选</span>
+	      	<span class="fr">
+	      		<lable class="ml30">会员用户名：</lable>
+           		<input type="text" class="text" name="username" maxlength="50" >
+            	<input type="button" class="submit_1 mr10 ml10" value="搜索" onclick="searchGoods();"/>
+	      	</span>
+        </div>
+        <form id="memberRepairForm" style="width: 98%;height:424px;overflow-y: auto;" class="ml10">
+        	<input type="hidden" name="note_id" class="text" value="${noteId}">
+            <table class="goodslist_bystore" cellpadding="0" cellspacing="0">
+                <thead>
+	                <tr>
+	                    <th class="w50 h30 ">选择</th>
+	                    <th class="w150">会员用户名</th>
+	                    <th class="w180">昵称</th>
+	                    <th class="w120">电子邮箱</th>
+	                    <th class="w110">联系地址</th>
+	                </tr>
+                </thead>
+               <tbody class="bbsTab" id="repairMember">
+               
+               </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+ 		<script>
+ 		 $(".checkall").click(function(){
+
+             if($(this).attr("checked")=="checked"){
+                 $(".checkitem").each(function(){
+                     $(this).attr("checked",true);
+                 })
+             }else{
+                 $(".checkitem").each(function(){
+                     $(this).attr("checked",false);
+                 })
+             }
+
+         });
+ 		$(function(){
+      	  getAllGoods();
+      	  document.onkeydown=function(event){
+      	 	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+      	 	      if(e && e.keyCode==13){ // enter 键
+      	 	    	  search();
+      	 	      }
+      	 	 };
+        });
+       function search(){
+    		searchGoods();
+    	}
+        
+    	function searchGoods(){
+    		var userName=$("input[name='userName']").val();
+    		getAllGoods(userName);
+    	}
+        function getAllGoods(userName){
+      	  $("#repairMember").html("");
+      	  $.ajax({
+					url : "${ctx}/api/shop/member!getRepairMemberByStoreId.do",
+					type : "POST",
+					dataType : "json",
+					data : {"userName":userName},
+					async:false,
+					success : function(data) {
+						var result=data.data.memberList;
+						$.each( result, function(i, field){
+						var ss="<td><input type='checkbox'  name='username' class='checkitem' value='"+field.username+"'/></td>";
+						 $("#repairMember").append("<tr>"+ss+
+						  			"<td>"+field.username+"</td>"+
+						  			"<td>"+field.nickname+"</td>"+
+						  			"<td>"+field.email+"</td>"+
+						  			"<td>"+field.address+"</td>"+
+						  			"</tr>")  
+						});
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						alert("出现错误，请重试");
+					}
+				}); 
+        }
+       </script>

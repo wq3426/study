@@ -1,0 +1,383 @@
+<style>
+.red {
+	color: red;
+}
+.tab_box li{margin-right: 0px!important;}
+.tab_box li{height:36px!important;}
+.tabmenu ul{margin-top: 0px!important;border-bottom: 1px solid #e6e6e6!important;}
+</style>
+<a
+	href="edit_goods.html?goods_id=${storeGoods.goods_id}&menu=store_goods"
+	class="tool4 go_save_goods">编辑</a>
+<div class="store_add_goods hide0">
+	<h1>商品基本信息</h1>
+	<input type="hidden" id="goods_id" value="${storeGoods.goods_id}"/>
+	<div class="addgoods">
+		<div class="goods_attribute">
+			<dl>
+				<dt>商品分类：</dt>
+				<dd id="gcategory">
+					<#list storeGoodsCat.parentList as parent> <#if parent_index != 0>
+					<span>&nbsp;&gt;&nbsp;</span></#if> <span>${parent.name}</span>
+					</#list>
+				</dd>
+			</dl>
+		</div>
+
+		<dl>
+			<dt class="required">
+				<span class="red">*</span>商品名称：
+			</dt>
+			<dd>
+				<p>${storeGoods.name}
+				<input type="hidden" class="text" name="storeGoods.name" id="goods-name-txt"
+						value="${storeGoods.name}" isrequired="true"
+						fun="checkGoodsName" style="width: 500px;" maxlength="50"/>
+				<p>
+			</dd>
+		</dl>
+		<dl>
+			<dt nc_type="no_spec">
+				<span class="red">*</span>商品编号：
+			</dt>
+			<dd nc_type="no_spec">
+				<p>${storeGoods.sn}</p>
+			</dd>
+		</dl>
+		<dl>
+			<dt nc_type="no_spec">
+				<span class="red">*</span>市场价格：
+			</dt>
+			<dd nc_type="no_spec">${storeGoods.mktprice?string(',###.00')}</dd>
+		</dl>
+		<dl>
+			<dt nc_type="no_spec">
+				<span class="red">*</span>商品价格：
+			</dt>
+			<dd nc_type="no_spec">
+				<p>
+					${storeGoods.price?string(',###.00')}
+					<!-- 价格区间 -->
+				</p>
+			</dd>
+		</dl>
+		<dl>
+			<dt nc_type="no_spec">
+				<span class="red">*</span>最高可用安全奖励金额：
+			</dt>
+			<dd nc_type="no_spec">${storeGoods.rewards_limit?string(',###.00')}</dd>
+		</dl>
+		<dl>
+			<dt nc_type="no_spec">
+				<span class="red">*</span>成本价格：
+			</dt>
+			<dd nc_type="no_spec">
+				<p>
+					${storeGoods.cost?string(',###.00')}
+					<!-- 价格区间 -->
+				</p>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<span class="red">*</span>商品重量(g)
+			</dt>
+			<dd>
+				<p>${storeGoods.weight}</p>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<span>商品类型</span>
+			</dt>
+			<dd>
+				<p><#if storeGoods.goods_type?? && storeGoods.goods_type =="normal"> 实物类
+					 <#elseif storeGoods.goods_type?? && storeGoods.goods_type == "service"> 服务类
+				   </#if>
+				</p>
+			</dd>
+		</dl>
+		<#if storeGoods.is_pack?? && storeGoods.is_pack==0>
+		<div id="spec-input">
+			<input type="hidden" name="haveSpec" id="haveSpec"
+				value="${goodsSpec.have_spec!'0'}" /> 
+			<#list goodsSpecList as spec>	
+			<dl class="spec-bg" nctype="spec_group_dl"
+				nc_type="spec_group_dl_${spec_index}">
+				<dt>${spec.spec_name}</dt>
+				<dd>
+					<ul class="spec" specname="${spec.spec_name}">
+						<#list spec.valueList as specValue>
+						<li><span nctype="input_checkbox"> <input class="chk"
+								autocomplete="off" type="checkbox"
+								value="${specValue.spec_value_id}"
+								spec_value="${specValue.spec_value}"
+								specid="${specValue.spec_id}" />
+						</span> <span>${specValue.spec_value}</span></li> </#list>
+					</ul>
+				</dd>
+			</dl>
+			</#list>
+			<dl class="spec-bg spec-table">
+				<dt>库存配置</dt>
+				<dd>
+					<table cellspacing="0" cellpadding="0" border="0"
+						class="spec_table" width="98%">
+						<thead>
+							<tr>
+								<#if goodsSpec.have_spec?exists && goodsSpec.have_spec==1 && goodsSpec.specList?exists > 
+									<#list goodsSpec.specList as spec>
+										<th class="w1">${spec.spec_name}</th> 
+									</#list> 
+								</#if>
+								<th class="w2">货号<span class="red">*</span></th>
+								<th class="w2">销售价<span class="red">*</span></th>
+								<th class="w3">重量<span class="red">*</span></th>
+								<th class="w3">成本价</th>
+							</tr>
+						</thead>
+						<tbody>
+							<#if goodsSpec.have_spec?exists && goodsSpec.have_spec==1 && goodsSpec.productList?exists > 
+								<#list goodsSpec.productList as product> 
+									<#assign specids=''> 
+									<#assign specvids=''> 
+									<#assign propid=''>
+							<tr>
+									<#list product.specList as spec> 
+									 	<#if spec_index!=0 >
+										 <#assign specids=specids+','>
+										 <#assign specvids=specvids+','> 
+										 <#assign 	propid=propid+'_'> 
+										</#if>
+										<#assign specids=specids+spec.spec_id>
+										<#assign propid=propid+spec.spec_value_id>
+										<#assign specvids=specvids+spec.spec_value_id>
+										<td>
+											${spec.spec_value}
+											<input type="hidden" name="specvalue_${product_index}" value="${spec.spec_value}" />
+										</td> 
+									</#list>
+								<td>
+									<input type="text" style="width: 150px" class="ipt" onblur="sn_is_exist(this)" name="sns" prop='sn' propid="${propid}" value="${product.sn}"> 
+									<span style="float: left; color: red;" class="err"></span>
+								    <input type="hidden" name="productids" value="${product.product_id}" 	class="ipt" prop='productid' propid="${propid}" /></td>
+								<td>
+									<input type="hidden" value="${specids}" name="specids">
+									<input type="hidden" value="${specvids}" name="specvids">
+									<!-- 形成price id，用js通过此id反向选择checkobx --> 
+									<input type="text" size="8" name="prices" class='ipt price'
+									value="${(product.price!0)?c}" prop='price' propid="${propid}" />
+								</td>
+								<td>
+									<input type="text" size="10" name="weights" value="${(product.weight!0)?c}" class='ipt' prop='weight'
+									propid="${propid}" class="input_text" style="width: 80px" />
+								</td>
+								<td>
+									<input type="text" size="8" name="costs" value="${(product.cost!0)?c}" class='ipt' prop='cost'
+									propid="${propid}" class="input_text" style="width: 80px" />
+								</td>
+							</tr>
+								</#list> 
+							</#if>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+		</div>
+		</#if>
+		<dl>
+			<dt>
+				商品图片</br>(第一张图片为列表图片)：
+			</dt>
+			<dd>
+				<div class="goods_image">
+					<input type="hidden" name="image_default" id="image_default"
+						value="${storeGoods.original!''}" />
+					<div id="some_file_queue"></div>
+					<#if (storeGoodsInfo.galleryList?size) lt 5>
+						<!-- 循环店铺商品列表 获取默认图片 -->
+						<#list storeGoodsInfo.galleryList as gallery> 
+							<#if gallery.isdefault==1>
+								<div id="img-div-${gallery_index+1}" style="float: left; height: 100px; position: relative; text-align: center; margin-right: 5px;">
+									<img src="${gallery.thumbnail}" width="100" height="100" id="img${gallery.img_id}">  <br />
+								</div>
+								<#break> 
+							</#if>
+						 </#list>
+						<!-- 循环店铺商品列表 获取所有图片 -->
+						<#list storeGoodsInfo.galleryList as gallery>
+						    <#if gallery.isdefault==0>
+								<div id="img-div-${gallery_index}"
+									style="float: left; height: 100px; position: relative; text-align: center; margin-right: 5px;">
+									<img src="${gallery.thumbnail}" width="100" height="100"
+										id="img${gallery.img_id}"> <br />
+								</div>
+						   </#if> 
+						</#list>
+						<!-- 没有上传图片的 图片 -->
+						<#list (storeGoodsInfo.galleryList?size+1)..5 as t>
+						<div id="img-div-${t}"
+							style="float: left; height: 100px; position: relative; text-align: center; margin-right: 5px;">
+							<img
+								src="${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif"
+								name="img${t}" id="img${t}" width="100" height="100"> <br />
+						</div>
+						</#list> 
+					<#else>
+						<!-- 循环店铺商品列表 获取默认图片 -->
+						<#list storeGoodsInfo.galleryList as gallery>
+							 <#if gallery.isdefault==1>
+								<div
+									style="float: left; height: 100px; position: relative; text-align: center; margin-right: 5px;">
+									<img src="${gallery.thumbnail}" width="100" height="100"
+										id="img${gallery.img_id}">
+								</div>
+							</#if>
+						</#list>
+						<!-- 循环店铺商品列表 获取图片 -->
+						<#list storeGoodsInfo.galleryList as gallery> 
+							<#if gallery.isdefault==0>
+							<div
+								style="float: left; height: 100px; position: relative; text-align: center; margin-right: 5px;">
+								<img src="${gallery.thumbnail}" width="100" height="100" id="img${gallery.img_id}">
+							</div>
+							</#if> 
+						</#list>
+					</#if>
+				</div>
+			</dd>
+		</dl>
+
+		<dl class="tit">
+			<h3>商品详情描述</h3>
+		</dl>
+		<dl>
+			<dt>商品品牌：</dt>
+			<dd>
+				<#if storeGoods.brand_name??>
+					<p>${storeGoods.brand_name}</p>
+				<#else>
+					<p>其它品牌</p>
+				</#if>
+			</dd>
+		</dl>
+		<dl>
+			<dt>商品描述：</dt>
+			<dd  id="intro">
+				<p>
+					${storeGoods.intro!''}
+				</p>
+			</dd>
+		</dl>
+		<dl class="tit">
+			<h3>其他信息</h3>
+		</dl>
+		<dl>
+			<dt>本店分类：</dt>
+			<dd>
+				<p>
+					<#if storeGoods.store_cat_name??>
+						<p>${storeGoods.store_cat_name}</p>
+					</#if>
+				</p>
+			</dd>
+		</dl>
+		<#include '/goods/goods_preview.html' />
+		<dl>
+			<dt>商品评价:</dt>
+			<dd class="" id="goodsCommentList">
+			</dd>
+		</dl>
+		<div class="clear">
+			<p>&nbsp;</p>
+			<p>&nbsp;</p>
+		</div>
+	</div>
+</div>
+<script type = "text/javascript" src = "${ctx}/themes/b2b2cv2/js/pagerUtils.js" ></script>
+<script type="text/javascript">
+	$(function() {
+		$(".paging li").bind("click", function() {
+			//this就是当前点击的对象
+			alert($(this).text());
+			$(this).addClass("add_paging");
+			$(this).siblings("li").removeClass("add_paging");
+		})
+		showPage(1);
+	});
+	
+	function showPage(pageNo){
+		var goods_id = $("#goods_id").val();
+		var data = {
+			"goods_id":goods_id,
+			"pageNo":pageNo
+		};
+		$.ajax({
+			type : "post",
+			data : data,
+			url : "${ctx}/api/shop/commentApi!getGoodsCommentJson.do",
+			success : function(res) {
+				listComment(res);
+			},
+			error : function() {
+				alert("评论显示失败");
+			}
+		});
+	}
+	
+	function listComment(res){
+		/*后台数据分页处理*/
+		var json = $.parseJSON(res);
+		var dd =$("#goodsCommentList");
+		if(json.data.totalCount == 0 || json.result == 0){
+			dd.html("<p class=\"no_blank\">暂无符合条件的数据记录</p>");
+		}else{
+			var result = json.data.result;
+			var html = "";
+			for(var i = 0 ; i < result.length ; i++){
+				create_time = getFormatDate(result[i].create_time);
+				html+="<div class=\"bde6 h120 seeBaseInfo\">";
+				html+="<img src=\""+result[i].face+"\" alt=\"用户头像\" class=\"bdc fl\">";
+				html+="<div class=\"fl w500 mt10 ml10 lh20\">";
+				html+="<p>"+result[i].username+"</p>";
+				html+="<p class=\"pjxx"+(result[i].goods_grade)+"\"></p><br/>";
+				html+="<p>"+result[i].content+"</p>";
+				html+="</div><p class=\"fr w140 mt10\">"+create_time+"</p></div>" ;
+			}
+			var currentPageNo = json.data.currentPageNo;
+			var pageSize = json.data.pageSize;
+			var totalCount = json.data.totalCount;
+			var fuc = "javascript:showPage";
+			html+=pagerUtils(currentPageNo,pageSize,totalCount,fuc);
+			dd.html(html);
+		}
+	}
+	
+	function getFormatDate(time) { 
+			var date = new Date(time);
+	        var pattern = "yyyy-MM-dd hh:mm:ss";   
+	        return date.format(pattern);  
+	}
+	Date.prototype.format = function(format) {
+		var o = {
+			"M+" : this.getMonth() + 1,
+			"d+" : this.getDate(),
+			"h+" : this.getHours(),
+			"m+" : this.getMinutes(),
+			"s+" : this.getSeconds(),
+			"q+" : Math.floor((this.getMonth() + 3) / 3),
+			"S" : this.getMilliseconds()
+		};
+		if (/(y+)/.test(format)) {
+			format = format.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		}
+		for ( var k in o) {
+			if (new RegExp("(" + k + ")").test(format)) {
+				format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k]
+						: ("00" + o[k]).substr(("" + o[k]).length));
+			}
+		}
+		return format;
+	};
+</script>

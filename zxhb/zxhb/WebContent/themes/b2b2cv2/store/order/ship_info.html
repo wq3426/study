@@ -1,0 +1,46 @@
+<#assign storeLogiCompanyListTag=newTag("storeLogiCompanyListTag")>
+<#assign storeLogiCompanyList=storeLogiCompanyListTag()>
+	<div class="orderdetail">
+		<i class="<#if orderDetail.status==8>order_no<#else> order_ok</#if>"></i>
+		订单状态：
+		<#if orderDetail.isCod && orderDetail.status == orderState.ORDER_COMPLETE && orderDetail.pay_status==orderState.PAY_NO>
+			<@orderstatus status="${orderState.ORDER_ROG}" type="order" />
+			<#else>
+				<@orderstatus status="${orderDetail.status}" type="order" />
+		</#if>
+	</div>
+	<ul>
+		<li>1、订单附言：${orderDetail.remark!''}</li>
+		<li>2、取货时间：${orderDetail.ship_day!''}&nbsp;${orderDetail.ship_time!''}</li>
+		<li>3、发票抬头：${orderreceipt.title!'无'}</li>
+		<li>4、发票内容：${orderreceipt.content!'无'}</li>
+		<!--<li>5、物流信息：<a-->
+		<!--href="order_exp_info.html?ordersn=${orderDetail.sn}&menu=transaction"-->
+		<!--style="color: red;">点击查看</a></li>-->
+	</ul>
+<!--<div class="shipintro">-->
+<!--<h3 style="height:30px;line-height:30px;">-->
+<!--物流信息-->
+<!--<a class="order-btn3"  href="${ctx}/store/ship/logiCompany/logi_company_list.html?menu=transaction">添加物流公司</a>-->
+<!--</h3>-->
+<!--<table class="table-style">-->
+   	<!--<thead>-->
+		<!--<tr>-->
+			<!--<th class="w150">公司名称</th>-->
+        		<!--<th class="w150">物流单号</th>-->
+        		<!--<th class="w150">操作</th>-->
+      		<!--</tr>-->
+    	<!--</thead>-->
+    	<!--<tbody>-->
+    		<!--<#list storeLogiCompanyList as logiCompany>-->
+    			<!--<#if logiCompany.logi_id?? && (logiCompany.logi_id!=0)>-->
+    				<!--<tr>-->
+      				<!--<td>${logiCompany.name}</td>-->
+      				<!--<td><input type="text" class="text" name="shipNo" logi_id="${logiCompany.id}" /></td>-->
+      				<!--<td><input type="button"  name="ship" value="确定" logi_name="${logiCompany.name}" logi_id="${logiCompany.id}" class="ship_info_button"/></td>-->
+     			<!--</tr>-->
+     		<!--</#if>-->
+     	<!--</#list>-->
+    	<!--</tbody>-->
+<!--</table>-->
+<!--</div>-->

@@ -1,0 +1,271 @@
+<#include '/admin/header.html' > <#assign
+dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<!--行程展示-->
+<style>
+.input_text {
+	width: 150px;
+}
+
+.header_box {
+	border: 1px solid #ccc;
+	text-align: right;
+	border-collapse: collapse;
+	line-height: 30px;
+}
+
+.header_box td {
+	border: 1px solid #ccc;
+	padding: 0 10px;
+}
+
+.bc_ff {
+	background-color: #fff;
+}
+</style>
+<div id="detail" style="display: none; overflow: hidden"></div>
+<div id="loading"></div>
+<div class="main">
+	<div class='buttonArea' style="height: auto">
+		<span style="float: right;"> <span id="simpleSearch"> <input
+				id="searchKeyword" class="input_text" type="text" value="" size="30"
+				style="width: 300px;" placeholder="车牌号" name="searchKeyWord">
+				<a href="javascript:void(0)" class="easyui-linkbutton" id="search"
+				data-options="plain:true" onclick="searchHodometer()">搜索</a>
+		</span> <a href="javascript:void(0)" class="button" data-options="plain:true"
+			id="aAdvanced">高级搜索</a>
+		</span>
+	</div>
+	<div style="display: block;" class="searchAdvanced">
+		<input id="Advanced" name="Advanced" type="hidden" value="0" />
+		<table width="98%" border="0" cellspacing="0" cellpadding="8">
+			<!--  <tr>
+                    	<td width="" align="right">车牌：</td>
+                        <td style=""><input type="text" value="" id="carplate" name="carplate" class="input_text">
+                        </td>
+                        <td width="" align="right">交易对象:</td>
+                        <td style=""><input type="text" value="" id="object_name" name="object_name" class="input_text">
+                        </td>
+                        <td width="" align="right">交易类型:</td>
+                        <td style=""><select id="trade_big_type" class="inputSelect valid"
+                                    style="width: 145px;">
+                            <option value="">---所有---</option>
+                        </select></td>
+                        <td width="" align="right">交易时间</td>
+                        <td style=""><input class="easyui-datebox" style="width: 90px;height: 28px;"
+                                   id="start_time" data-options="buttons:buttons" /> <span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                            <input class="easyui-datebox" style="width: 90px;height: 28px;" id="end_time"
+                                   data-options="buttons:e_buttons" /></td>
+                        <td style="" align="center"><a id="searchAdvance"
+                                                          class="button blueButton " onclick="searchSettlement()"
+                                                          href="javascript:;">开始搜索</a></td>
+
+                    </tr> -->
+		</table>
+	</div>
+	<div class="clear height10"></div>
+	<div class="shadowBoxWhite tableDiv">
+		<table id="dgs" class="easyui-datagrid"
+			data-options="url:'${ctx}/b2b2c/admin/carHodometer!list_json.do',remoteSort:false,pageList: [10,20,40],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" width="width">
+			<thead>
+				<tr>
+					<th data-options="field:'carplate',width:50">车牌号</th>
+					<th data-options="field:'starttime',width:50,align:'center'"
+						formatter="formatTime">起始时间</th>
+					<th data-options="field:'hotcartime',width:50"
+						formatter="formatDate">热车时长</th>
+					<th data-options="field:'idlingtime',width:50"
+						formatter="formatDate">怠速时长</th>
+					<th data-options="field:'drivingtime',width:50"
+						formatter="formatDate">驾驶时长</th>
+					<th data-options="field:'endtime',width:50" formatter="formatTime">停止时间</th>
+					<th data-options="field:'mile',width:70">行驶里程(km)</th>
+					<th data-options="field:'totalmile',width:70">总里程(km)</th>
+					<th data-options="field:'idlingoilconsumption',width:70">怠速耗油量(L)</th>
+					<th data-options="field:'maxspeed',width:80">最高车速(km/h)</th>
+					<th data-options="field:'maxrevolution',width:50">最高转速</th>
+					<th data-options="field:'fastaccelarationnum',width:50">急加速(次)</th>
+					<th data-options="field:'slambrakenum',width:50">急减速(次)</th>
+					<th data-options="field:'overdriving',width:60">疲劳驾驶(次)</th>
+					<th data-options="field:'overspeed',width:50">超速次数(次)</th>
+					<th data-options="field:'maxrevolution_overtime',width:60">最大转速超速(大于5000)</th>
+					<th data-options="field:'carstatus',width:40">车况</th>
+					<th data-options="field:'drivingaction',width:50">驾驶行为</th>
+					<th data-options="field:'drivingscore',width:50">驾驶得分</th>
+					<!--<th  data-options="field:'insuregain',width:50" formatter="formatMoney">保险收益</th> 
+                        <th  data-options="field:'repairgain',width:50" formatter="formatMoney">保养收益</th>  -->
+					<th data-options="field:'deduction',width:60"
+						formatter="formatMoney">危险扣除金额</th>
+					<th data-options="field:'reward',width:50" formatter="formatMoney">行程奖励</th>
+					<th data-options="field:'gps_imgurl',width:50"
+						formatter="formatGps">GPS</th>
+					<th data-options="field:'action',width:50,align:'center'">操作</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+	function formatMoney(value, row, index) {
+		var val = "￥" + value;
+		return val;
+	}
+	function formatTime(value, row, index) {
+		if (value == null || value == 0) {
+			return "";
+		} else {
+			return getFormatDateByLong((value / 1000), "yyyy-MM-dd hh:mm:ss");
+		}
+	}
+	function formatDate(value, row, index) {//毫秒格式化时间
+		if (value == null) {
+			return "";
+		} else {
+			var returnValue = "";
+			var stime = Math.floor(value / 1000);
+			if (stime >= 60) {
+				var s = stime % 60;
+				returnValue = (s + "s") + returnValue;
+			} else {
+				returnValue = (stime + "s") + returnValue;
+				return returnValue;
+			}
+			var mtime = Math.floor(stime / 60);
+
+			if (mtime >= 60) {
+				var m = mtime % 60;
+				returnValue = (m + "m:") + returnValue;
+			} else {
+				returnValue = (mtime + "m:") + returnValue;
+				return returnValue;
+			}
+			var htime = Math.floor(mtime / 24);
+			if (htime >= 24) {
+				var h = htime % 24;
+				returnValue = (h + "h:") + returnValue;
+			} else {
+				returnValue = (htime + "h:") + returnValue;
+			}
+			return returnValue;
+		}
+	}
+
+	function formatGps(value, row, index) {
+		var val = "";
+		val = "<a href='#' onclick='showGps(\"" + row.gps_imgurl
+				+ "\")'>展示地图</a>";
+		return val;
+	}
+	function showGps(img) {
+		img = encodeURI(encodeURIComponent(img));
+		$("#detail").show();
+		$('#detail')
+				.dialog(
+						{
+							title : '查看图片',
+							width : 750,
+							top : 100,
+							closed : false,
+							cache : false,
+							href : '${ctx}/b2b2c/admin/carHodometer!showGpsImg.do?gps_imgurl='
+									+ img,
+							modal : true
+						});
+	}
+
+	function formatOperation(value, row, index) {
+		var val = "";
+		val = "<a href='#' onclick='detail(\"" + row.sn + "\","
+				+ row.trade_big_type + ")'>查看详情</a>";
+		return val;
+	}
+
+	function detail(sn, trade_big_type) {
+		$("#detail").show();
+		$('#detail')
+				.dialog(
+						{
+							title : '查看详情',
+							width : 750,
+							top : 100,
+							closed : false,
+							cache : false,
+							href : '${ctx}/b2b2c/admin/adminSettlement!settlementDetail.do?sn='
+									+ sn + '&trade_big_type=' + trade_big_type,
+							modal : true
+						});
+	}
+
+	var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+	buttons.splice(1, 0, {
+		text : '清空',
+		handler : function(target) {
+			$('#start_time').datebox('setValue', "");
+		}
+	});
+
+	var e_buttons = $.extend([], $.fn.datebox.defaults.buttons);
+	e_buttons.splice(1, 0, {
+		text : '清空',
+		handler : function(target) {
+			$('#end_time').datebox('setValue', "");
+		}
+	});
+
+	function searchHodometer() {
+		var searchtype = $("#Advanced").val();
+		var keyword = "";
+		if (searchtype == 1) {
+		} else {
+			keyword = $("#searchKeyword").val();
+		}
+		/*  if(start_time>end_time){
+		     $.Loading.error("结束时间不能小于开始时间");
+		     return;
+		 } */
+		$("#dgs").datagrid('load', {
+			keyword : keyword,
+			page : 1
+		});
+	}
+
+	$(function() {
+		$(".searchAdvanced").hide();
+		//高级查询按钮
+		$("#aAdvanced").click(function() {
+			if ($("#Advanced").val() == "0") {
+				$("#Advanced").val(1);
+				$("#simpleSearch").hide();
+				//$("#aAdvanced").text("简单搜索")
+				$("#aAdvanced").addClass("searchAdvancedS");
+			} else {
+				$("#Advanced").val(0);
+				$("#simpleSearch").show();
+				//$("#aAdvanced").text("高级搜索");
+				$("#aAdvanced").removeClass("searchAdvancedS");
+			}
+			$(".searchAdvanced").slideToggle("slow");
+		});
+		$("#searchBtn").click(function() {
+			$("#searchcbox").show();
+		});
+
+		$("#closeBtn").click(function() {
+			$("#searchcbox").hide();
+		});
+		$("#dgs").datagrid({
+			onLoadSuccess : function(data) {
+				$("#income_money").text(data.income_money);
+				$("#income_number").text(data.income_number);
+				$("#expend_money").text(data.expend_money);
+				$("#expend_number").text(data.expend_number);
+			}
+		});
+
+	});
+</script>
+
+<div id="log"></div>
+
+<#include '/admin/footer.html' >
+

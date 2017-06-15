@@ -1,0 +1,243 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .odd {
+        background-color: #f7f7f7;
+    }
+
+    .btn_too:hover {
+        color: #FF4A00
+    }
+</style>
+<div class="store_center">
+    <#include '/store/left_menu.html' />
+    <div id="sotre_right_content" class="sotre_right_content">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>></span>
+            <a href="#"> 商家设置 </a><span>></span>保养项目价格表
+        </div>
+        <div class="store_right_main">
+            <div class="tabmenu">
+                <ul class="tab pngFix">
+                    <li class="active">
+                        <a href="#">保养项目价格表</a>
+                    </li>
+                </ul>
+                <div class="store_goods_tool">
+                    <span class="ncu_btn3 cp" id="trash" onclick="importPrice()">&nbsp;导入Excel&nbsp;</span>
+                </div>
+            </div>
+            <div class="mt10 tal">
+                <span>车系 : </span><input type="text" class=" text" id="car_series" value="${car_series!''}">
+                <span class="pl20">年款 : </span><input type="text" class=" text" id="car_nk" value="${car_nk!''}">
+                <span class="pl20">车型 : </span><input type="text" class=" text" id="car_sales_name" value="${car_sales_name!''}">
+                <input type="button" class="submit submit search_btn" id="btnSearch" value="搜 索">
+            </div>
+            <#assign storeCarModelListTag=newTag("storeCarModelListTag")>
+			<#assign msdata=storeCarModelListTag()/>
+            <!-- 列表 -->
+            <div class="store_goodslist mt10">
+                <form id="storeGoodsForm">
+                    <table class="timeSharingList" cellpadding="0" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th class="w50">序号</th>
+                            <th class="w130">品牌</th>
+                            <th class="w130">车系</th>
+                            <th class="w100">年款</th>
+                            <th class="w400">车型</th>
+                            <th class="w170">操作</th>
+                        </tr>
+                        </thead>
+                        <#if msdata.pageList.totalCount != 0 >
+                        	<tbody id="bbsTab">
+                        	<#list msdata.pageList.result as ms>
+		                        <tr class="h70">
+		                            <td>${(ms_index+1)!''}</td>
+		                            <td>${ms.brand!''}</td>
+		                            <td>${ms.series!''}</td>
+		                            <td>${ms.nk!''}</td>
+		                            <td>${ms.sales_name!''}</td>
+		                            <td>
+		                                <span class="btn_too btn_edit cp" onclick="edit_ItemPrice('${ms.store_id!''}','${ms.carmodel_id!''}')">修改价格</span>
+		                            </td>
+		                        </tr>
+                        	</#list>
+                        	</tbody>
+                    		  </table>
+                        	<@pager pageno="${msdata.pageList.currentPageNo!'1'}" pagesize="${msdata.pageList.pageSize}" totalcount="${msdata.pageList.totalCount}" />
+						<#else>
+							</table>
+							<p class="no_blank">暂无符合条件的数据记录</p>
+						</#if>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function test() {
+        var txt = document.getElementById("txt");
+        var btn = document.getElementById("btn");
+        if (txt.disabled) {
+            txt.disabled = false;
+            btn.value = "切换成disabled状态";
+        }
+        else {
+            txt.disabled = true;
+            btn.value = "切换成可以输入状态";
+        }
+    }
+</script>
+<!--table隔行变色-->
+<script>
+    $(document).ready(function () {
+    	document.onkeydown=function(event){
+     	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+     	      if(e && e.keyCode==13){ // enter 键
+     	    	 search();
+     	      }
+     	 };
+    	
+//隔行变色
+        $("#bbsTab").find("tr:odd").addClass("odd");
+// 编辑按钮
+//        $(".btn_edit").click(function () {
+//            var txt = $(this).parent().parent().find("input");
+//            var btn_edit=$(this).html();
+//            alert(btn_edit);
+//            if (txt.disabled) {
+//                txt.disabled = false;
+//            }
+//            else {
+//                txt.disabled = true;
+//            }
+//        })
+       // $(".ro").attr("disable", "false");
+       /**
+        $(".btn_edit").click(function () {
+        	var id = $(this).attr("id");
+        	if($(this).text()=="编辑"){
+        		var text1 = $(this).parent().parent().find(".ro")[0].innerText;
+                var text2 = $(this).parent().parent().find(".or")[0].innerText;
+                $(this).parent().parent().find(".ro").empty();
+                $(this).parent().parent().find(".or").empty();
+                $(this).parent().parent().find(".ro").append("<input type='text' id='price_input_"+ id +"' value='"+text1+"'/>");
+                $(this).parent().parent().find(".or").append("<input type='text' id='repair_price_input_"+ id +"' value='"+text2+"'/>");
+                $(this).text("保存");
+                $(this).attr("class","btn_too btn_submit");
+        	}else if($(this).text()=="保存"){
+        		var text1 = $("#price_input_"+id).val();
+        		var text2 = $("#repair_price_input_"+id).val();
+        		$(this).parent().parent().find(".ro").empty();
+        		$(this).parent().parent().find(".or").empty();
+        		$(this).parent().parent().find(".ro").append(text1);
+        		$(this).parent().parent().find(".or").append(text2);
+        		$(this).text("编辑");
+        		$(this).attr("class","btn_too btn_submit");
+        	}
+        })
+        **/
+        
+        $("#btnSearch").click(function() {
+			search();
+		});
+	
+    });
+    
+    //条件搜索
+	function search() {
+        var car_series = $("#car_series").val();
+        var car_nk = $("#car_nk").val();
+        var car_sales_name = $("#car_sales_name").val();
+        
+        if(car_nk != "" && !/^[0-9]{4}$/.test(car_nk)){
+			alert("请输入正确的年份");
+			return;
+		}
+        
+		location.href="maintenance_itemPriceList.html?car_series="+car_series+"&car_nk="+car_nk+"&car_sales_name="+car_sales_name+"&menu=store_set11";
+    }
+</script>
+<!--加载弹出页面-->
+<script>
+    var dialog;
+
+    function importPrice() {
+        var map = {}; // 相当于Map map = new HashMap();
+        map["title"] = "保养价格导入";
+        map["html"] = "add_maintenance.html";
+        map["form"] = "#import_form";
+        map["url"] = "${ctx}/api/b2b2c/storeApi!importStoreRepairItem.do?ajax=yes";
+        openDialog(map);
+    }
+    //保养项目价格编写
+    function edit_ItemPrice(store_id, carmodel_id) {
+        var map = {}; // 相当于Map map = new HashMap();
+        map["title"] = "保养项目价格表修改";
+        map["html"] = "editItemPrice.html?store_id="+store_id+"&carmodel_id="+carmodel_id;
+        openDialog(map);
+    }
+    function openDialog(map) {
+        dialog = $.dialog({
+            title: map["title"],
+            lock: true,
+            min: false,
+            max: false,
+            width: 500
+        });
+
+        $.ajax({
+            url: map["html"],
+            cache: false,
+            success: function (html) {
+                dialog.content(html);
+                dialog.button([{
+                    name: '保存',
+                    callback: function () {
+                        formSubmit(dialog, map);
+
+                        this.button({
+                                    name: '保存',
+                                    disabled: false
+                                })
+                                .lock();
+                        return false;
+                    }
+                }, {
+                    name: '取消'
+                }]);
+            },
+            error: function () {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+
+    function formSubmit(dialog, map) {
+        var options = {
+            url: map["url"],
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    dialog.title('保存成功，2秒后关闭此窗口。').time(3);
+                    dialog.reload();
+                } else {
+                    dialog.title('保存失败，' + result.message);
+                    $("input[type='button']").each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $(map["form"]).ajaxSubmit(options);
+        return false;
+    }
+</script>
+<#include '/common/footer.html' />

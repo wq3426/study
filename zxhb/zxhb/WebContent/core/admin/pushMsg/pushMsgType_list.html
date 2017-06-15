@@ -1,0 +1,103 @@
+<#include '/admin/header.html' >
+<style>
+.tableDiv table tr td {
+    text-align:center;
+}
+.input_text{
+	width: 95%;
+}
+</style>
+<div class="main">
+	<div class="buttonArea">
+		<a href="javascript:void(0)" class="button blueButton" onclick="append()">添加</a> 
+	</div>
+	<div class="shadowBoxWhite tableDiv">
+		<form id="pushMsgform">
+			<table class="easyui-datagrid"
+				data-options="url:'${ctx}/core/admin/pushMsgType!listJson.do',fitColumns:'true',singleSelect:'true'"
+				pagination="true" id="pushMsgTypedata" >
+				<thead>
+					<tr>
+						<th data-options="field:'push_id',width:100">Id</th>
+						<th data-options="field:'push_type',width:100">消息类型</th>
+					</tr>
+				</thead>
+			</table>
+		</form>
+		<div id="divdia" style="display: none;"></div>
+	</div>
+</div>
+<script type="text/javascript">
+
+	function append() {
+		var map = {}; // Map map = new HashMap();
+		map["href"] = "pushMsgType!add.do";
+		map["formId"] = "#addForm";
+		map["url"] = "pushMsgType!addPushMsgType.do?ajax=yes";
+		map["title"] = "新增消息类型";
+		map["loadshow"] = "正在添加......";
+		map["divDialog"] = "#divdia";
+		map["gridreload"] = "#pushMsgTypedata";
+
+		addDialog(map);
+	}
+	function addDialog(map) {
+		$(map["divDialog"]).show();
+		$(map["divDialog"]).dialog({
+			title : map["title"],
+			width : 800,
+			height : 400,
+			closed : false,
+			cache : false,
+			href : map["href"],
+			modal : true,
+			buttons : [ {
+				text : '保存',
+				iconCls : 'icon-ok',
+				handler : function() {
+					var savebtn = $(this);
+	　　				var disabled=savebtn.hasClass("l-btn-disabled");
+	　　				if(!disabled){
+						submitForm(map,savebtn);
+					}
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					$(map["divDialog"]).dialog('close');
+				}
+			} ]
+		});
+	}
+	function submitForm(map,savebtn) {
+		var formflag = $(map["formId"]).form().form('validate');
+		if (formflag) {
+			$.Loading.show(map["loadshow"]);
+			savebtn.linkbutton("disable");
+			var options = {
+				url : map["url"],
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$(map["divDialog"]).dialog('close');
+						$(map["gridreload"]).datagrid('reload');
+						$.Loading.success(result.message);
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					savebtn.linkbutton("enable");
+				},
+				error : function(e) {
+					$.Loading.error("出现错误 ，请重试");
+					savebtn.linkbutton("enable");
+				}
+			};
+			$(map["formId"]).ajaxSubmit(options);
+		}
+	}
+
+	
+</script>
+<#include '/admin/footer.html' >

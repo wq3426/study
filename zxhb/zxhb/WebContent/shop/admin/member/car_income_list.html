@@ -1,0 +1,77 @@
+<#include '/admin/header.html' >
+<style>
+.input_text{
+	width: 95%;
+}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="incomeform">
+		<div id="tb" style="height: auto">	
+			<span style="float: right;"> 
+				<span id="simpleSearch">
+					<input class="easyui-datebox" style="width: 90px;height: 28px;" id="start_time" />
+                    <span>&nbsp;~&nbsp;</span>
+                    <input class="easyui-datebox" style="width: 90px;height: 28px;" id="end_time" /> 
+					<a href="javascript:void(0)" class="easyui-linkbutton" id="search" 
+					data-options="plain:true" onclick="searchIncome()">搜索</a>
+				</span>
+			</span>
+		</div>
+		<div class="clear height10"></div>
+		<div class="shadowBoxWhite tableDiv">
+		<table class="easyui-datagrid"
+			data-options="url:'${ctx}/shop/admin/member!carIncomeDetailListJson.do?carplate=${carplate}',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" id="incomedata" sortName="id" sortOrder="desc" >
+			<thead>
+				<tr>
+					<th data-options="field:'id',checkbox:true"></th>
+					<th data-options="field:'type',width:200">收支项目</th>
+					<th data-options="field:'timeline',width:200" formatter="formatTime">时间</th>
+					<th data-options="field:'reward',width:200">金额数量</th>					
+					<th data-options="field:'detail',width:300">详情</th>					
+				</tr>
+			</thead>
+		</table>
+		</div>
+	</form>
+	<div id="divdia" style="display: none;"></div>
+
+</div>
+<script type="text/javascript">
+
+	//时间格式转换
+	function formatTime(value, row, index) {
+		value = value/1000;
+		return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+	}
+
+	//执行查询操作
+	function searchIncome() {
+		var start_time = $('#start_time').datebox('getValue');
+		var end_time = $('#end_time').datebox('getValue'); 		
+		
+		//校验时间
+		if(start_time > end_time){
+			alert("开始时间不得大于结束时间！");
+			return;
+		}
+				
+		//如果手动输入日期搜索，需判断输入的内容是否为正确的日期格式。 
+		//利用正在表达式判断输入的日期格式是否有误。 修改人:DMRain 2015-12-02
+		if(start_time != "" || end_time != ""){
+			var reg = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/;
+			if(!start_time.match(reg) || !end_time.match(reg)){ 
+				alert("输入的日期格式有误！");
+				return;
+			}
+		}
+		
+		$("#incomedata").datagrid('load', {	
+			start_time : start_time,
+			end_time : end_time,
+			page : 1
+		});
+	}
+</script>
+<#include '/admin/footer.html' >

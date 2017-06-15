@@ -1,0 +1,435 @@
+<#include '/store/store_header.html' />
+<#assign noteServerListTag=newTag("noteServerListTag")> 
+<#assign noteServerList=noteServerListTag()/>
+<#assign storeCostTag=newTag("storeCostTag")>
+<#assign storeCost=storeCostTag("{'sale_type':1}")/>
+<#assign storeCostForBuyTag=newTag("storeCostForBuyTag")>
+<#assign storeCostForBuy=storeCostForBuyTag("'saleType':1")!''/>
+<script  src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .search_store_commont {
+        padding: 0px 0px 0px 20px;}
+    .clear_1{
+        padding: 3px 15px;
+        background-color: #F1F1F1;
+        border: 1px solid #A5A5A5;
+    }
+	.bonuslist {
+		padding:  0px 20px 20px 20px;
+	}
+</style>
+<div class="store_center">
+    <#include '../left_menu.html' />
+    <div id="sotre_right_content" class="sotre_right_content">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>营销管理</span>
+            <span> > </span>短信服务
+        </div>
+        <div class="store_right_main">
+            <div class="tabmenu">
+                <ul class="tab pngFix">
+                    <li class="active commont_list">
+                        <a href="${ctx}/store/information/information.html?menu=promotion">短信服务</a>
+                    </li>
+                    <li class="mt10">&nbsp;&nbsp;&nbsp;&nbsp;用于进行短信提醒的生成和发放</li>
+                </ul>
+                <div class="store_commont_search">
+                    <!-- <a title="免费申请" class="ncu_btn3" href="javascript:void(0)" onclick="purchase(0)" style="margin-right: 100px;" >免费申请</a> -->
+                    <a title="新增短信提醒"  class="ncu_btn3 update_btn" href="javascript:void(0)" onclick="saveOrUpdate()">新增短信提醒 </a>
+                </div>
+            </div>
+            <p class="fl mt10 pb10">
+			<#if storeCostForBuy.storeCost??>
+					<input type="hidden" name="surpNumForBuy" class="text" value="${storeCostForBuy.storeCost.surp_num}">
+					<span style="float: right;"  class="mr60">&nbsp;&nbsp;已经使用购买发送数量:<b class="f16 color_r">${storeCostForBuy.storeCost.used_num}</b>,剩余发送数量:<b class="f16 color_r">${storeCostForBuy.storeCost.surp_num}</b><span onclick="purchase(1)" class="color_r fr pl10 cp">点击购买</span></span>
+				<#else>
+					<input type="hidden" name="surpNumForBuy" class="text" value="0">
+					<span style="float: right;">&nbsp;&nbsp;已经购买发送数量:<b class="f16 color_r">0</b>,剩余发送数量:<b class="f16 color_r">0</b> <span onclick="purchase(1)" class="color_r fr pl10 cp">点击购买</span> </span>
+			</#if>
+			<#if storeCost.storeCost?? >
+					<input type="hidden" name="surpNumForFree" class="text" value="${storeCost.storeCost.surp_num}">
+					<span style="float: right;">&nbsp;&nbsp;本月已经使用免费发送数量:<b class="f16 color_r">${storeCost.storeCost.used_num}</b>,剩余免费发送数量:<b class="f16 color_r">${storeCost.storeCost.surp_num}</b> <!-- <span onclick="purchase(0)" class="color_r fr pl10 pr20 cp">点击申请</span> --></span>
+				<#else>
+					<input type="hidden" name="surpNumForFree" class="text" value="0">
+					<span style="float: right;">&nbsp;&nbsp;本月已经使用免费发送数量:<b class="f16 color_r">0</b>,剩余免费发送数量:<b class="f16 color_r">0</b><!-- <span onclick="purchase(0)" class="color_r fr pl10 pr20 cp">点击申请</span> --></span>
+		    </#if>
+		    
+		  </p>
+        </div>
+		
+        <div class="bonuslist s_commont_list">
+                <table class="list_table">
+                    <thead>
+                    <tr>
+                        <th class="w60 bl">选择</th>
+                        <th class="w120">短信名称</th>
+                        <th class="w480">内容</th>
+                        <th class="w100">发送数量</th>
+                        <th class="w180 br">操作</th>
+                    </tr>
+                    </thead>
+                   <#if noteServerList.totalCount != 0 >
+                    <tbody class="bbsTab">
+                    	<#list noteServerList.noteList.result as note>
+                            <tr>
+                                <td ><input type="checkbox" name="note_id" value="" class="checkitem" ></td>
+                                <td>${note.note_name}</td>
+                                <td style="text-align: left;padding: 10px ;">${note.note_detail}</td>
+                                <td>${note.send_count}</td>
+                                <td>
+                                    <div style="line-height: 1.5;">
+                                        <a href="javascript:void(0)" class="update_btn tool2" onclick="saveOrUpdate(${note.note_id})">编辑</a>
+                                        <a href="javascript:void(0)" class="tool2" onclick="open_member_list(${note.note_id})">分发</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </#list>
+                    </tbody>
+                </table>
+                <@pager pageno="${noteServerList.page!'1'}" pagesize="${noteServerList.pageSize}" totalcount="${noteServerList.totalCount}" />
+				<#else>	
+			  		</table>
+			  		<p class="no_blank">暂无符合条件的数据记录</p>
+			  	</#if>
+        	</div>
+        </div>
+    </div>
+</div>
+    <!--购买短信服务/免费申请短信服务-->
+    <script>
+        var dialog;
+
+        function purchase(isfree) {
+            var map = {}; // 相当于Map map = new HashMap();
+            if (isfree == 1) {
+                map["title"] = "购买短信服务";
+                map["html"] = "purchase_information.html";
+                map["url"] = "${ctx}/api/b2b2c/saleaudit!add_buyBonus.do";
+                map["form"] = "#add_buy_form";
+                openDialogForBuy(map);
+            } else {
+                map["title"] = "免费申请短信服务";
+                map["html"] = "apply_information.html";
+                map["url"] = "${ctx}/api/b2b2c/saleaudit!apply_freeNote.do";
+                map["form"] = "#add_free_form";
+                openDialogForFree(map);
+            }
+        }
+      //购买页面
+		function openDialogForBuy(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:500
+			});
+
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '购买',
+						callback : function() {
+							var id=$('input:radio[name="saleFreeId"]:checked').val();
+							if(typeof(id) == "undefined"){
+								$.alert("请选择购买信息");
+								return false;
+							}
+							formSubmitForBuy(dialog, map);
+							this.button({
+										name: '购买',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function() {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+		
+		function formSubmitForBuy(dialog, map) {
+			var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) { 
+					 	if(result.result==1){ 
+							dialog.title('购买成功，3秒后关闭此窗口。').time(5); 
+							dialog.reload();
+						}else{
+							dialog.title('购买失败，'+result.message);
+							dialog.reload();
+						} 
+					},
+					error:function(XmlHttpRequest, textStatus, errorThrown) {
+						alert(XmlHttpRequest);
+						alert(textStatus);
+						alert(errorThrown);
+						alert("出现错误，请重试");
+						}
+				};
+				$(map["form"]).ajaxSubmit(options);
+				return false;
+		}
+		
+      //免费申请
+		function openDialogForFree(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:500
+			});
+
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '申请',
+						callback : function() {
+							var val=$('input:radio[name="auditId"]:checked').val();
+							if(typeof(val) == "undefined"){
+								$.alert("请选择申请条数");
+								return false;
+							}
+							formSubmitForFree(dialog, map);
+							this.button({
+										name: '申请',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function(e) {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+		
+		function formSubmitForFree(dialog, map) {
+			var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) { 
+					 	if(result.result==1){ 
+							dialog.title('申请成功，3秒后关闭此窗口。').time(5); 
+							dialog.reload();
+						}else{
+							dialog.title('申请失败，'+result.message);
+							$("input[type='button']").each(function(){ 
+								$(this).removeAttr("disabled");
+							});
+						} 
+					},
+					error:function(XmlHttpRequest, textStatus, errorThrown) {
+						alert(XmlHttpRequest);
+						alert(textStatus);
+						alert(errorThrown);
+						alert("出现错误，请重试");
+						}
+				};
+				$(map["form"]).ajaxSubmit(options);
+				return false;
+		}
+        
+    </script>
+<!--新增短信提醒-->
+<script>
+    var dialog;
+
+    function saveOrUpdate(noteId) {
+        var map = {}; // 相当于Map map = new HashMap();
+        if(!noteId){
+	        map["title"] = "新增短信提醒";
+	        map["html"] = "add_information.html";
+	        map["url"] = "${ctx}/api/b2b2c/noteserver!add_noteInfo.do";
+	        map["form"] = "#add_form";
+        }else{
+        	map["title"] = "编辑短信提醒";
+            map["html"] = "edit_information.html?noteId=" + noteId;
+            map["url"] = "${ctx}/api/b2b2c/noteserver!edit_noteInfo.do";
+            map["form"] = "#edit_form";
+        }
+        openDialogadd(map);
+    }
+
+    function openDialogadd(map) {
+        dialog = $.dialog({
+            title : map["title"],
+            lock : true,
+            min : false,
+            max : false,
+            width:460
+        });
+        $.ajax({
+            url : map["html"],
+            cache : false,
+            success : function(html) {
+                dialog.content(html);
+                dialog.button([{
+                    name : '保存',
+                    callback : function(event) {
+                        if($("#note_name").val()==''){
+							$.alert("请输入短信名称！");
+							return false;
+						} 
+                        if($("#note_detail").val().indexOf(" ")>=0){
+                        	var noteDetail = $("#note_detail").val().replace(/(^\s*)|(\s*$)/g,''); 
+	                        if($("#note_detail").val().replace(/(^\s*)|(\s*$)/g,'') ==''){
+								$.alert("请输入短信内容！");
+								return false;
+							}else{
+		                        var codes = "我操,我草,我日,你妈,你妹,你老母,法轮功,共产党,国民党,反政府,反国家,反人民,操,艹,赌,暴力,毒品";
+		                        var noteDetail = $("#note_detail").val().replace(/(^\s*)|(\s*$)/g,'');
+		                        if (codes.indexOf(noteDetail) != -1) {
+		                        	$.alert("短信内容中包含敏感汉字，请重新输入！");
+		                        	$("#note_detail").val('');
+		                      		return false;
+			               	     }
+							}
+                        }
+                        formSubmit(dialog,map);
+                        
+                        this.button({
+                                name: '保存',
+                                disabled: false
+                            })
+                            .lock();
+                        return false;
+                    }
+                }, {
+                    name : '取消'
+                } ]);
+            },
+            error : function() {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+	function formSubmit(dialog, map) {
+		var options = {
+			url : map["url"],
+			type : "POST",
+			dataType : 'json',
+			success : function(result) { 
+				if(result.result==1){ 
+					dialog.title('保存成功，2秒后关闭此窗口。').time(3); 
+					dialog.reload();
+				}else{
+					dialog.title('保存失败，'+result.message);
+					$("input[type='button']").each(function(){ 
+						$(this).removeAttr("disabled");
+					});
+				}
+			},
+			error : function(e) {
+				alert("出现错误，请重试");
+			}
+		};
+		$(map["form"]).ajaxSubmit(options);
+		return false;
+	}
+
+<!--隔行变色-->
+    $(".bbsTab tr:odd").addClass("bgc_f1");
+</script>
+<!--弹出会员用户名单-->
+<script>
+    function open_member_list(noteId) {
+        var map = {}; // 相当于Map map = new HashMap();
+    	var surpNumForFree = $("input[name='surpNumForFree']").val();
+		var surpNumForBuy =  $("input[name='surpNumForBuy']").val();
+		if(surpNumForFree == 0 &&　surpNumForBuy　== 0){
+			alert("您本月免费发放短信数量已经使用完，如需发放请点击【购买】");
+			return;
+		}else{
+	        map["title"] = "签约用户名单";
+	        map["html"] = "${ctx}/store/information/subscriber_list.html?noteId="+noteId;
+	        map["url"] = "${ctx}/api/b2b2c/noteserver!send_noteInfo.do";
+	        map["form"] = "#memberRepairForm";
+	        openDialogForReapir(map);
+		}
+    }
+
+    function openDialogForReapir(map) {
+     var dialog = $.dialog({
+            title : map["title"],
+            lock : true,
+            min : false,
+            max : false,
+            width:960
+        });
+        $.ajax({
+            url : map["html"],
+            cache : false,
+            success : function(html) {
+            	dialog.content(html);
+            	dialog.button([{
+                    name : '发送',
+                    callback : function() {
+                    	if(!$("input[type='checkbox']").is(':checked')){
+                			alert("请选择会员！");
+                			return false;
+                		}
+                		if(!confirm("确定发送短信给选择的会员吗？")){
+                			return false;
+                		}
+                    	formSendNoteSubmit(dialog,map);
+                        this.button({
+                                    name: '发送',
+                                    disabled: false
+                                })
+                                .lock();
+                        return false;
+                    }
+                }, {
+                    name : '取消'
+                } ]);
+            },
+            error : function() {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+    function formSendNoteSubmit(dialog, map) {
+		 var options = {
+			url : map["url"],
+			type : "POST",
+			dataType : 'json',
+			success : function(result) { 
+				if(result.result==1){ 
+					dialog.reload();
+				}else{
+					dialog.title('保存失败，'+result.message);
+					 $("input[type='button']").each(function(){ 
+						$(this).removeAttr("disabled");
+					}); 
+				}
+			},
+			error : function(e) {
+				alert("出现错误，请重试");
+			}
+		};
+		$(map["form"]).ajaxSubmit(options); 
+		return false;
+	}
+</script>
+<#include '/common/footer.html' />

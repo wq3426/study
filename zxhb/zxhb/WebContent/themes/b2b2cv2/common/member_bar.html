@@ -1,0 +1,32 @@
+<#if member?? >
+	<script type="text/javascript">var isLogin= true;</script>
+	 您好
+	<span>
+		<#if member.name??>
+			<a href="${ctx}/member/member.html">${member.name}</a>
+		<#else>
+			<a href="${ctx}/member/member.html">${member.username}</a>
+		</#if>
+	</span>
+	，欢迎来到
+	<a alt="首页" title="首页" href="${ctx}/store/business_center.html?menu=store_index">盈驾商城</a>
+	<span>
+		[<a id="logout" href="javascript:void(0);">退出</a>]
+	</span>
+<#else>
+	<script type="text/javascript">var isLogin= false;</script>
+	您好，欢迎来到 
+	<a href="${ctx}/store/business_center.html?menu=store_index" title="首页" alt="首页">盈驾商城</a>
+	<span>
+		[<a href="${ctx}/store/login.html">登录</a>]
+	</span> 
+	<#if sms_isopen==0>
+		<span>
+			<!--[<a href="${ctx}/store/register.html">注册</a>]-->
+		</span> 
+	<#else>
+		<span>
+			[<a href="${ctx}/store/register_phone.html">手机注册</a>]
+		</span> 
+	</#if>
+</#if>

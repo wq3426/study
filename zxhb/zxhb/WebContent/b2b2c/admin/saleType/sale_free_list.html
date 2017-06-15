@@ -1,0 +1,337 @@
+<#include '/admin/header.html' > 
+<#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.tableDiv table tr td {
+    text-align:center;
+}
+.input_text{
+	width: 95%;
+}
+</style>
+<div class="main">
+	<div class="buttonArea">
+		<a href="javascript:void(0)" class="button blueBlue"
+			data-options="iconCls:'icon-add',plain:true" onclick="append()">添加</a>
+		<!-- <a href="javascript:void(0)" class="button"
+			data-options="iconCls:'icon-remove',plain:true" onclick="del()">删除</a> -->
+	    <span style="float: right;"> 
+		 	<span id="simpleSearch"> 
+			 	<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;" placeholder="请输入类型名称、等级" name="searchKeyWord">
+				<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchOrder()">搜索</a>
+			</span> 
+			<a href="javascript:void(0)" class="button" data-options="plain:true" id="aAdvanced">高级搜索</a> 
+	    </span>
+	</div>
+	<div class="shadowBoxWhite tableDiv">
+		<form id="saleFreeform">
+			<div style="display: none;" class="searchAdvanced">
+				<input id="Advanced" name="Advanced" type="hidden" value="0" />
+				<table width="98%" border="0" cellspacing="0" cellpadding="8">
+					<tr>
+						<td width="70" align="right" >类型名称:</td>
+						<td>
+							<select id="typeId" class="inputSelect valid" style="width: 145px;">
+								<option value="">---所有---</option> 
+									<#list saleTypeList as saleType>
+										<option  value="${saleType.type_id}">${saleType.type_name}</option> 
+									</#list>
+							</select>
+						</td>
+						<td width="70" align="right">店铺等级：</td>
+						<td>
+							<select id="storeLevel" class="inputSelect valid" style="width: 145px;" >
+								<option value="">---所有---</option> 
+								<#list storeLevelList as storeLevel>
+									<option value="${storeLevel.level_id}">${storeLevel.level_name}</option>
+								</#list>
+							</select>
+						</td>
+						<td width="70" align="left">是否为初始化模板:</td>
+						<td>
+							<select  id="isFree" class="inputSelect valid" style="width: 145px;">
+								<option  value="">---所有---</option> 
+								<option  value="1">否</option> 
+								<option  value="0">是</option> 
+							</select>
+						</td>
+						<td width="70" align="left">是否收费:</td>
+						<td>
+							<select  id="isFree" class="inputSelect valid" style="width: 145px;">
+								<option  value="">---所有---</option> 
+								<option  value="0">否</option> 
+								<option  value="1">是</option> 
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td width="70" align="right"></td>
+						<td colspan="7" align="center">
+							<a id="searchAdvance" class="button blueButton" onclick="searchOrder()" href="javascript:;">开始搜索</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+	
+			<table class="easyui-datagrid" 
+				data-options="url:'${ctx}/b2b2c/admin/salefree!saleFreeJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'" 
+				pagination="true" width="width" id="saleFreedata" sortName="id" sortOrder="asc" width="width">
+				<thead>
+					<tr>
+				   	 	<th  data-options="field:'id',checkbox:true,width:100">Id</th>
+				   	 	<th  data-options="field:'type_id',width:100">类型编号</th>
+				   	 	<th  data-options="field:'type_name',width:100">类型名称</th>
+				   	 	<th  data-options="field:'level_name',width:100">等级</th>
+				   	 	<th  data-options="field:'use_num',width:100">条数/栏位</th>
+				   	 	<th  data-options="field:'isfree',width:100,
+				   	 		formatter: function(value,row,index){
+									if(row.isfree == '0'){
+										return '否';
+									}else{
+										return '是';
+									}
+								},
+							styler: function(value,row,index){
+								  	if(row.isfree == '0'){
+										return 'color:balck;';
+									}else{
+										return 'color:red;';
+									}
+								}
+							">是否收费</th>
+						<th  data-options="field:'isinitia',width:100,
+				   	 		formatter: function(value,row,index){
+									if(row.isinitia == '0'){
+										return '是';
+									}else{
+										return '否';
+									}
+								},
+							styler: function(value,row,index){
+								  	if(row.isinitia == '0'){
+										return 'color:red;';
+									}else{
+										return 'color:balck;';
+									}
+								}
+							">是否为初始化模板</th>
+				   	 	<th  data-options="field:'limit_date',width:100,
+				   	 		formatter: function(value,row,index){
+									if (row.limit_date == '0' || row.limit_date == null){
+										return '无';
+									} else{
+										return row.limit_date +'个月';
+									}
+								},
+							styler: function(value,row,index){
+								  	if(row.limit_date == '0' || row.limit_date == null){
+										return 'color:balck;';
+									}else{
+										return 'color:red;';
+									}
+								}
+							">使用期限</th>
+				   	 	<th  data-options="field:'price',width:100,
+					   	 		formatter: function(value,row,index){
+										if (row.price == null ){
+											return 0;
+										}else{
+											return row.price;
+										}
+								}">价格</th>
+				   	 	<th  data-options="field:'action',width:100"  formatter="formatAction">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</form>
+		<div id="saleFreeinfo" style="display: none;"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	function formatAction(value,row,index){
+		var val="<a href='#' class='edit' title='编辑营销类型' onclick='edit("+row.id+")'></a>";
+		return val;
+	}
+	$(function(){
+		$(".searchAdvanced").hide();
+		//高级查询按钮
+	    $("#aAdvanced").click(function () {
+	        if ($("#Advanced").val() == "0") {
+	            $("#Advanced").val(1);
+	            $("#simpleSearch").hide();
+	            //$("#aAdvanced").text("简单搜索")
+	            $("#aAdvanced").addClass("searchAdvancedS");
+	        } else {
+	            $("#Advanced").val(0);
+	            $("#simpleSearch").show();
+	            //$("#aAdvanced").text("高级搜索");
+	            $("#aAdvanced").removeClass("searchAdvancedS");
+	        }
+	        $(".searchAdvanced").slideToggle("slow");
+	    });
+	})
+	function searchOrder(){
+		var searchtype = $("#Advanced").val();
+		var keyword = $("#searchKeyword").val();
+		
+		var typeId = $("#typeId").val();
+		var storeLevel = $("#storeLevel").val();
+		var isFree = $("#isFree").val();
+		
+		$("#saleFreedata").datagrid('load', {
+			 stype:searchtype,
+			 keyword:keyword,
+			 
+			 typeId:typeId,
+			 storeLevel:storeLevel,
+			 isFree:isFree,
+			 page:1
+	    });
+	}
+	function append(){
+		    $("#saleFreeinfo").show();
+		　　	$('#saleFreeinfo').dialog({
+		　　		title: '添加营销类型',			//对话框的标题
+		　　		width: 500,
+		　　		closed: false,
+		　　		cache: false,
+		　　		href: '${ctx}/b2b2c/admin/salefree!add.do', 	 //对话框所引用的html页面
+		　　		modal: true,
+		　　		buttons: [{					//创建按钮
+		　　			 text:'保存',
+		　　			 iconCls:'icon-ok',
+		　　			 handler:function(result){
+		　　				 var savebtn = $(this);
+		　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+		　　				 if(!disabled){
+			　　				 addSaleFreeForm(savebtn);
+			　　			 }	
+		　　			}
+		　　		},{
+					text : '取消',
+					handler : function() {
+						$('#saleFreeinfo').dialog('close');
+					}
+				}]
+		　　	});
+	}
+	function edit(id){
+		    $("#saleFreeinfo").show();
+		　　	$('#saleFreeinfo').dialog({
+		　　		title: '修改营销类型',			//对话框的标题
+		　　		width: 500,
+		　　		closed: false,
+		　　		cache: false,
+		　　		href: '${ctx}/b2b2c/admin/salefree!edit.do?id='+id, 	 //对话框所引用的html页面
+		　　		modal: true,
+		　　		buttons: [{					//创建按钮
+		　　			 text:'保存',
+		　　			 iconCls:'icon-ok',
+		　　			 handler:function(){
+		　　				 var savebtn = $(this);
+		　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+		　　				 if(!disabled){
+			　　				 editFreeTypeForm(savebtn);
+			　　			 }	
+		　　			}
+		　　		},{
+					text : '取消',
+					handler : function() {
+						$('#saleFreeinfo').dialog('close');
+					}
+				}]
+		　　	});
+	}
+	function addSaleFreeForm(savebtn){
+		var formflag= $("#saleFreeform").form().form('validate');
+		if(formflag){
+			$.Loading.show("正在保存请稍后...");
+			savebtn.linkbutton("disable");	
+			var options = {
+					url : "${ctx}/b2b2c/admin/salefree!addSaleFree.do",
+					type : "POST",
+					dataType : "json",
+					success : function(result) {
+						if(result.result==1){
+							$("#saleFreeinfo").dialog('close');
+							$('#saleFreedata').datagrid('reload');
+							$.Loading.success(result.message);
+						}else{
+							$("#saleFreeinfo").dialog('close');
+							$('#saleFreedata').datagrid('reload');
+							$.Loading.error(result.message);
+						}
+						savebtn.linkbutton("enable");
+				 	},
+				 	error : function(e) {
+				 		$.Loading.error('出现错误，请重试');
+				 		savebtn.linkbutton("enable");
+					}
+				};
+			$('#freeform').ajaxSubmit(options);	
+		}
+		
+	}
+	function editFreeTypeForm(savebtn){
+		var formflag= $("#saleFreeform").form().form('validate');
+		if(formflag){
+			$.Loading.show("正在保存请稍后...");
+			savebtn.linkbutton("disable");	
+			var options = {
+					url : "${ctx}/b2b2c/admin/salefree!editSaleFree.do",
+					type : "POST",
+					dataType : "json",
+					success : function(result) {
+						if(result.result==1){
+							$("#saleFreeinfo").dialog('close');
+							$('#saleFreedata').datagrid('reload');
+							$.Loading.success(result.message);
+						}else{
+							$("#saleFreeinfo").dialog('close');
+							$('#saleFreedata').datagrid('reload');
+							$.Loading.error(result.message);
+						}
+						savebtn.linkbutton("enable");
+				 	},
+				 	error : function(e) {
+				 		$.Loading.error('出现错误，请重试');
+				 		savebtn.linkbutton("enable");
+					}
+				};
+			$('#freeform').ajaxSubmit(options);	
+		}
+	}
+	function del(){
+		var rows = $('#saleFreedata').datagrid("getSelections"); 
+		if(rows.length<1){
+			$.Loading.error('请选择要删除的营销类型');
+			return;
+		}
+		if(!confirm("确认要删除营销类型吗？")){	
+			return ;
+		}
+		 var options = {
+			url : "${ctx}/b2b2c/admin/salefree!delSaleFree.do",
+			type : "POST",
+			dataType : 'json',
+			success : function(result) {
+				if(result.result==1){
+					var rows = $('#saleFreedata').datagrid("getSelections"); 
+					for(var i =0;i<rows.length;i++){      
+						var index = $('#saleFreedata').datagrid('getRowIndex',rows[i]); 
+						$('#saleFreedata').datagrid('deleteRow',index);      
+					}
+				}
+				if(result.result==0){ 
+					$.Loading.error(result.message);
+				}
+			},
+			error : function(e) {
+				$.Loading.error("出现错误 ，请重试");
+			}
+		};
+		$('#saleFreeform').ajaxSubmit(options);	
+	}
+</script>
+
+
+<#include '/admin/footer.html' >

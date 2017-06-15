@@ -1,0 +1,26 @@
+<style>
+    .text{width: 100px;}
+    .addInsertTime span{display: inline-block;width: 60px;text-align: right;}
+
+</style>
+<div class="h150 tac addInsertTime">
+	<form id="addForm" method="post" class="validate">
+    <div class="w380">
+        <span class="prl30" style="width: 70px;">时间段：</span>
+        <div class="prl30" style="display: inline-block">
+            <label>
+            	<input class="text hasDatepicker" type="text" name="repairTimeRegion.starttime" id="repair_starttime" onClick="WdatePicker({dateFmt:'HH:mm'})" value=""/>
+                <i class="storeorder_time"></i>
+            </label>
+        </div>
+        <i>至</i>
+        <div style="display: inline-block">
+            <label><input class="text hasDatepicker" type="text" name="repairTimeRegion.endtime" id="repair_endtime" onClick="WdatePicker({dateFmt:'HH:mm'})" value="">
+                  <i class="storeorder_time"></i>
+            </label>
+        </div>
+    </div>
+    <div class="w380"><span>工位数：</span><input class="w220 h25 " onkeyup="value=value.replace(/[^\d.]/g,'')" type="text" name="repairTimeRegion.station" id="repair_station"></div>
+    <div class="w380"><span>费率：</span><input class="w220 h25 " onkeyup="value=value.replace(/[^\d.]/g,'')" type="text" name="repairTimeRegion.ratio" id="repair_ratio" value="1.0"></div>
+    </form>
+</div>

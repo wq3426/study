@@ -1,0 +1,244 @@
+<#include '/admin/header.html' >
+<style>
+.tableDiv table tr td {
+    text-align:center;
+}
+.input_text{
+	width: 95%;
+}
+</style>
+<div class="main">
+	<div class="buttonArea">
+		<a href="javascript:void(0)" class="button blueButton"
+			onclick="append()">添加</a> <a href="javascript:void(0)" class="button"
+			onclick="del()">删除</a>
+	</div>
+	<div class="shadowBoxWhite tableDiv">
+		<form id="pushMsgform">
+			<table class="easyui-datagrid"
+				data-options="url:'${ctx}/core/admin/pushMsg!listJson.do',pageList: [10,15,19,30],pageSize:10,fitColumns:'true',singleSelect:'true'"
+				pagination="true" id="pushMsgdata" >
+				<thead>
+					<tr>
+						<th data-options="field:'id',checkbox:true"></th>
+						<th data-options="field:'storeid',width:200,
+							formatter: function(value,row,index){
+								if (value == 0){
+									return '所有店铺';
+								} else {
+									return row.store_name;
+								}
+							}
+						">推送对象</th>
+						<th data-options="field:'title',width:100">消息标题</th>
+						<th data-options="field:'push_type',width:100">消息类型</th>
+						<th data-options="field:'msg',width:300">消息内容</th>
+						<th data-options="field:'create_time',width:100">消息创建时间</th>
+						<th data-options="field:'status',width:100,
+							formatter: function(value,row,index){
+								if (value == 0){
+									return '待推送';
+								} else {
+									return '已推送';
+								}
+							}
+						">消息状态</th>
+						<th data-options="field:'flag',width:100,
+							formatter: function(value,row,index){
+								if (value == 0){
+									return '待查看';
+								} else {
+									return '已查看';
+								}
+							}
+						">查看状态</th>
+						<th data-options="field:'action',width:100"
+							formatter="formatOperation">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</form>
+		<div id="divdia" style="display: none;"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	var flag=false;
+	function append(id,status) {
+		var map = {}; // Map map = new HashMap();
+		if (!id) {
+			map["href"] = "pushMsg!add.do";
+			map["formId"] = "#addForm";
+			map["url"] = "pushMsg!addPushMsg.do?ajax=yes";
+			map["title"] = "新增消息";
+			map["loadshow"] = "正在添加......";
+		} else {
+			map["href"] = "pushMsg!edit.do?id=" + id;
+			map["formId"] = "#editForm";
+			map["url"] = "pushMsg!editPushMsg.do?ajax=yes";
+			map["title"] = "修改消息";
+			map["loadshow"] = "正在修改......";
+		}
+		map["divDialog"] = "#divdia";
+		map["gridreload"] = "#pushMsgdata";
+
+		//需要验证的参数
+		//map["nameId"]="#name";
+
+		addDialog(map);
+	}
+	function addDialog(map) {
+		$(map["divDialog"]).show();
+		$(map["divDialog"]).dialog({
+			title : map["title"],
+			width : 800,
+			top:10,
+			height : 500,
+			closed : false,
+			cache : false,
+			href : map["href"],
+			modal : true,
+			onLoad : function() {
+				if(flag){
+					UE.getEditor('editor').destroy();
+				}
+				var ue = UE.getEditor('editor', {
+				    zIndex: 99999
+				});
+				flag = true;
+			},
+			buttons : [ {
+				text : '保存',
+				iconCls : 'icon-ok',
+				handler : function() {
+					var savebtn = $(this);
+	　　				var disabled=savebtn.hasClass("l-btn-disabled");
+	　　				if(!disabled){
+						submitForm(map,savebtn);
+					}
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					$(map["divDialog"]).dialog('close');
+				}
+			} ]
+		});
+	}
+	function submitForm(map,savebtn) {
+		var formflag = $(map["formId"]).form().form('validate');
+		if (formflag) {
+			$.Loading.show(map["loadshow"]);
+			savebtn.linkbutton("disable");
+			 var options = {
+				url : map["url"],
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$(map["divDialog"]).dialog('close');
+						$(map["gridreload"]).datagrid('reload');
+						$.Loading.success(result.message);
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					savebtn.linkbutton("enable");
+				},
+				error : function(e) {
+					$.Loading.error("出现错误 ，请重试");
+					savebtn.linkbutton("enable");
+				}
+			};
+			$(map["formId"]).ajaxSubmit(options); 
+		}
+	}
+
+	function formatOperation(value, row, index) {
+		var val; 
+		if(row.status == 0){
+			val = "<a class='edit' title='修改' href='javascript:void(0);' onclick='append("+row.id+")' ></a>"+
+				  "<a class='push' title='推送' href='javascript:void(0);' onclick='changeStatus("+row.id+","+row.status+")' ></a>";
+		}else{
+			val = "<a class='back' title='撤回' href='javascript:void(0);' onclick='changeStatus("+row.id+","+row.status+")' ></a>";
+		}
+		return val;
+	}
+	
+	function changeStatus(msid,status){
+		if(status == 1){
+			if(confirm("确定撤回这条消息吗？")){
+				change(msid,status);
+			}else{
+				return;
+			}
+		}else{
+			if(confirm("确定推送这条消息吗？")){
+				change(msid,status);
+			}else{
+				return;
+			}
+		}
+	}
+	
+	function change(msid,status){
+		$.ajax({
+			url : "${ctx}/core/admin/pushMsg!changeStatus.do?id="+msid+"&status="+status,
+			cache : false,
+			dataType: "json",
+			success : function(data) {
+				if(data.result==1){
+					alert(data.message);
+					location.reload();
+				}else{
+					alert(data.message);
+				}
+			},
+			error : function() {
+				alert("出现错误，请重试");
+			}
+		});
+	}
+	
+	function formatBegintime(value, row, index) {
+		return getFormatDateByLong(value, "yyyy-MM-dd");
+	}
+
+	function formatEndtime(value, row, index) {
+		return getFormatDateByLong(value, "yyyy-MM-dd");
+	}
+	function del() {
+		var rows = $('#pushMsgdata').datagrid("getSelections");
+		if (rows.length < 1) {
+			$.Loading.error("请选择删除消息");
+			return;
+		}
+		if(rows[0].status == '1'){
+			$.Loading.error("该消息已推送，请重新选择！");
+			return;
+		}
+		if (!confirm("确认要删除消息吗？")) {
+			return;
+		}
+		$.Loading.show("正在删除......");
+		var options = {
+			url : "pushMsg!delete.do?ajax=yes",
+			type : "POST",
+			dataType : 'json',
+			success : function(result) {
+				if (result.result == 1) {
+					$.Loading.success(result.message);
+				}
+				if (result.result == 0) {
+					$.Loading.error(result.message);
+				}
+				$("#pushMsgdata").datagrid('reload');
+			},
+			error : function(e) {
+				$.Loading.error("出现错误 ，请重试");
+			}
+		};
+		$('#pushMsgform').ajaxSubmit(options);
+	}
+	
+</script>
+<#include '/admin/footer.html' >

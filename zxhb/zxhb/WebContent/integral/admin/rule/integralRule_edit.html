@@ -1,0 +1,63 @@
+<style>
+.input_text, .lvPrice, .ipt{
+    border: 1px solid #D7D7D7;
+    border-radius: 3PX;
+    /* height: 14PX; */
+    padding: 7px 0 7px 5px;
+    line-height: 14PX;
+    font-size: 12px;
+    display: inline-block;
+    width: 300px;
+}
+</style>
+<div class="easyui-panel" style="border-style:none;" >
+	<div style="padding: 10px 40px 10px 30px;text-align:right;">
+			<form id="integralEditForm" method="post" class="validate">
+				<input type="hidden" name="integral.integral_ruleId" value="${integral.integral_ruleId}" />
+					<div style="margin-top:10px"></div>
+					<div style="margin-top:10px">
+					积分规则内容：
+						<input class="easyui-validatebox input_text" value="${integral.integral_ruleContent}" type="text"  name="integral.integral_ruleContent" data-options="required:true" autocomplete='off'></input>
+					</div>
+					<div style="margin-top:10px">
+					积分值：
+						<input class="easyui-validatebox input_text" value="${integral.integral_value}" type="text"  name="integral.integral_value" data-options="required:true" autocomplete='off'></input>
+					</div>
+					<#if integral.isSet_integralUp == '0'>
+						<div style="margin-top:10px" id="isSetIntegralUp">
+						是否设置积分上限：
+							<select  style="width: 305px;" class="input_text" value="${integral.isSet_integralUp}" name="integral.isSet_integralUp"  onchange="checkField(this.value)">
+								<option  value="0" selected="selected">否</option> 
+								<option  value="1">是</option> 
+							</select>
+						</div>
+					<#else>
+						<div style="margin-top:10px" id="isSetIntegralUp">
+						是否设置积分上限：
+							<select  style="width: 305px;" class="input_text" value="${integral.isSet_integralUp}" name="integral.isSet_integralUp"  onchange="checkField(this.value)">
+								<option  value="0">否</option> 
+								<option  value="1" selected="selected">是</option> 
+							</select>
+						</div>
+						<div style='margin-top:10px'>
+						积分上限：
+							<input type='text' class='input_text' value="${integral.integral_upValue}"  name='integral.integral_upValue' data-options='required:true' autocomplete='off'/>
+						</div>
+					</#if>
+			</form>
+		</div>
+</div>
+<script>
+	function checkField(value){
+		if(value == 1){
+			$("#isSetIntegralUp").nextAll().empty();
+			$("#isSetIntegralUp").after("<div style='margin-top:10px'>"+
+										"积分上限："+
+											"<input type='text' class='input_text' name='integral.integral_upValue' data-options='required:true' autocomplete='off'/>"+
+										"</div>");
+		}else{
+			$("#isSetIntegralUp").nextAll().empty();
+		}
+	}
+	
+</script>

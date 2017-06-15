@@ -1,0 +1,14 @@
+<div class="easyui-panel" style="border-style:none;" >
+	<div style="padding: 10px 40px 10px 30px;text-align:right;">
+		<form id="typeform">
+		<#if saleType??>
+					<input type="hidden" name="saleType.type_id" value="${saleType.type_id}" />
+					<div style="margin-top:10px"></div>
+					类型名称：<input type="text" class="input_text" name="saleType.type_name" value="${saleType.type_name}" autocomplete="off"/>
+		<#else>
+			<span style="margin-left:50px"></span>
+			类型名称：<input type="text" class="input_text" name="saleType.type_name" autocomplete="off"/>
+		</#if>
+		</form>
+	</div>
+</div>

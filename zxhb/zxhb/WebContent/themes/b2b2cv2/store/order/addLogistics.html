@@ -1,0 +1,36 @@
+<style>
+    .ui_inner{width: 500px!important;}
+    .select{width: 157px;}
+</style>
+<#assign logiCompanyListTag=newTag("logiCompanyListTag")/>
+<#assign logiCompanyList=logiCompanyListTag()/>
+<div  style="width:400px;" class="tal">
+	<form id="logistics_form">
+    <div class="">
+      <lable class="f12">物流公司 : </lable>
+      <select name="logi_id" id="logi_id" class="select" onchange="javascript:changeClear()">
+        <option value="0" >未选择</option>
+        <#if logiCompanyList??  >
+	        <#list logiCompanyList as logi>
+	         	<option value="${logi.id}" <#if logi_id==logi.id?string.number>selected="selected"</#if> >${logi.name}</option>
+	        </#list>
+        </#if>
+    </select>
+    </div>
+    <div class="mt5">
+        <lable class="f12">物流单号 : </lable> <input type="text" class="text" value="${ship_no!''}" id="ship_no" name="ship_no">
+    </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".scalability").click(function () {
+            $(this).parent().addClass("history").next("li.history_body").slideToggle(300);
+            $(this).toggleClass("hyzztp2");
+        });
+    })
+    
+    function changeClear(){
+    	$("#ship_no").val("");
+    }
+</script>

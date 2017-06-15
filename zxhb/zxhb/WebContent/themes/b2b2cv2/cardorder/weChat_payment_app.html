@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta content="width=device-width, initial-scale=1.1, maximum-scale=1.2, user-scalable=0" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <style>
+        body{font-size: 12px;}
+        body * { max-height: 999999px; }
+        input,input:focus,input:active{user-select: text;}
+        footer{width: 90%;position: absolute;bottom: 0px;}
+    </style>
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=document.documentElement.clientWidth+"px";
+    </script>
+</head>
+
+<body class="mmt2" >
+
+<div style="width: 28%;">
+    <div class="mml1 tc mmt20 ">
+        <div class=" ww100 m0 " id="goodsImage">
+            <p class="ff30 llhh35">微信安全支付，长按识别二维码</p>
+            <img src="${ctx}/wpaycode.servlet?order_sn=${order_sn}" class="mmt2" alt="">
+            <div class="  bg_3a ff30 llhh35 w200" style="height: 50px;margin-left: 20%;">
+                <img src='${ctx}/themes/b2b2cv2/cardorder/images/zhifu_bt_03.png' style="margin-top: 6px; float: left;margin-left: 20px;" alt=''>
+                <div class="fl cfff  m10">
+                    <p>请长按识别</p>
+                    <p>二维码完成支付</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class=" cb   mm5 c999" style="font-size: 0.018rem;line-height: 0.023rem;">
+        <!--<p>温馨提示：<br>-->
+            <!--请确认您预约信息，提交后将不能更改；<br>-->
+            <!--预约不代表购买成功，请在开放购买时访问购买。数量有限，先到先得!-->
+        <!--</p>-->
+    </div>
+    <div style="font-size: 0.020rem; text-align: center" class="mmt20">
+        版权所有&copy;2016 西藏中信海博电子科技有限公司 <p>京ICP备10051071号-1</p>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		setInterval("ajaxstatus()", 5000);
+	});
+	
+	function ajaxstatus(){
+		$.ajax({
+			url : "${ctx}/api/b2b2c/storeApi!getOrderStatus.do?order_sn=${order_sn}",
+			type : "POST",
+			dataType : "json",
+			async : true,
+			success : function(data){
+				if(data.status == 1){
+					window.location = "${ctx}/cardorder/wish_app.html?order_sn=${order_sn}&receive_user="+data.receive_user
+							        + "&user_telephone="+data.user_telephone+"&status="+data.status;
+				}
+			},
+			error : function(){
+				alert("请求失败");
+			}
+		});
+	}
+</script>
+
+</body>
+</html>

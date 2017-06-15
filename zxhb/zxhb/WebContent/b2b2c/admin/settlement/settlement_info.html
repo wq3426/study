@@ -1,0 +1,122 @@
+ <#include '/admin/header.html' >
+    <#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+	<style>
+		.main .input h5, #index_box .item .indexitem h3{text-indent: -2em; text-align: center;}
+	</style>
+	<script type="text/javascript" src="${ctx}/themes/b2b2cv2/js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="${ctx}/themes/b2b2cv2/js/jquery.form.js"></script>
+
+<div class="main">
+	<form id="appform">
+		<div class='buttonArea'>
+			<div style="float:left">
+				 <a class="button" href="javascript:void(0);"  onclick='newTab("账户明细","${ctx}/b2b2c/admin/adminSettlement!settlementList.do")'>账户明细</a>
+				 <a class="button" href="javascript:void(0);"  onclick='newTab("提款申请","${ctx}/b2b2c/admin/adminSettlement!applyList.do")'>提款申请</a>
+			</div>
+		</div>
+		<div class="clear height10"></div>
+		<div id="index_box">
+			<div id="item1" class="item">
+				<div class="indexitem">
+					<div class="body"><table cellspacing="0" cellpadding="0" border="0" width="100%">
+						<tbody>
+						<tr>
+							<th><span>账户余额：</span></th>
+							<td>
+								<span><a>${settlementInfo.admin_balance!'0'}</a> 元</span>
+							</td>
+						</tr>
+						<tr>
+							<th><span>已支付订单总额：</span></th>
+							<td>
+								<span><a>${settlementInfo.pay_order_count!'0'}</a> 元</span>
+							</td>
+						</tr>
+						<tr>
+							<th><span>已提现总额：</span></th>
+							<td>
+								<span><a>${settlementInfo.yet_draw_money!'0'}</a> 元</span>
+							</td>
+						</tr>
+						<tr>
+							<th><span>手续费：</span></th>
+							<td>
+								<span><a>${settlementInfo.all_handling_charge_count!'0'}</a> 元</span>
+							</td>
+						</tr>
+						<!-- <tr>
+							<th><span>待结算金额：</span></th>
+							<td>
+								<span><a>${settlementInfo.noSettlementCount!'0'}</a> 元</span>
+							</td>
+						</tr>
+						<tr>
+							<th><span>应付账款：</span></th>
+							<td>
+								<span><a>0</a> 元</span>
+							</td>
+						</tr> -->
+						</tbody>
+					</table></div>
+				</div>
+			</div>
+			<div id="item2" class="item" style="clear:both">
+				<div class="indexitem">
+					<div class="title"><h3 >本日收支</h3></div>
+					<div class="body"><table cellspacing="0" cellpadding="0" border="0" width="100%">
+						<tbody>
+						<tr>
+							<th><span>本日收入：</span></th>
+							<td><span><a>${settlementInfo.today_income_money!'0'}</a> 元</span></td>
+						</tr>
+						<tr>
+							<th><span>本日支出：</span></th>
+							<td><span><a>${settlementInfo.today_pay_count!'0'}</a> 元</span></td>
+						</tr>
+						<tr>
+							<th><span>手续费：</span></th>
+							<td><span><a>${settlementInfo.today_handling_charge_count!'0'}</a> 元</span></td>
+						</tr>
+						<tr>
+							<th><span>经销商提现：</span></th>
+							<td><span><a>${settlementInfo.today_apply_count!'0'}</a> 元</span></td>
+						</tr>
+					<!-- 	<tr>
+							<th><span>用户退款：</span></th>
+							<td><span><a>-${settlementInfo.today_refund_count!'0'}</a> 元</span></td>
+						</tr>-->
+						</tbody> 
+					</table></div>
+				</div>
+			</div>
+			<div id="item3" class="item" >
+				<div class="indexitem">
+					<div class="title" style="text-align: center;"><h3>本月收支</h3></div>
+					<div class="body"><table cellspacing="0" cellpadding="0" border="0" width="100%">
+						<tbody>
+						<tr>
+							<th><span>本月收入：</span></th>
+							<td><span><a>${settlementInfo.month_income_money!'0'}</a> 元</span></td>
+						</tr>
+						<tr>
+							<th><span>本月支出：</span></th>
+							<td><span><a>${settlementInfo.month_pay_count!'0'}</a> 元</span></td>
+						</tr>
+						<tr>
+							<th><span>手续费：</span></th>
+							<td><span><a>${settlementInfo.month_handling_charge_count!'0'}</a> 元</span></td>
+						</tr>
+						<tr>
+							<th><span>经销商提现：</span></th>
+							<td><span><a>${settlementInfo.month_apply_count!'0'}</a> 元</span></td>
+						</tr>
+					<!-- 	<tr>
+							<th><span>用户退款：</span></th>
+							<td><span><a>-${settlementInfo.month_refund_count!'0'}</a> 元</span></td>
+						</tr> -->
+						</tbody>
+					</table></div>
+				</div>
+			</div>
+		</div>
+	</form>

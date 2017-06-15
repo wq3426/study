@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<product>
+
+	<apps>
+		<app id="base" version="2.2.0"></app>
+		<app id="cms" version="2.2.0"></app>
+		<app id="shop" version="2.2.0"></app>
+		<app id="b2b2c" version="2.2.0"></app>
+	</apps>
+	<site>
+		<field name="sitename" value="盈驾商城" />
+		<field name="title" value="盈驾商城" />
+		<field name="keywords" value="盈驾商城,中安信博,安全驾驶" />
+        <field name="descript" value="盈驾，为您的安全保驾护航" />
+        <field name="logofile" value="fs://images/logo.gif" />
+	</site>
+	<menus>
+	
+		<!-- new admin menus setting -->
+		<menu text="清分结算" type="app" url="#" icon="/adminthemes/new/images/settlement.png">
+	       <menu text="清分结算"> 
+				<menu text="账户中心" url="/b2b2c/admin/adminSettlement!settlementInfo.do" />
+				<menu text="账户明细" url="/b2b2c/admin/adminSettlement!settlementList.do" />		
+				<menu text="提现申请" url="/b2b2c/admin/adminSettlement!applyList.do" />		
+				<menu text="对账管理" url="/b2b2c/admin/adminInvoice!list.do" />			
+		   </menu> 
+		</menu>
+		<menu text="商户管理" type="app" url="#" icon="/adminthemes/new/images/merchantManagement.png">
+	       <menu text="商户管理">
+				<menu text="商户申请列表" url="/b2b2c/admin/merchant!merchantListStore.do" />
+				<menu text="商户注册" url="/b2b2c/admin/merchant!showMermberRegisterAdmin.do" />
+				<menu text="商户列表" url="/b2b2c/admin/store!store_list.do" />
+				<menu text="商户审核" url="/b2b2c/admin/storeadmin!showStoreAuditList.do" />		
+			</menu>
+			<menu text="消息管理">
+				<menu text="消息中心" url="/core/admin/pushMsg!list.do" />		
+			</menu>
+			<menu text="商户设置">
+				<menu text="商户等级设置" url="/b2b2c/admin/storelevel!list.do" />
+				<menu text="费率模板设置" url="/b2b2c/admin/storerate!list.do" />
+			</menu>
+			<menu text="开发中">
+				<menu text="解约商户" url="/b2b2c/admin/development!error.do" />		
+				<menu text="平台公告" url="/cms/admin/data!list.do?catid=26" />
+			</menu>
+		</menu>
+		<menu text="商品管理" type="app" url="#" icon="/adminthemes/new/images/CommodityManagement.png">
+	       <menu text="商品管理">
+				<menu text="所有商品" url="/b2b2c/admin/storeGoods!list.do" />
+				<menu text="商品库存" url="/b2b2c/admin/storeGoodsStock!listGoodsStore.do" />			
+			</menu>
+			<menu text="商品设置">
+				<menu text="规格设置" url="/shop/admin/spec!list.do" />			
+				<menu text="分类设置" url="/shop/admin/cat!list.do" />			
+				<menu text="品牌设置" url="/shop/admin/brand!list.do" />			
+				<menu text="类型设置" url="/shop/admin/type!list.do" />			
+				<menu text="物流公司" url="/shop/admin/logi!list_logi.do" />			
+			</menu>
+			<menu text="开发中">
+				<menu text="今日发布" url="/b2b2c/admin/development!error.do" />
+				<menu text="本周发布" url="/b2b2c/admin/development!error.do" />			
+				<menu text="热门商品" url="/b2b2c/admin/development!error.do" />			
+			</menu>
+		</menu>
+		<menu text="订单管理" type="app" url="#" icon="/adminthemes/new/images/orderManagement.png">
+	       <menu text="订单管理">
+				<menu text="所有订单" url="/b2b2c/admin/storeOrder!list.do" />
+			</menu>
+		</menu>
+		<menu text="会员管理" type="app" url="#" icon="/adminthemes/new/images/memberManagement.png">
+	       <menu text="会员管理">
+				<menu text="会员列表" url="/shop/admin/member!memberlist.do" />
+				<menu text="行程信息" url="/b2b2c/admin/carHodometer!list.do" />			
+			</menu>
+			<menu text="积分管理">
+				<menu text="积分规则" url="/integral/admin/integral!integralRuleList.do" />		
+				<menu text="积分明细" url="/integral/admin/integralDetail!integralDetailList.do" />		
+			</menu>
+			<menu text="开发中">
+				<menu text="车检记录" url="/b2b2c/admin/development!error.do" />		
+				<menu text="保养记录" url="/b2b2c/admin/development!error.do" />		
+				<menu text="保险记录" url="/b2b2c/admin/development!error.do" />			
+				<menu text="违章记录" url="/b2b2c/admin/development!error.do" />	
+				<menu text="保养币明细" url="/b2b2c/admin/development!error.do" />				
+				<menu text="积分设置" url="/b2b2c/admin/development!error.do" />				
+			</menu>
+		</menu>
+		<menu text="营销管理" type="app" url="#" icon="/adminthemes/new/images/marketingManagement.png">
+	       <menu text="营销管理">
+				<menu text="申请审核" url="/b2b2c/admin/salefree!audit_list.do" />			
+			</menu>
+			<menu text="营销设置">
+				<menu text="营销类型" url="/b2b2c/admin/saletype!saleType_list.do" />			
+				<menu text="营销模板" url="/b2b2c/admin/salefree!saleFree_list.do" />			
+			</menu>
+			<menu text="开发中">
+				<menu text="短信服务" url="/b2b2c/admin/development!error.do" />
+				<menu text="信息推送" url="/b2b2c/admin/development!error.do" />		
+				<menu text="首页广告" url="/b2b2c/admin/development!error.do" />		
+				<menu text="优惠券" url="/b2b2c/admin/development!error.do" />			
+				<menu text="申请/购买记录" url="/b2b2c/admin/development!error.do" />
+				<menu text="促销" url="/shop/admin/activities/index.jsp" />
+			</menu>
+		</menu>
+		<menu text="系统设置" type="app" url="#" icon="/adminthemes/new/images/systemSetting.png">
+	       <menu text="车辆设置">
+				<menu text="汽车品牌设置" url="/shop/admin/brand!carBrandList.do" />			
+				<menu text="车型列表" url="/b2b2c/admin/carInsureAndRepair!list.do" />
+			</menu>
+			<menu text="保养设置">
+				<menu text="保养项目列表" url="/b2b2c/admin/carInsureAndRepair!repairItemList.do" />			
+				<menu text="车型保养项目列表" url="/b2b2c/admin/carInsureAndRepair!carmodelRepairItemList.do" />			
+			</menu>
+			<menu text="保险设置">
+				<menu text="保险公司列表" url="/b2b2c/admin/carInsureAndRepair!insureCompanyList.do" />			
+				<menu text="保险公司险种列表" url="/b2b2c/admin/carInsureAndRepair!insureCompanyList.do" />			
+			</menu>	
+		</menu>
+		<menu text="开发者" type="app" url="#" icon="/adminthemes/new/images/developer.png">
+	       <menu text="工具">
+				<menu text="URL映射" url="/core/admin/themeUri!list.do" />
+				<menu text="菜单管理" url="/core/admin/menu!tree.do" />		
+				<menu text="数据导出" url="/core/admin/data-export.do" />		
+				<menu text="清除示例数据" url="/core/admin/example-data-clean.do" />			
+			</menu><menu text="权限设置">
+				<menu text="管理员管理" url="/core/admin/userAdmin!list.do" />
+				<menu text="角色管理" url="/core/admin/role!list.do" />		
+				<menu text="权限点管理" url="/core/admin/auth!list.do" />	
+			</menu>		
+			<menu text="系统设置">
+				<menu text="系统设置" url="/core/admin/setting!edit_input.do"  />
+				<menu text="smtp设置" url="/core/admin/smtp!list.do" />			
+				<menu text="短信网关设置" url="/core/admin/sms!list.do" />		
+				<menu text="快递平台设置" url="/shop/admin/express!list.do" />	
+				<menu text="组件管理" url="/core/admin/component!list.do" />
+			</menu>
+		</menu>
+		
+		<menu text="其他" type="app" url="#" icon="/adminthemes/new/images/developer.png">
+			<menu text="其他">
+				<menu text="审核店铺" url="/b2b2c/admin/store!audit_list.do" />		
+				<menu text="联系平台" url="/cms/admin/data!list.do?catid=28" />			
+				<menu text="审核列表--店铺管理" url="/b2b2c/admin/store!auth_list.do" />			
+				<menu text="审核列表--营销管理" url="/b2b2c/admin/salefree!audit_list.do" />			
+				<menu text="结算列表" url="/b2b2c/admin/storeBill!list.do" />			
+				<menu text="商品列表--自营" url="/b2b2c/admin/selfStoreGoods!list.do" />			
+				<menu text="商品库存--自营" url="/b2b2c/admin/selfStoreGoodsStock!listGoodsStore.do" />
+				<menu text="订单查询--自营" url="/b2b2c/admin/storeOrder!listSelf.do" />
+				<menu text="待结算订单--自营" url="/b2b2c/admin/selfStoreOrder!notPayOrder.do" />			
+				<menu text="待发货订单--自营" url="/b2b2c/admin/selfStoreOrder!notShipOrder.do" />			
+				<menu text="标签列表--商品" url="/b2b2c/admin/b2b2cTag!list.do" />			
+				<menu text="标签商品设置--商品" url="/b2b2c/admin/b2b2cGoodsShow!list.do" />			
+				<menu text="标签品牌设置--商品" url="/shop/admin/brandsShow!list.do" />			
+				<menu text="商品评论列表--会员" url="/shop/admin/comments!list.do?type=1" />			
+				<menu text="购买咨询列表--会员" url="/shop/admin/comments!list.do?type=2" />			
+				
+				<menu text="会员等级" url="/shop/admin/member!list_lv.do" />
+				<menu text="广告位" url="/core/admin/adColumn!list.do" />
+				<menu text="广告列表" url="/core/admin/adv!list.do" />
+				<menu text="热门关键字" url="/cms/admin/data!list.do?catid=1" />			
+				<menu text="帮助中心" url="/cms/admin/data!helplist.do" />			
+				<menu text="商城公告--页面设置" url="/cms/admin/data!list.do?catid=26" />			
+				<menu text="联系方式" url="/cms/admin/data!list.do?catid=28" />
+							
+				<menu text="支付方式" url="/shop/admin/payCfg!list.do" />		
+				<menu text="物流公司" url="/shop/admin/logi!list_logi.do" />		
+				<menu text="地区管理" url="/shop/admin/region!list.do" />		
+				<menu text="快递单模板管理" url="/shop/admin/printTmpl!list.do" />		
+				<menu text="前台模板" url="/core/admin/user/siteTheme.do" />		
+				<menu text="后台模板" url="/core/admin/user/siteAdminTheme.do" />		
+			</menu>
+			<menu text="单据管理">
+				<menu text="收款单" url="/b2b2c/admin/storeOrderReport!paymentList.do" />		
+				<menu text="退货单" url="/b2b2c/admin/storeOrderReport!returnedList.do" />		
+			</menu>
+			<menu text="配送设置">
+				<menu text="配送方式" url="/shop/admin/dlyType!list.do" />			
+				<menu text="仓库设置" url="/shop/admin/depot!list.do" />			
+				<menu text="发货点管理" url="/shop/admin/dlyCenter!list.do" />			
+			</menu>
+			<menu text="主题管理" >
+				<menu text="站点前台主题" url="/core/admin/user/siteTheme.do" />
+				<menu text="站点后台主题" url="/core/admin/user/siteAdminTheme.do" />
+			</menu>
+			<menu text="页面管理">
+				<menu text="文章模型" url="/cms/admin/model!list.do" />
+				<menu text="文章管理" url="/cms/admin/cat!list.do" />					
+				<menu text="导航栏管理" url="/core/admin/siteMenu!list.do" />
+			</menu>
+		</menu>
+		<menu text="浏览网站" url="../" />		
+		<menu text="退出" url="/admin/logout.do" />	
+	</menus>
+
+	<urls>
+        <url from="/index.jsp" to="/index.html" name="首页" point="0" sitemaptype="0" cache="1"/>
+        <url from="/index.html" to="/index.html" name="首页" point="0" sitemaptype="1" cache="1"/>
+        <url from="/goods-(\d+).html" to="/goods.html" name="商品详情" point="0" sitemaptype="0" cache="1"/>
+        <url from="/search-(.*).html" to="/goods_list.html" name="商品搜索" point="0" sitemaptype="0" cache="1"/>
+        <url from="/help-(\d+)-(\d+).html" to="/help.html" name="帮助" point="0" sitemaptype="0" cache="1"/>
+        <url from="/(.*)_payment-result.html" to="/payment_result.html" name=" 支付结果" point="0" sitemaptype="0" cache="0"/>
+        <url from="/(.*)_payment-wap-result.html" to="/payment_wap_result.html" name="app支付结果" point="0" sitemaptype="0" cache="0"/>
+	</urls>
+
+	<components>
+	
+		<!-- 下面两个规格组件和标准货品组件，只能二选其一  -->
+		<!--  规格组件 -->
+		<component id="goodsSpecComponent"></component> 
+		<component id="goodsCoreComponent"></component><!-- 商品核心组件 -->
+		<component id="depotComponent"></component><!-- 库存管理组件 -->		
+		<component id="orderCoreComponent"></component><!-- 订单核心组件 -->
+		<component id="paymentComponent"></component><!-- 支付组件 -->			
+		<component id="shopEmailComponent"></component><!-- 网店邮件组件 -->			
+		<component id="receiptComponent"></component> <!--  发票组件 -->	
+		<component id="goodsSearchComponent"></component>	<!--商品搜索组件 -->
+		<component id="shopShortMsgComponent"></component>	<!-- 网店消息提醒组件 -->
+		<component id="shopMemberComponent"></component>	<!-- 网店会员组件组件 -->
+		<component id="memeberPointComponent"></component>	<!-- 会员积分组件组件 -->
+		<component id="visitedGoodsComponent"></component>	<!-- 浏览过的商品组件 -->
+		<component id="cmsCoreComponent"></component><!--CMS核心组件 -->
+		<component id="galleryComponent"></component><!--新相册组件 -->
+		<component id="bonusComponent"></component><!--新版优惠卷组件 -->
+		<component id="b2b2cComponent"></component><!--b2b2c组件 -->
+		<component id="shopExpressComponent"></component><!-- 快递平台组件 by_xlp 2015年08月20日15:25:19 -->
+	</components>
+  	
+	<themes>
+		<theme id="b2b2cv2" name="b2b2c模板" default="yes"></theme>
+		
+	</themes>
+	
+    <indexitems>
+    	<item>
+    		<title>站点统计信息</title>
+    		<url>/core/admin/indexItem!base.do</url>
+    	</item>     
+    	<item>
+    		<title>订单统计信息</title>
+    		<url>/shop/admin/indexItem!order.do</url>
+    	</item> 
+    	<item>
+    		<title>商品统计信息</title>
+    		<url>/shop/admin/indexItem!goods.do</url>
+    	</item><!--
+    	<item>
+    		<title>文章统计信息</title>
+    		<url>/cms/admin/indexItem!article.do</url>
+    	</item>
+    	<item>
+    		<title>流量统计信息</title>
+    		<url>/core/admin/indexItem!access.do</url>
+    	</item>  -->
+    </indexitems> 
+</product>

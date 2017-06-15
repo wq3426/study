@@ -1,0 +1,358 @@
+<style>
+	.red{
+		color: red;
+	}
+</style>
+<div class="store_add_goods hide0">
+	<h1>商品基本信息</h1>
+	<div class="addgoods">
+		<input type="hidden" name="storeGoods.cat_id" value="${catid}">
+		<input type="hidden" name="storeGoods.type_id"
+			value="${storeGoodsCat.typeid}">
+		<div class="goods_attribute">
+			<dl>
+				<dt>商品分类：</dt>
+				<dd id="gcategory">
+					<#list storeGoodsCat.parentList as parent> <#if parent_index != 0>
+					<span>&nbsp;&gt;&nbsp;</span> </#if> <span>${parent.name}</span>
+					</#list>
+				</dd>
+			</dl>
+			<dl>
+				<dt class="required">
+					<span class="red">*</span>商品名称：
+				</dt>
+				<dd>
+					<p>
+						<input type="text" class="text store_goodsname"
+							name="storeGoods.name"
+							isrequired="true" style="width: 400px;" maxlength="60"/>
+					<p>
+					<p class="hint">商品标题名称长度至少3个字符，最长60个汉字</p>
+				</dd>
+			</dl>
+		<!-- 	<dl>
+				<dt nc_type="no_spec">
+					<span class="red">*</span>商品编号：
+				</dt>
+				<dd nc_type="no_spec">
+					<p>
+						<input type="text" class="text" name="storeGoods.sn" id = "sn" onblur="sn_is_exist($(this).val());"
+							isrequired="true" datatype="string" />
+					</p>
+				</dd>
+			</dl> -->
+			<dl>
+				<dt nc_type="no_spec">
+					<span class="red">*</span>市场价格：
+				</dt>
+				<dd nc_type="no_spec">
+					<input type="text" class="text decimal" name="storeGoods.mktprice"
+						dataType="double" isrequired="true" />
+				</dd>
+			</dl>
+			<dl>
+				<dt nc_type="no_spec">
+					<span class="red">*</span>商品价格：
+				</dt>
+				<dd nc_type="no_spec">
+					<p>
+						<input type="text" class="text decimal" name="storeGoods.price" dataType="double" id="price"
+							isrequired="true" />
+						<!-- 价格区间 -->
+					</p>
+				</dd>
+			</dl>
+			<dl>
+				<dt nc_type="no_spec">
+					<span class="red">*</span>最高可用安全奖励金额：
+				</dt>
+				<dd nc_type="no_spec">
+					<input type="text" class="text decimal" id="rewards_limit" name="storeGoods.rewards_limit"
+						dataType="double" isrequired="true" />
+				</dd>
+			</dl>
+			<dl>
+				<dt nc_type="no_spec">
+					<span class="red">*</span>成本价：
+				</dt>
+				<dd nc_type="no_spec">
+					<input type="text" class="text decimal" name="storeGoods.cost" dataType="double" id="cost"
+						isrequired="true" />
+				</dd>
+			</dl>
+			<dl>
+				<dt>
+					<span class="red">*</span>商品重量(g)：
+				</dt>
+				<dd>
+					<p>
+						<input type="text" class="text" name="storeGoods.weight"  id="weight"
+							isrequired="true" dataType="float" />
+					</p>
+				</dd>
+			</dl>
+			<dl>
+				<dt>
+					<span class="red">*</span>商品库存：
+				</dt>
+				<dd>
+					<p>
+						<input type="text" class="text" name="storeGoods.store"  id="store"
+							isrequired="true" dataType="int"/>
+					</p>
+				</dd>
+			</dl>
+			<div id="spec-input">
+				<input type="hidden" name="haveSpec" id="haveSpec" value="1" />
+				<#list goodsSpecList as spec>
+				<dl class="spec-bg">
+					<dt>${spec.spec_name}</dt>
+					<dd>
+						<ul class="spec" specname="${spec.spec_name}">
+							<#list spec.valueList as specValue>
+							<li>
+								<span> 
+									<input class="chk" autocomplete="off" type="checkbox" value="${specValue.spec_value_id}"
+									spec_value="${specValue.spec_value}"
+									specid="${specValue.spec_id}" />
+								</span> 
+								<span>${specValue.spec_value}</span>
+							</li> 
+							</#list>
+						</ul>
+					</dd>
+				</dl>
+				</#list>
+				<dl class="spec-bg spec-table" style="display: none;">
+					<dt>库存配置</dt>
+					<dd>
+						<table cellspacing="0" cellpadding="0" border="0"
+							class="spec_table" width="98%">
+							<thead>
+								<tr>
+									<th class="w2">货号<span class="red">*</span></th>
+									<th class="w2">销售价<span class="red">*</span></th>
+									<th class="w3">重量<span class="red">*</span></th>
+									<th class="w3">成本价</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</dd>
+				</dl>
+			</div>
+			<dl>
+				<dt>
+					商品图片</br>(第一张图片为列表图片)：
+				</dt>
+				<dd>
+					<div id="some_file_queue"></div>
+					<div class="goods_image">
+						<input type="file" value="批量上传" id="allFile" status="批量上传" />
+						<span>批量上传只适用于第一次上传且总和能上传五个,支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</span><br/>
+						<#list 1..5 as t>
+						<div id="img-div-${t}" style="float: left; height: 200px; position: relative; width: 100px; text-align: center; margin-right: 5px;">
+							<@image name="img${t}" id="img${t}"src="${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif" width="100" height="100" /><br /> 
+							<input type="hidden" name="goods_fs" id="fs_img${t}" fs="${t}" />
+							<input type="hidden" name="status" value="2" id="fs_status${t}" /> 
+							<input type="file" id="goods${t}" fs="${t}" status="上传" /> 
+							<input type="button" name="clean" value="清除" fs="${t}" class="del_addgoods" />
+						</div>
+						</#list> <input type="hidden" name="image_default" />
+					</div>
+				</dd>
+			</dl>
+			<dl>
+				<dt>商品品牌：</dt>
+				<dd>
+						<#if (brandList?size > 0)>
+							<select name="storeGoods.brand_id"> 
+								 <#list brandList as brand>
+									<option value="${brand.brand_id}">${brand.name}</option>
+								 </#list>
+							</select>
+						<#else>
+							<select name="storeGoods.brand_id"> 
+								<option value="0" selected="selected">其它品牌</option>
+							</select>
+						</#if>
+				</dd>
+			</dl>
+			<dl>
+				<dt>商品描述：</dt>
+				<dd>
+					<script id="editor" name="storeGoods.intro" type="text/plain" style="height:200px;width: 99%;"></script>
+				</dd>
+			</dl>
+			<!--transport info begin-->
+			<dl class="tit">
+				<h3>商品物流信息</h3>
+			</dl>
+			<dl class="tit">
+				<h3>其他信息</h3>
+			</dl>
+			<dl>
+				<dt>本店分类：</dt>
+				<dd>
+					<p>
+						<select name="storeGoods.store_cat_id"> <#list
+							storeGoodsCatList as cat> <#if cat.store_cat_pid==0>
+							<option value="${cat.store_cat_id}">${cat.store_cat_name!''}</option>
+							</#if> <#list storeGoodsCatList as childCat> <#if
+							childCat.store_cat_pid==cat.store_cat_id>
+							<option value="${childCat.store_cat_id}">&nbsp;&nbsp;&nbsp;&nbsp;${childCat.store_cat_name!''}</option>
+							</#if> </#list> </#list>
+						</select>
+					</p>
+					<p class="hint">
+						商品可以从属于店铺的多个分类之下,</br>店铺分类可以由 "商品管理 -> 店铺商品管理 -> 商品分类" 中自定义
+					</p>
+				</dd>
+			</dl>
+			<dl>
+				<dt>商品发布：</dt>
+				<dd>
+					<p class="mt5">
+						<label> <input type="radio"
+							name="storeGoods.market_enable" checked="checked" value="1" />立即发布
+						</label>
+					</p>
+
+					<p class="mt5">
+						<label> <input type="radio"
+							name="storeGoods.market_enable" value="0" />暂不发布
+						</label>
+					</p>
+				</dd>
+			</dl>
+			<#include '/goods/goods_preview.html' />
+			<div class="clear">
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+$("#rewards_limit").on("blur",function(){
+	var price = $("#price").val();
+	var rewards_limit =  $("#rewards_limit").val();
+	price = price.replace(',',"");
+	rewards_limit = rewards_limit.replace(',',"");
+	if(parseFloat(price) > 0){
+		if(parseFloat(price) <= parseFloat(rewards_limit)){
+			alert("最高奖励不能大于商品价格！");
+			return  $(this).val("");
+		}
+	}else{
+		if(parseFloat(price) < parseFloat(rewards_limit)){
+			alert("最高奖励不能大于商品价格！");
+			return  $(this).val("");
+		}
+	}
+});
+$("#price").on("blur",function(){
+	var price = $("#price").val();
+	var rewards_limit =  $("#rewards_limit").val();
+	price = price.replace(',',"");
+	rewards_limit = rewards_limit.replace(',',"");
+	if(parseFloat(price) > 0){
+		if(parseFloat(price) <= parseFloat(rewards_limit)){
+			alert("最高奖励不能大于商品价格！");
+			return  $(this).val("");
+		}
+	}else{
+		if(parseFloat(price) < parseFloat(rewards_limit)){
+			alert("最高奖励不能大于商品价格！");
+			return  $(this).val("");
+		}
+	}
+	
+})
+</script>
+<script>
+	$(".decimal").on("blur",function(money){
+		var discount = $(this).val();
+		var total;
+		if(parseFloat(discount.replace(',',"")) <0 || isNaN(parseFloat(discount.replace(',',"")))){
+			return  $(this).val("");
+		}else if(parseFloat(discount.replace(',',"")) !==''&&!isNaN(parseFloat(discount.replace(',',"")))){
+			total = parseFloat(discount.replace(',',""));
+			total = total.toFixed(2) + "";
+			var re=/(\d{1,3})(?=(\d{3})+(?:$|\.))/g;
+			var n=total.replace(re,"$1,");
+			return  $(this).val(n);
+		}
+	 });
+</script>
+<script type="text/javascript">
+window.onload=function(){
+	<#list 1..5 as t>
+		bindFileEvent($("#goods${t}"));
+	</#list>
+	bindFileEvent($("#allFile"));
+}
+function bindFileEvent(obj){
+	var status=$(obj).attr("status");
+	$(obj).uploadify({
+		'queueID'  : 'some_file_queue',
+		'buttonText':status,		//显示文字
+		'fileObjName':'image',		//文件对象名称
+		'fileTypeDesc': '请选择',//允许上传的文件类型的描述，在弹出的文件选择框里会显示
+		'fileTypeExts': '*.gif; *.jpg; *.png',//允许上传的文件类型，限制弹出文件选择框里能选择的文件
+		'uploader' : '${ctx}/api/base/upload-image.do?subFolder=store/${storeMember.store_id}/goods',
+		'swf'      : '${ctx}/themes/b2b2cv2/uploadify.swf',
+		'height':'30',				//高度
+		'width':'70',
+		'multi':true,				//是否支持多文件上传
+		'progressData':'percentage',//设置文件上传时显示的数据
+		'uploadLimit':5,
+		'onFallback':function(){				//falsh兼容
+			alert("麻烦了，不兼容falsh!");
+		},
+		'onUploadSuccess':function(file,data,response){
+			var img =jQuery.parseJSON(data);
+			if(status=="批量上传"){
+				$("input[name='goods_fs']").each(function(){
+					if($(this).val()==""){
+						var fs= $(this).attr("fs");
+						//显示图片
+						$("#img"+fs).attr("src",img.img);
+						//设置参数
+						$("#fs_status"+fs).val("1");
+						$(this).attr("name","picnames");
+						$(this).val(img.img);
+						if(fs=="1"){
+							$("input[name='image_default']").val(img.img);
+						}
+						return false;
+					}
+				});
+			}else{
+				var fs= $(obj).attr("fs");
+				//显示图片
+				$("#img"+fs).attr("src",img.img);
+				//设置参数
+				$("#fs_img"+fs).attr("name","picnames");
+				$("#fs_img"+fs).val(img.img);
+				$("#fs_status"+fs).val("1");
+				if(fs=="1"){
+					$("input[name='image_default']").val(img.img);
+				}
+			}
+		},
+		'onSelectError':function(file,errorCode,errorMsg){
+			if(errorCode==SWFUpload.QUEUE_ERROR.QUEUE_LIMIT_EXCEEDED){
+				this.queueData.errorMsg="最多只能上传五个";
+			}
+			if(errorCode==SWFUpload.QUEUE_ERROR.INVALID_FILETYPE){
+				this.queueData.errorMsg="请上传正确的格式";
+			}
+		}
+	});
+	
+}
+
+</script>

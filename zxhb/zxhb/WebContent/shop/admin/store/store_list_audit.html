@@ -1,0 +1,123 @@
+<#include '/admin/header.html' >
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<style>
+.input_text{
+	width: 95%;
+}
+.color_red{color:blue;}
+.color_green{color:green;}
+.dn{display:none;}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="storeForm">
+		<div class="clear height10"></div>
+		<div class="shadowBoxWhite tableDiv">
+		<table class="easyui-datagrid"
+			data-options="url:'${ctx}/b2b2c/admin/storeadmin!storeListJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" id="storedata" sortName="store_id" sortOrder="desc" >
+			<thead>
+				<tr>
+				 	<th data-options="field:'store_id',checkbox:true,width:100"></th>
+					<th data-options="field:'store_name',width:200">店铺名称</th>
+					<th data-options="field:'brand_name',width:200">品牌名称</th>
+					<th data-options="field:'member_name',width:150">会员名称</th>
+					<th data-options="field:'store_province',width:150">所在省份</th>
+					<th data-options="field:'contacts_name',width:200,sortable:'true'">联系人姓名</th>
+					<th data-options="field:'tel',sortable:'true',width:250">联系电话</th>
+					<th data-options="field:'create_time',width:250,sortable:'true'"
+						formatter="formatRegtime">创建时间</th>
+					<th data-options="field:'action',width:160,align:'center'"
+						formatter="formatOperation">操作</th> 
+				</tr> 
+			</thead>
+		</table>
+		</div>
+	</form>
+	<div id="divdia" style="display: none;"></div>
+</div>
+<script type="text/javascript">
+
+	//时间格式转换
+	function formatRegtime(value, row, index) {
+		return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+	}
+
+    //操作
+	function formatOperation(value, row, index) {
+		var val = "<a href='javascript:void(0);' class='edit' onclick='append("+row.store_id+")' title='审核店铺信息'></a>";
+		return val;
+	}
+
+	function append(store_id) {
+		var map = {}; 
+		map["href"] = "${ctx}/b2b2c/admin/storeadmin!showStoreAudit.do?storeId="+store_id,
+		map["formId"] = "#auditForm";
+		map["url"] = "${ctx}/b2b2c/admin/storeadmin!auditPass.do?ajax=yes";
+		map["title"] = "店铺信息审核";
+		map["divDialog"] = "#divdia";
+		map["gridreload"] = "#storedata";
+
+		addDialog(map);
+	} 
+	function addDialog(map) {
+		$(map["divDialog"]).show();
+		$(map["divDialog"]).dialog({
+			title : map["title"],
+			width : 800,
+			height : 550,
+			top:10,
+			closed : false,
+			cache : false,
+			href : map["href"],
+			modal : true,
+			buttons : [ {
+				text : '通过',
+				iconCls : 'icon-ok',
+				handler : function() {
+					var savebtn = $(this);
+	　　				var disabled=savebtn.hasClass("l-btn-disabled");
+	　　				if(!disabled){
+						submitForm(map,savebtn);
+					}
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					$(map["divDialog"]).dialog('close');
+				}
+			} ]
+		});
+	}
+	
+	function submitForm(map,savebtn) {
+		var formflag = $(map["formId"]).form().form('validate');
+		if (formflag) {
+			$.Loading.show("正在保存请稍后...");
+			savebtn.linkbutton("disable");
+			var options = {
+				url : map["url"],
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$.Loading.success(result.message);
+						$(map["divDialog"]).dialog('close');
+						$(map["gridreload"]).datagrid('reload');
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					savebtn.linkbutton("enable");
+				},
+				error : function(e) {
+					$.Loading.error("出现错误 ，请重试");
+					savebtn.linkbutton("enable");
+				}
+			};
+			$(map["formId"]).ajaxSubmit(options);
+		}
+	}
+	
+</script>
+<#include '/admin/footer.html' >

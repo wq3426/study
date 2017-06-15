@@ -1,0 +1,61 @@
+<style>
+	div.ui_content{margin: 20px;text-align: left;}
+	#adt_form table tbody tr th{width: 550px; background-color: #f7f7f7;}
+	#adt_form table tbody tr th b{margin-left: 20px;}
+	#adt_form table tbody tr td{padding-left: 40px;}
+	#adt_form table tbody tr td input{height: 26px;}
+</style>
+<#assign myStoreDetailTag=newTag("myStoreDetailTag")/>
+<#assign myStoreDetail=myStoreDetailTag()>
+<#assign myStoreDetailOtherTag=newTag("myStoreDetailOtherTag")>
+<#assign myStoreDetailOther=myStoreDetailOtherTag()>
+<div class="dialog_content" style="margin: 0px; padting: 0px; width: 550px;">
+	<div class="sodle_bonus bdc_gray ">
+		<form id="adt_form" action="#" method="post" onsubmit="javascript:validate();">
+			<table>
+				<tbody>
+				<tr><th><b>账户资金</b></th></tr>
+				<tr><td>商户名称：${myStoreDetail.store_name!''}</td></tr>
+				<tr><td>账户金额：<#if myStoreDetailOther.yetSettlementCount??>${myStoreDetailOther.yetSettlementCount?string.currency}</#if>&nbsp;&nbsp;元</td></tr>
+				<tr><th><b>结算账户</b></th></tr>
+				<tr><td><input type="radio" id="payType"  name="payType"  checked="checked" value="bank"/>&nbsp;&nbsp;银行账户
+					<input type="radio" id="payType"  name="payType" value="weichat"/>&nbsp;&nbsp;微信账户
+					<input type="radio" id="payType"  name="payType" value="alipay"/>&nbsp;&nbsp;支付宝账户</td></tr>
+				<tr name="banktr"><td>开户银行：${myStoreDetail.bank_name!''}</td></tr>
+				<tr name="banktr"><td>银行账户：${myStoreDetail.bank_account_number!''}</td></tr>
+				<tr id="weichattr"><td>微信账户：${myStoreDetail.weichat_account!''}</td></tr>
+				<tr id="alipaytr"><td>支付宝账户：${myStoreDetail.alipay_account!''}</td></tr>
+				<tr><th><b>提现信息</b></th></tr>
+				<tr><td style="padding-top: 10px">提现金额：<#if myStoreDetailOther.yetSettlementCount??>${myStoreDetailOther.yetSettlementCount?string.currency}</#if>&nbsp;&nbsp;元</td></tr>
+				<tr class="pr"><td style="padding-top: 10px"><span class="pa">备注：</span><textarea name="apply_remarks" id="apply_remarks" cols="30" rows="10" class="w340 h150 ml70" style="max-width: 340px;"></textarea></td></tr>
+				<tr><td style="padding-bottom: 10px;padding-top: 10px">提现密码：<input type="password" name="password" /></td></tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	  $("#weichattr").hide();
+	  $("#alipaytr").hide();
+	  $(":radio").click(function(){
+	  	 var val = $(this).val();
+	  	 if(val=="bank"){
+	  		$("tr[name='banktr']").show();
+	  		 $("#weichattr").hide();
+	  		 $("#alipaytr").hide();
+	  	 }
+	  	 if(val=="weichat"){
+	  		 $("tr[name='banktr']").hide();
+	  		 $("#weichattr").show();
+	  		 $("#alipaytr").hide();
+	  	 }
+	  	 if(val=="alipay"){
+	  		$("tr[name='banktr']").hide();
+	  		 $("#weichattr").hide();
+	  		 $("#alipaytr").show();
+	  	 } 
+	  });
+});
+</script>

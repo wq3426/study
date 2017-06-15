@@ -1,0 +1,53 @@
+<style>
+	.input_text {
+		width: 210px;
+	}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="addForm" method="post" class="validate">
+			<table width="100%">
+				<tr>
+					<th style="width:200px">保险公司：</th>
+					<td>
+						<select class="input_text" name="insureType.company_id" id="company_id">
+							<option value="0">----请选择保险公司----</option>
+							<#list insureCompanyList as company>
+							<option value="${company.id}">${company.company_name}</option> 
+							</#list>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">险种类型：</th>
+					<td>
+						<select class="input_text" name="insureType.insure_type" id="insure_type" onchange="editInsurename(this)">
+							<option value="0">----请选择险种类型----</option>
+							<#list insureTypes?keys as key>
+							<option value="${key}">${insureTypes.get(key)}</option>
+							</#list>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">险种名称：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" id="insure_type_name" name="insureType.insure_name"/>
+					</td>
+				</tr>
+				<tr>
+					<th>排序号：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="insureType.sort" value="0"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	//自动为险种名称赋值
+	function editInsurename(item){
+		$("#insure_type_name").val($(item).find("option:selected").text());
+	}
+</script>

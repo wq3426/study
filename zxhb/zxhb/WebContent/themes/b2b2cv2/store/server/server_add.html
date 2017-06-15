@@ -1,0 +1,403 @@
+<#include '/store/store_header.html' />
+<style>
+    .file{ width: 82px;  height: 32px; background: #333;  margin: 0 auto;position: absolute;  top: 126px;
+        left: 0px;  opacity: 0; filter:alpha(opacity=0); -moz-opacity:0; -khtml-opacity:0;
+         z-index: 2;}
+    .sotre_bonus dl dt{line-height: 20px;}
+</style>
+
+<div class="store_center">
+    <#include '../left_menu.html' />
+    <div class="sotre_right_content pb100">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>></span>
+            <a href="#">营销管理 </a><span>></span>信息推送<span>></span>新增
+        </div>
+        <div class="sotre_bonus" style="position: relative;">
+            <div class="store_right_main">
+                <div class="tabmenu">
+                    <ul class="tab pngFix">
+                        <li class=" commont_list" style="line-height: 50px">
+                            <a class="active" href="${ctx}/store/server/server_list.html?menu=promotion">信息推送</a>&nbsp;&nbsp;用于对APP信息推送，位于APP首页信息栏。
+                        </li>
+                        <li class="fr">
+                            <span class="cp btn_2" id="submit_btn">确认</span>
+                            <span class="cp btn_3" id="return_1">取消</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <form id="add_form" action="#" method="post">
+                <input type="hidden"  name="ms.create_time">
+                <input type="hidden" value="0" name="ms.status">
+                <input type="hidden"  id="detail" name="ms.detail">
+                <input type="hidden"  id="linkGoods_id" name="ms.linkGoods_id">
+                <dl>
+                    <dt class="required"><span class="red">*</span>标题:</dt>
+                    <dd>
+                        <input type="text" value="" name="ms.title" id="title" maxlength="15" placeholder="标题最大长度为15字符" class="text w100 mr5" isrequired="true"/>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt class="required">是否添加商品链接:</dt>
+                    <dd> <span class="ncu_btn6 " id="yes_link">是</span><span class="ncu_btn9" id="no_link">否</span>
+                    </dd>
+                </dl>
+                <dl class="display_link none">
+                    <dt><span class="red">*</span>商品链接:</dt>
+                    <dd>
+                        <input type="text"  id="synopsis"  name="ms.synopsis" onclick="open_server_iframe(0)"  placeholder="请选择商品链接" class="text w100 mr5 ofh"/>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt class="required"><span class="red">*</span>责任编辑:</dt>
+                    <dd>
+                        <input type="text" value="" maxlength="10" placeholder="编辑人最大长度为10字符" name="ms.author" id="author"
+                               class="text w100 mr5" isrequired="true"/>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt class="required"><span class="red">*</span>图片内容:</dt>
+                    <dt class="apply_id_img pr w404">
+                        <img class="fl" src="${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif" name="img" id="imghref"   style="width:100px;height:100px; border:1px solid #f1f1f1;">
+                        <span class=" ncu_btn7" style="display: block; cursor:pointer;">上传图片</span>
+                        <input class="fl cb mt10 file" id="fileHref" type="file" name="file" onchange="preview2(this)"/>
+                        <span class="fl cb tal" style="">建议上传图片大小为100x100,支持格式jpg,png,gif，<br>请保证图片清晰且文件大小不超过400KB</span>
+                    </dt>
+                </dl>
+                <dl>
+                    <dt class="required">文字内容:</dt>
+                    <dd class="pr">
+                        <textarea name="" id="textarea" cols="30" rows="10" class="w404 h150"></textarea>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt class="required">图片内容:</dt>
+                    <dt class="apply_id_img pr w404">
+                            <span class="cropped"></span>
+                            <img class="fl" src="" name="img" id="img"  style="width:210px;height:110px">
+                            <span  class=" ncu_btn7" style="display: block; cursor:pointer;">上传图片</span>
+                            <input class="fl cb mt10 file" id="file" type="file" name="file" onchange="previewTest(this)"/>
+                            <span class="fl">支持格式jpg,png,gif，请保证图片清晰且文件大小不超过400KB</span>
+                    </dt>
+                </dl> 
+            </form>
+            <div>
+                <dl>
+                    <dt></dt>
+                    <dt class="w404">
+                        <span class="ncu_btn6 cp" id="add_textarea" >添加文字</span>
+                        <span class="ncu_btn6 cp" id="add_img" >添加图片</span>
+                    </dt>
+                </dl>
+            </div>
+            <div>
+                <dl>
+                    <dt></dt>
+                    <dt class="w404 tc">
+                        <span class="ncu_btn8 cp" id="refreshSubmit" onclick="refreshSubmit();">刷新</span>
+                        <p>在APP中显示位置如右图</p>
+                    </dt>
+                </dl>
+            </div>
+        </div>
+        <div class="store_right_main_list">
+            <div class="store_right_main_list_head"><span class="fl"><</span>信息详情<i></i></div>
+            <ul class="store_right_main_list_body">
+              <li style="width: 228px;height: 30px;text-align: center; line-height:30px;"><b id="head_title">长安4S店正在促销活动</b>
+                </li>
+                <li class="lowh"><p style="word-break:break-all; color: #666666;" id="lowhp">
+                	主要刊登学生的优秀习作，主要分为“成长呼啦圈”、“亲友抱抱团”、“校园同学会”、“迷你动物园”等几个栏目。
+                	“成长呼啦圈”主要刊登同学们在成长过程中经历的趣事、难事及从中获得的感悟；“亲友抱抱团”，顾名思义主要选登的是小读者与亲朋好友间发生的故事；
+                	“校园同学会”则记录了小读者在学校发生的点滴故事；“迷你动物园”则鼓励小读者细心观察小动物、亲近大自然。
+                	总之，该板块选登的习作体裁不限，题材、内容可以涉及生活的方方面面，角度也可多种多样，是学生培养写作兴趣，展现写作水平的绝佳平台。</p>
+                </li>
+            </ul>
+            <ul class="store_right_main_list_bottom"></ul>
+        </div>
+    </div>
+</div>
+<script>
+    $("#yes_link").click(function(){
+       $(".display_link").css("display","block");
+    });
+    $("#no_link").click(function(){
+        $(".display_link").css("display","none");
+        $("#linkGoods_id").val("");
+        $("#synopsis").val("");
+    });
+</script>
+<script>
+    function preview2(file) {
+        if (file.files && file.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                $("#imghref").attr("src", evt.target.result);
+            };
+            reader.readAsDataURL(file.files[0]);
+        }
+    }
+</script>
+<script>
+    var dialog;
+
+    function open_server_iframe(linkGoodsId) {
+        var map = {}; // 相当于Map map = new HashMap();
+        map["title"] = "出售中的商品列表";
+        map["html"] = "${ctx}/goods/server_goods_insert_list.html?linkGoodsId="+linkGoodsId;
+        map["form"] = "#storeGoodsForm";
+        openDialog(map);
+    }
+
+    function openDialog(map) {
+        dialog = $.dialog({
+            title : map["title"],
+            lock : true,
+            min : false,
+            max : false,
+            width:960
+        });
+        $.ajax({
+            url : map["html"],
+            cache : false,
+            success : function(html) {
+                dialog.content(html);
+                dialog.button([{
+                    name : '保存',
+                    callback : function() {
+                        var goodsIdAndName=$('input:radio[name="goods_id"]:checked').val();
+                        if(goodsIdAndName==null){
+                            alert("请选择一件商品!");
+                            return false;
+                        }
+                        formSubmit(dialog,goodsIdAndName);
+                        this.button({
+                                    name: '保存',
+                                    disabled: false
+                                })
+                                .lock();
+                    }
+                }, {
+                    name : '取消'
+                } ]);
+            },
+            error : function() {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+
+    function formSubmit(dialog,goodsIdAndName) {
+        var goods = goodsIdAndName.split(",");//以逗号作为分隔字符串
+        $("#linkGoods_id").val($.trim(goods[0]));
+        $("#synopsis").val($.trim(goods[1]));
+    }
+
+</script>
+
+
+<script type="text/javascript">
+	var num = 0;
+    $(document).ready(function () {
+//    给原有的图片文字绑定删除事件
+        $(".clear_img").click(function(){
+            $(this).parent().parent().remove();
+        });
+//        增加文字输入框。
+        $("#add_textarea").click(function(){
+        	num = num+1;
+           $("#add_form").append('<dl>'+
+           						 '<dt class="required">文字内容:</dt>'+
+           						 '<dd  class="pr">'+
+	           						 '<i class="clear_img pa" id="clear_textarea'+num+'" name="'+num+'"></i>'+
+	           						 '<textarea name="" id="textarea'+num+'" cols="30" rows="10" class="w404 h150" ></textarea>'+
+           						 '</dd>'+
+           						 '</dl>')
+//           给新增的文本框增加删除事件
+            $("#clear_textarea"+num).click(function(){
+            	var nowNum = $(this).attr("name");
+            	for(var i= Number(nowNum)+1;i<=num;i++){
+            		$("#textarea"+i).attr("id","textarea"+(i-1));
+            		$("#clear_textarea"+i).attr("name",(i-1));
+            		$("#clear_textarea"+i).attr("id","clear_textarea"+(i-1));
+            		
+            		$("#img"+i).attr("id","img"+(i-1));
+            		$("#clear_img"+i).attr("name",(i-1));
+            		$("#clear_img"+i).attr("id","clear_img"+(i-1));
+            	}
+            	num = num-1;
+            	if(num  < 0){
+            		num = 0;
+            	} 
+                $(this).parent().parent().remove();
+            });
+        });
+//        增加图片事件。
+        $("#add_img").click(function(){
+        	num = num+1;
+            $("#add_form").append('<dl>'+
+	            					  '<dt class="required">图片内容:</dt>'+
+	            					  '<dt class="apply_id_img pr w404">'+
+	            					  '<i class="clear_img pa" id="clear_img'+num+'" name="'+num+'"></i>'+
+	            					  '<span class="cropped"></span>'+
+	            					  '<img class="fl" src="" name="img" id="img'+num+'"  style="width:210px;height:110px">'+
+	            					  '<a href="javascript:(0)" class=" upload-file ncu_btn7" style="display:block;">上传图片</a>'+
+	            					  '<input class="fl cb mt10 file" id="file'+num+'" type="file" name="file" onchange="preview(this,'+num+')"/>'+
+	            					  '<span class="fl">支持格式jpg,png,gif，请保证图片清晰且文件大小不超过400KB</span>'+
+	            					  '</dt>'+
+            					  '</dl>');
+//           给新增的图片框增加删除事件
+            $("#clear_img"+num).click(function(){
+            	var nowNum = $(this).attr("name");
+            	for(var i= Number(nowNum)+1;i<=num;i++){
+            		$("#textarea"+i).attr("id","textarea"+(i-1));
+            		$("#clear_textarea"+i).attr("name",(i-1));
+            		$("#clear_textarea"+i).attr("id","clear_textarea"+(i-1));
+            		
+            		$("#img"+i).attr("id","img"+(i-1));
+            		$("#clear_img"+i).attr("name",(i-1));
+            		$("#clear_img"+i).attr("id","clear_img"+(i-1));
+            	}
+            	num = num-1;
+            	if(num  < 0){
+            		num = 0;
+            	} 
+            	var filePath = $("#img"+nowNum).attr("src");
+            	if(filePath != ""){
+            		deleteFile(filePath);
+            	}
+                $(this).parent().parent().remove();
+            });
+        });
+      //文件删除
+	 	function deleteFile(filePath){
+			$.ajax({
+	          	url : "${ctx}/api/shop/appMessageAction!deleteFile.do",
+	          	type : "POST",
+	          	data : {filePath:filePath},
+	            dataType: 'json', //返回值类型 一般设置为json
+	          	success: function(data,status){
+	          		//console.log(data);
+	          	},
+	          	error: function(data, status, e){
+	          		//alert(e);
+	          	}
+	          });
+		}
+
+        $("#submit_btn").click(function () {
+        	refreshSubmit();
+            var title = $("#title").val();
+            //var synopsis = $("#synopsis").val();
+            var author = $("#author").val();
+            var detail = $("#detail").val(aa);
+            if (title == ""  || author == "") {
+                alert("请填写完整的商品信息");
+                return false;
+            } else {
+            	 var options = {
+                         url: "${ctx}/api/shop/appMessageAction!add.do",
+                         type: "POST",
+                         dataType: "json",
+                         success: function (data) {
+                             if (data.result == 1) {
+                                 alert(data.message);
+                                 location.href="${ctx}/store/server/server_list.html?menu=promotion";
+                             } else {
+                                 alert("系统异常:" + data.message);
+                             }
+                         },
+                         error: function (XMLHttpRequest, textStatus, errorThrown) {
+                             alert("系统异常，请稍候重试！");
+                         }
+                     }
+                  $("#add_form").ajaxSubmit(options);
+            }
+        });
+        $("#return_1").click(function () {
+            window.history.back(-1);
+        });
+    });
+    
+    //文件上传事件
+    function previewTest(file){
+    	 if (file.files && file.files[0]) {
+             var reader = new FileReader();
+             reader.onload = function (evt) {
+	                //$('#img').attr("src", evt.target.result);
+	            	$.ajaxFileUpload({
+	                  	url : "${ctx}/api/shop/appMessageAction!fileUploadImg.do",
+	                  	secureuri: false, //是否需要安全协议，一般设置为false
+	                    fileElementId: 'file', //文件上传域的ID
+	                    dataType: 'json', //返回值类型 一般设置为json
+	                  	success: function(data,status){
+	                  		 $('#img').attr("src", data.url);
+	                  	},
+	                  	error: function(data, status, e){
+	                  		alert(e);
+	                  	}
+	                  });
+             };
+             reader.readAsDataURL(file.files[0]);
+         }
+    }
+    function preview(file,mun) {
+        if (file.files && file.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                if(num > 0){
+                	//$('#img'+num).attr("src", evt.target.result);
+           		$.ajaxFileUpload({
+                     	url : "${ctx}/api/shop/appMessageAction!fileUploadImg.do",
+                     	secureuri: false, //是否需要安全协议，一般设置为false
+                        fileElementId: 'file'+mun, //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                     	success: function(data,status){
+                     		 $('#img'+mun).attr("src", data.url);
+                     	},
+                     	error: function(data, status, e){
+                     		alert(e);
+                     	}
+                     });
+                }
+            };
+            reader.readAsDataURL(file.files[0]);
+        }
+    }
+    
+    var aa;
+    function refreshSubmit(){
+    	$("#head_title").text(function () {
+            var title = $("#title").val();
+            return title;
+        });
+    	var reg=new RegExp("\n","g");
+    	if(typeof($("#textarea").val()) != "undefined"){
+    		var str= $("#textarea").val().replace(reg,"<br>");
+	   		aa = '<p id="textarea">'+str+'</p>';
+    	}
+    	if($('#img').attr("src") != ""){
+	   		aa += '<img class="srmlb_1" id="img"  src="'+ $('#img').attr("src")+'" alt="" style="width: 100%;height: 100%;vertical-align: middle;" onclick="goodsIdHref();"></img>';
+    	}
+    	if(num > 0){
+    		for(var i=1;i<=num;i++){
+    			if(typeof($("#textarea"+i).val()) != "undefined"){
+    				if($("#textarea"+i).val() != "" ){
+    					var str= $("#textarea"+i).val().replace(reg,"<br>");
+        				aa += '<p id="textarea'+i+'">'+str+'</p>';
+        			}
+    			}else{
+    				if(typeof($('#img'+i).attr("src")) != "undefined"){
+    					 if($('#img'+i).attr("src") != ""){
+    				    		aa += '<img class="srmlb_1" id="img'+i+'"  src="'+ $('#img'+i).attr("src")+'" alt="" style="width: 100%;height: 100%;vertical-align: middle;"  onclick="goodsIdHref();"></img>';
+    		    		}
+    				}
+    			}
+    		}
+    	} 
+    	$("#lowhp").html(aa);
+    	$("#detail").val(aa);
+    }
+</script>
+<#include '/common/footer.html' />

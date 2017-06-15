@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+	<wb-module deploy-name="zxhb">
+		<wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/b2b2c"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/b2b2c-api"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/base"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/cms"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/data-analysis"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/eop"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/fastdfs"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/integral"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/resource"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/shop"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
+		<property name="java-output-path" value="/zxhb/build/classes"/>
+        <property name="context-root" value="zxhb"/>
+	</wb-module>
+</project-modules>

@@ -1,0 +1,49 @@
+<#assign carInsureRecordTag = newTag("carInsureRecordTag")>
+<#assign carInsureRecord = carInsureRecordTag("'car_id':${car_id}")!''>
+<div  style="width:900px;" class="tal">
+    <div class="bdc_gray">
+        <ul id="history">
+            <li class=" bgc_gray bdc_gray"><b class="ml10">车主基本信息</b></li>
+            <li>
+                <ul class="w200 fl ml20 ">
+                    <li><b>车主姓名：</b>${carInsureRecord.carinfo.fullname!''}</li>
+                    <li><b>联系方式：</b>${carInsureRecord.carinfo.carowner!''}</li>
+                </ul>
+                <ul class="w500 fl">
+                    <li><b>车型：</b>${carInsureRecord.carinfo.brand!''}-${carInsureRecord.carinfo.series!''}  ${carInsureRecord.carinfo.sales_name!''}</li>
+                    <li><b>车牌：</b>${carInsureRecord.carinfo.carplate!''}</li>
+                </ul>
+                <ul class="fr mr30">
+                    <li><b>购车时间：</b>${carInsureRecord.carinfo.car_register_time!''}</li>
+                </ul>
+            </li>
+            <#list carInsureRecord.insureRecords as record>
+            <li class="history_head history cb bgc_gray bdc_gray"><b class="ml10">保险记录：${record.order_create_time!''}</b><span class="fr mr10 scalability  hyzztp1"></span></li>
+            <li style="display:block" class="history_body ">
+               <div class="ml20">
+                   <div class="dip w200"><b>保险公司：</b>${record.company_name!''}</div>
+                   <div class="dip w400"><b>保险单号：</b>${record.policy_no!''}</div>
+                   <div class="dip  mr10"><b>保险期间：</b>${record.start_time!''}／${record.end_time!''}</div></div>
+                <div class="ml20">
+                	<#list record.insure_content as itemname>
+                        <div class="dip w280"><b>${itemname!''}</b></div>
+                    </#list>
+                </div>
+                <div class="bdDF cb"></div>
+                <div class="tar mr10"><b>保费合计：</b>${record.price!''}元</div>
+            </li>
+            </#list>
+        </ul>
+    </div>
+</div>
+
+
+<!--调取列表信息展示与收起-->
+<script>
+    $(document).ready(function () {
+        $(".scalability").click(function () {
+            $(this).parent().addClass("history").next("li.history_body").slideToggle(300);
+            $(this).toggleClass("hyzztp2");
+        });
+    })
+</script>

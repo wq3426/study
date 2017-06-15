@@ -1,0 +1,67 @@
+<style>
+    .text {  width: 200px;  height: 20px;  }
+    .text_bd {  border: 1px solid #f1f1f1;  }
+    .list li {  float: left;  }
+    .list li span{margin: 0px 5px;}
+</style>
+<div style="width:560px;" class="tal">
+<#assign insureOrderTag= newTag("insureOrderTag")>
+<#assign insureOrderDetail= insureOrderTag("'order_id':${order_id}")!''>
+    <form action="" id="insure_form">
+    		<input type="hidden" name="spec_id" value="${insureOrderDetail.spec_id!''}">
+            <table>
+                <tbody>
+                <tr>
+                    <td class="tar">保险公司：</td>
+                    <td>${insureOrderDetail.company_name!''}</td>
+                </tr>
+                <tr>
+                    <td class="tar">保险单号：</td>
+                    <td><input class="text" type="text" value="${insureOrderDetail.policy_no!''}" name="policy_no" id="policy_no"/></td>
+                </tr>
+                <tr>
+                    <td class="tar">生效日期：</td>
+                    <td>${insureOrderDetail.insure_starttime!''}<span>&nbsp;至&nbsp;</span>${insureOrderDetail.insure_endtime!''}</td>
+                </tr>
+                <tr>
+                    <td class="tar">投保人姓名：</td>
+                    <td>${insureOrderDetail.applicant!''}</td>
+                </tr>
+                <tr>
+                    <td class="tar">身份证号码：</td>
+                    <td>${insureOrderDetail.applicant_id!''}</td>
+                </tr>
+                <tr>
+                    <td class="tar">车架号：</td>
+                    <td>${insureOrderDetail.carvin!''}</td>
+                </tr>
+                <tr>
+                    <td class="tar">发动机号码：</td>
+                    <td>${insureOrderDetail.carengineno!''}</td>
+                </tr>
+                <tr class="pr">
+                    <td class="tar" style="left: 85px;">保险内容：</td>
+                    <td>
+                        <ul class="list" style="width:460px">
+                        <#list insureOrderDetail.insure_content as itemname>
+                        <li>${itemname!''}<span>,</span></li>
+                        </#list>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tar">预计保费：</td>
+                    <td>${insureOrderDetail.price!''}</td>
+                </tr>
+                <tr>
+                    <td class="tar">赠送保养币：</td>
+                    <td>${insureOrderDetail.repair_coin!''}</td>
+                </tr>
+                <tr>
+                    <td class="tar">实际保费：</td>
+                    <td>${insureOrderDetail.need_pay_money!''}元</td>
+                </tr>
+                </tbody>
+            </table>
+    </form>
+</div>

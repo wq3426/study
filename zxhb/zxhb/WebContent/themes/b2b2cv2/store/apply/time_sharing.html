@@ -1,0 +1,277 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .odd{background-color:#fafafa;}
+</style>
+<div class="store_center">
+    <#include '/store/left_menu.html' />
+    <div id="sotre_right_content" class="sotre_right_content">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>></span>
+            <a href="#"> 保险保养 </a><span>></span>分时保养设置
+        </div>
+        <div class="store_right_main">
+            <div class="tabmenu">
+                <ul class="tab pngFix">
+                    <li class="active">
+                        <a href="#">分时保养设置</a>
+                    </li>
+                </ul>
+                <div class="store_goods_tool">
+                    <span class="ncu_btn3 cp" id="trash"
+                        onclick="append()">&nbsp;新增&nbsp;</span>
+                </div>
+            </div>
+            
+            <#assign storeCarRepairByTimeListTag=newTag("storeCarRepairByTimeListTag")>
+			<#assign timeregiondata=storeCarRepairByTimeListTag()/>
+            <!-- 列表 -->
+            <div class="store_goodslist mt30">
+                <form id="storeGoodsForm">
+                    <table class="timeSharingList" cellpadding="0" cellspacing="0" >
+                        <thead>
+                            <tr>
+                               <th class="w50">序号</th>
+                               <th class="w200">时间段</th>
+                               <th class="w180">工位数</th>
+                               <th class="w180">费率</th>
+                               <th class="w170">操作</th>
+                            </tr>
+                        </thead>
+						<tbody id="bbsTab">
+                    <#if timeregiondata.timeRegionList??>
+							<#list timeregiondata.timeRegionList as region>
+                            <tr class="h70">
+                                <td>${region_index+1!''}</td>
+                                <td>${region.starttime!''} - ${region.endtime!''}</td>
+                                <td>${region.station!''}</td>
+                                <td>${region.ratio!''}</td>
+                                <td>
+                                    <span class="btn_too btn_edit cp"><span class="tool2 dip cp" onclick="append('${region.time_region_id}')">编辑</span></span>
+                                    <span class="btn_too cp"><span class="tool2 ml10 dip" onclick="del('${region.time_region_id}')">删除</span></span>
+                                </td>
+                            </tr>
+                            </#list>
+                        </tbody>
+                    </table>
+                    <#else>
+                    </tbody>
+                    </table>
+                    <p class="no_blank">保养时间段未设置</p>
+                    </#if>
+                </form>
+                <div class="cb pt20 ml10 online">保养预约时间范围：
+                    <span id="ro"> <span class="proportion">${timeregiondata.repair_time_range!''}</span>天</span>
+                    <div class="fr">
+                        <span class="cp proportion_edit">修改</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--table隔行变色-->
+<script>
+    $(document).ready(function() {
+        $("#bbsTab").find("tr:odd").addClass("odd");
+    });
+</script>
+<!--加载弹出页面-->
+<script>
+    var dialog;
+
+    function append(id){
+        var map = {}; // 相当于Map map = new HashMap();
+        if (!id) {
+        	map["title"] = "添加保养时间段";
+            map["html"] = "add_insert_time.html";
+            map["form"] = "#addForm";
+            map["url"] = "${ctx}/api/b2b2c/storeApi!addRepairTimeRegion.do?ajax=yes";
+		} else {
+			map["title"] = "修改保养时间段";
+            map["html"] = "${ctx}/api/b2b2c/storeApi!editRepairTimeRegion.do?ajax=yes&id="+id;
+            map["form"] = "#editForm";
+            map["url"] = "${ctx}/api/b2b2c/storeApi!editRepairTimeRegionSave.do?ajax=yes";
+		}
+        
+        openDialog(map);
+    }
+
+    function openDialog(map) {
+        dialog = $.dialog({
+            title: map["title"],
+            lock: true,
+            min: false,
+            max: false,
+            width: 500
+        });
+
+        $.ajax({
+            url: map["html"],
+            cache: false,
+            success: function (html) {
+                dialog.content(html);
+                dialog.button([{
+                    name: '保存',
+                    callback: function () {
+                        formSubmit(dialog, map);
+
+                        this.button({
+                                    name: '保存',
+                                    disabled: false
+                                })
+                                .lock();
+                        return false;
+                    }
+                }, {
+                    name: '取消'
+                }]);
+            },
+            error: function () {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+
+    function formSubmit(dialog, map) {
+    	var repair_starttime = $("#repair_starttime").val();
+    	var repair_endtime = $("#repair_endtime").val();
+    	var repair_station = $("#repair_station").val();
+    	var repair_ratio = $("#repair_ratio").val();
+    	var repair_sort = $("#repair_sort").val();
+ 
+    	if(repair_starttime == ""){
+    		alert("请指定起始时间");
+    		return;
+    	}
+    	if(repair_endtime == ""){
+    		alert("请指定结束时间");
+    		return;
+    	}
+    	if(repair_starttime > repair_endtime){
+    		alert("起始时间不能大于结束时间");
+    		return;
+    	}
+    	if(repair_station == ""){
+    		alert("请指定工位数");
+    		return;
+    	}
+    	if(repair_ratio == ""){
+    		alert("请指定费率");
+    		return;
+    	}
+    	if(repair_sort == ""){
+    		alert("请指定排序号");
+    		return;
+    	}
+    	
+        var options = {
+            url: map["url"],
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                if (result.result == 1) {
+                    dialog.title('保存成功，2秒后关闭此窗口。').time(3);
+                    dialog.reload();
+                } else {
+                    dialog.title('保存失败，' + result.message);
+                    $("input[type='button']").each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                }
+            },
+            error: function (e) {
+                alert("出现错误，请重试");
+            }
+        };
+        $(map["form"]).ajaxSubmit(options);
+        return false;
+    }
+    
+    //删除保养时间段
+    function del(id){
+    	if(!confirm("确定要删除该时间段吗?")){
+    		return;
+    	}
+    	$.ajax({
+			url : "${ctx}/api/b2b2c/storeApi!delRepairTimeRegion.do?id="+id,
+			type : "POST",
+			dataType : 'json',
+			success : function(result) {
+				if (result.result == 1) {
+					alert(result.message);
+				}
+				location.reload();
+			},
+			error : function(e) {
+				$.Loading.error("出现错误，请重试");
+			}
+		});
+    }
+
+</script>
+<script>
+    //编辑保养预约时间范围
+    $(".proportion_edit").click(function () {
+        if ($(this).text() == "修改") {
+            var text = $(".proportion").html();
+            $("#ro").find(".proportion").empty();
+            if(text != ""){
+                $("#ro").find(".proportion").append("<input type='text' id='proportion_input' value="+ text +" onkeyup='clearNoNum(this)'/>(如:1)");
+            }else{
+                $("#ro").find(".proportion").append("<input type='text' id='proportion_input' onkeyup='clearNoNum(this)'/>(如:天)");
+            }
+
+            $(this).text("保存");
+            $(this).attr("class", "cp proportion_edit btn_submit");
+        }else if ($(this).text() == "保存") {
+            var text1 = $("#proportion_input").val();
+
+            if(text1 == ""){
+                alert("请设置保养预约时间范围");
+                return;
+            }
+
+            if(text1 < 1){
+                alert("保养预约时间范围最少为1天");
+                return;
+            }
+
+            //保存修改
+            $.ajax({
+                url : "${ctx}/api/b2b2c/storeApi!editRepairTimeRegionSave.do?repair_time_range="+text1,
+                type : "POST",
+                dataType : "json",
+                success : function(data){
+                    alert(data.message);
+                    if(data.result == 1){
+                        $("#ro").find(".proportion").empty();
+                        $("#ro").find(".proportion").append(text1);
+                    }
+                },
+                error : function(){
+                    alert("请求出错，保存失败");
+                }
+            });
+            
+            $(this).text("修改");
+            $(this).attr("class", "cp proportion_edit btn_submit");
+        }
+    });
+    //验证保养预约时间范围
+    function clearNoNum(obj) {
+        //先把非数字的都替换掉，除了数字和.
+        obj.value = obj.value.replace(/[^\d.]/g, "");
+        //必须保证第一个为数字而不是.
+        obj.value = obj.value.replace(/^\./g, "");
+        //保证只有出现一个.而没有多个.
+        obj.value = obj.value.replace(/\.{2,}/g, ".");
+        //保证.只出现一次，而不能出现两次以上
+        obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+    }
+    $(".preserved").click(function () {
+
+    });
+</script>
+<#include '/common/footer.html' />

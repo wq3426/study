@@ -1,0 +1,61 @@
+<style>
+    .ui_content {  margin: 10px 0px;  }
+</style>
+<#assign carRepairRecordTag = newTag("carRepairRecordTag")>
+<#assign carRepairRecord = carRepairRecordTag("'car_id':${car_id}")!''>
+<div style="width:900px;" class="tal">
+    <ul id="history">
+        <li class="history"><b class="ml10">车主基本信息</b></li>
+        <li>
+            <ul class="w300 fl ml20">
+                <li><b>车主姓名：</b>${carRepairRecord.carinfo.fullname!''}</li>
+                <li><b>联系方式：</b>${carRepairRecord.carinfo.carowner!''}</li>
+            </ul>
+            <ul class="w350 fl">
+                <li><b>车型：</b>${carRepairRecord.carinfo.brand!''}-${carRepairRecord.carinfo.series!''}  ${carRepairRecord.carinfo.sales_name!''}</li>
+                <li><b>车牌：</b>${carRepairRecord.carinfo.carplate!''}</li>
+            </ul>
+            <ul class="w220 fl">
+                <li><b>购车时间：</b>${carRepairRecord.carinfo.car_register_time!''}</li>
+            </ul>
+        </li>
+        <#list carRepairRecord.repairRecords as record>
+        <#if record.isOnTime == 1>
+        <li class="history cb "><b class="ml10">购买时间：${record.order_create_time!''} </b><span class="fr mr10 scalability  hyzztp1"></span></li>
+        <li class="history_body history">
+        <#elseif record.isOnTime == 0>
+        <li class="history_r cb "><b class="ml10">购买时间：${record.order_create_time!''} </b> <span class="color_r ml20">保养到期时间:${record.repairnexttime!''}</span><span class="fr mr10 scalability  hyzztp1"></span></li>
+        <li class="history_body history_b ">
+        </#if>
+            <ul class="w300 fl ml20">
+                <li><b>保养地点：</b>${record.repair_source!''}</li>
+                <li><b>服务工时：</b>${record.service_timelength!''}小时</li>
+
+            </ul>
+            <ul class="w350 fl ">
+                <li><b>保养里程：</b>${record.repair_mile!''}公里</li>
+                <li><b>技师姓名：</b>${record.engineer!''}</li>
+            </ul>
+            <ul class="w220 fl">
+                <li><b>保养价格: </b>${record.repair_price!''}元</li>
+                <li><b>服务时间： </b>${record.service_time!''}</li>
+            </ul>
+            <ul class="ml20 mr20">
+                <li class="bdDF cb"></li>
+                <li><b>保养要素：</b>${record.baseItems!''}</li>
+                <li><b>其他增项：</b>${record.extendItems!''}</li>
+            </ul>
+        </li>
+        </#list>
+    </ul>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $(".scalability").click(function () {
+            $(this).parent().addClass("history").next("li.history_body").slideToggle(300);
+            $(this).toggleClass("hyzztp2");
+        });
+    })
+</script>

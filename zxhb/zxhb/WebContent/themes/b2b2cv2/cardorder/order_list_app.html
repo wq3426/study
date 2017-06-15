@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content=" width=1280,user-scalable=no;">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <style>
+        body{font-size: 12px!important; }
+        body * { max-height: 999999px; }
+        input,input:focus,input:active{user-select: text;}
+        input{    border: 2px solid #999;  margin-left: 3%!important;  width: 50%;  height: 0.074rem;  font-size: 0.03rem;  line-height: 0.074rem;  padding-left: 0.02rem;}
+        .info_app{ background-color: #135481;  color: #fff;  padding: 0.0088rem 0!important;  width: 20%!important;  text-align: center;  margin-left: 2%;  display: inline-block;
+            border-radius: 10px;   font-size: 0.026rem;  line-height: 0.06rem; }
+        .info_app:hover{background-color: #c8c8c8;}
+
+
+    </style>
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=document.documentElement.clientWidth+"px";
+    </script>
+</head>
+
+<body>
+	<input type="hidden" id="user_telephone" value="${user_telephone!''}"/>
+    <input type="hidden" id="status" value="${status!''}"/>
+
+<div class="mm5">
+    <div class="ff40 llhh90 tc"><span class="goBack " onclick="javascript:history.back(-1)"></span>我的订单</div>
+    <div class="tc mmt3">
+        <input type="text" placeholder="&nbsp;请输入手机号查询！" id="mobile">
+        <span class="info_app" id="inquiries">购买查询</span>
+    </div>
+
+    <div class="h400 tc" id="initDiv">
+        <img class="mt50" style="width: 300px;" src="${ctx}/themes/b2b2cv2/cardorder/images/order_list2.png" alt="">
+        <!--<img class="mt50"  style="width: 300px;" src="${ctx}/themes/b2b2cv2/cardorder/images/order_list1.png" alt="">-->
+    </div>
+
+    <div id="orderListDiv">
+    </div>
+    
+    <!--这是一个列表每一个商品都是由这个div生成的－－用完后可删除注释-->
+    <!-- 
+    <div class="ff28 mmt2 c666 ">
+        <p class="llhh70 c555" >订单号：2222222222222 <span class="cred fr">待支付</span></p>
+        <div class="bb3"></div>
+        <div class="llhh70 of">
+            <div class="fl landmark"></div>
+            <div class="fl mml2">
+                <p>李晓明 <span>18911***044</span></p>
+                <p>北京市昌平区回龙观镇龙域北街金域国际中心a座1210室</p>
+            </div>
+        </div>
+        <div class="bb3"></div>
+        <div class="mmt2 of ww100">
+            <div class="app_list_img fl ">
+                <img src="${ctx}/themes/b2b2cv2/cardorder/images/add_1_06.png" alt="">
+            </div>
+            <div class=" fl mml2 ww75 ff24 llhh35">
+                <div class="ww100">
+                    <p class=" app_list_title fl">西藏交通一卡通纪念卡</p>
+                    <p class="fl tr ww20 ff28">x2</p>
+                </div>
+                <p class=" app_list_text ">万套交通纪念卡限量发售，万套交通纪念卡限量发售,以救度佛母二十一种礼赞经为背</p>
+                <p>规格：单卡</p>
+                <div class="ww100 of">
+                    <p class="ww80 fl">图案：度母卡</p>
+                    <span class="ww20 lf dip tr ff28">&yen;100</span>
+                </div>
+            </div>
+        </div>
+        <div class="bb3 mmt2"></div>
+        <div class="tr mmt2 ff28 llhh40">
+            <p><span>共计两件商品，合计：&yen;110</span></p>
+            <span class=" toPay" onclick="toPay()" >去付款</span>
+        </div>
+        <div class="mmt2" style="width: 100%;height: 20px;background-color: #f9f9f9;border-top: 2px solid #dddddd;"></div>
+    </div>
+     -->
+
+    <div  style="font-size: 0.02rem;margin-top: 0.03rem;text-align: center;">
+        版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+    </div>
+</div>
+
+<script>
+	$(function(){
+		var queryMobile = $("#mobile").val();
+		if(queryMobile != ""){
+			getOrderList(queryMobile);
+		}
+	});
+	
+	var mobile = $("#user_telephone").val();
+	if(mobile != ""){
+		$("#mobile").val(mobile);
+		getOrderList(mobile);
+	}
+
+	//查询按钮验证
+	$("#inquiries").click(function () {
+	    var mobile = $("#mobile").val();
+	    if (mobile == "") {
+	        alert('请输入您预约时填写的手机号码');
+	        return false;
+	    }
+	    if (!/^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/.test(mobile)) {
+	        alert('手机号码格式不正确');
+	        return false;
+	    }
+	
+	    getOrderList(mobile);
+	});
+	
+	function getOrderList(mobile){
+		$.ajax({
+	        url: "${ctx}/api/b2b2c/storeApi!getCardOrderList.do?ajax=yes",
+	        type: "POST",
+	        data: "mobile=" + mobile,
+	        async: false,
+	        dataType: "json",
+	        success: function(data) {
+	        	if(data.result == 0){
+	        		$("#orderListDiv").addClass("din");
+	        		$("#initDiv").removeClass("din");
+	        		$("#initDiv").empty();
+	        		$("#initDiv").append("<img class='mt50' style='width:300px;' src='${ctx}/themes/b2b2cv2/cardorder/images/order_list1.png' alt=''>");
+	        		alert(data.message);
+	        	}else if(data.result == 1){
+	        		$("#initDiv").addClass("din");
+	        		$("#orderListDiv").removeClass("din");
+	        		$("#orderListDiv").empty();
+	        		var total_content = "";
+	        		$.each(data.data, function(i, item){
+	        			var content = "";
+	                    content += "<div class='ff28 mmt2 c666 '>";
+	                    content += "<p class='llhh70 c555' >订单号："+item.order_sn;
+	                    if(item.status == 1){
+            				content += "<span class='cred fr'>已支付，待发货</span></p>";
+            			}else if(item.status == 2){
+            				content += "<span class='cred fr'>配送中</span></p>";
+            			}else if(item.status == 3){
+            				content += "<span class='cred fr'>已送达，未签收</span></p>";
+            			}else if(item.status == 4){
+            				content += "<span class='cred fr'>已签收</span></p>";
+            			}else if(item.status == 8){
+            				content += "<span class='cred fr'>已取消</span></p>";
+            			}
+	                    content += "<div class='bb3'></div>";
+	                    content += "<div class='llhh70 of'>";
+	                    content += "<div class='fl landmark'></div>";
+	                    content += "<div class='fl mml2 ww90'>";
+	                    content += "<p>"+item.receive_user+" <span class='ml30'>"+item.user_telephone+"</span></p>";
+	                    content += "<p>"+item.address+"</p>";
+	                    content += "</div>";
+	                    content += "</div>";        
+	                    content += "<div class='bb3'></div>";
+	                    content += "<div class='mmt2 of ww100'>";
+	                    content += "<div class='app_list_img fl '>";
+	                    content += "<img  src='"+item.ta_spec_image+"' alt=''>";
+	                    content += "</div>";
+	                    content += "<div class=' fl mml2 ww73 ff24 llhh35'>";
+	                    content += "<div class='ww100'>";        
+	                    content += "<p class=' app_list_title fl'>"+item.goods_name+"</p>";
+	                    content += "<p class='fl tr ww20 ff28'>x"+item.order_count+"</p>";
+	                    content += "</div>";
+	                    content += "<p class=' app_list_text '>"+item.intro+"</p>";
+	                    content += "<p>规格："+item.gg_spec_value+"</p>";
+	                    content += "<div class='ww100 of'>";
+	                    content += "<p class='ww80 fl'>图案："+item.ta_spec_value+"</p>";
+	                    content += "<span class='ww20 lf dip tr ff28'>&yen;"+item.unit_price+"</span>";
+	                    content += "</div>";
+	                    content += "</div>";
+	                    content += "</div>";
+	                    content += "<div class='bb3 mmt2'></div>";
+	                    content += "<div class='tr mmt2 ff28 llhh40'>";
+	                    content += "<p><span>共计"+item.order_count+"件商品，合计：&yen;"+item.total_price+"</span></p>";
+	                    if(item.status == 0){
+	                    	content += "<span class=' toPay' onclick='toPayOrder("+item.order_id+")' >去付款</span>";
+            			}else{
+            				content += "<span class=' toPay' onclick='getTransInfo("+item.order_sn+")' >查看物流</span>";
+            			}
+	                    content += "</div>";
+	                    content += "<div class='mmt2' style='width: 100%;height: 20px;background-color: #f9f9f9;border-top: 2px solid #dddddd;'></div>";
+	                    content += "</div>";
+	
+	        			total_content += content;
+	        		});
+	        		$("#orderListDiv").append(total_content);
+	        	}
+	        },
+	        error : function(){
+	        	alert("请求出错");
+	        }
+	    });
+	}
+
+	function toPayOrder(order_id){
+    	var mobile = $("#mobile").val();
+    	window.location = "${ctx}/cardorder/payment_app.html?mobile="+mobile+"&order_id="+order_id;
+    }
+	
+	function getTransInfo(order_sn){
+		window.location = "${ctx}/cardorder/logistics_app.html?order_sn="+order_sn;
+	}
+</script>
+</body>
+</html>

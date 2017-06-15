@@ -1,0 +1,241 @@
+<#include '/store/store_header.html' />
+<#assign myGoodsListTag=newTag("myGoodsListTag")>
+<#assign storeGoods=myGoodsListTag()>
+<style>
+.goodslist_bystore tr th{
+	text-align: center;
+}
+.store_goodslist .search_form tr th {
+    font-size: 12px;
+    line-height: 22px;
+    padding: 8px 8px 8px 500px;
+    text-align: right;
+}
+
+.goodslist_bystore tr .storegoodslist_tools {
+    text-align: right;
+    width: 100px;
+}
+	.tabmenu_1{
+		display: inline-block;
+		position: absolute;
+		margin-left: 30px;
+	}
+.tabmenu_1 .other_store_goods {
+	background-color: #f5f5f5;
+	border: 1px solid #ccc;
+	color: #333;
+	cursor: pointer;
+	display: block;
+	float: left;
+	font: 12px/28px "microsoft yahei";
+	height: 24px;
+	line-height: 24px;
+	margin-left: 10px;
+	padding: 0;
+	text-align: center;
+	width: 64px;
+	right: 70px;
+}
+.odd {background-color: #f7f7f7!important;}
+
+</style>
+
+<div class="store_center">
+<#include '/store/left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color:#999;">您的位置：</span>
+			<span>商品管理</span>
+			<span> > </span>回收站
+		</div>
+		<div class="store_right_main">
+			<div class="tabmenu">
+				<ul class="tab pngFix">
+					<li class="active">
+						<a href="#">回收站商品列表</a>
+					</li>
+				</ul>
+				<div class="store_goods_tool">
+	  				<a class="ncu_btn3 other_store_goods revert" href="javascript:void(0);">还原 </a>
+	  				<a class="ncu_btn3 clean" href="javascript:void(0);" style="width: 40px;">清除 </a>
+				</div>
+			</div>
+			<!-- 商品列表 -->
+			<div class="store_goodslist">
+				<table class="search_form">
+			  		<tbody>
+			  			<tr>
+							<td style="width:100px">&nbsp;&nbsp; <input type="checkbox"  class="checkall" id="all"/>&nbsp;&nbsp;&nbsp;&nbsp;全选</td>
+							<th>商品名称：</th>
+        					<td ><input type="text" class="text" name="goodsName" maxlength="50" value="${storeGoods.goodsName!''}"></td>
+			  				<td ><input type="button" class="submit" id="btnSearch" value="搜索" /></td>
+			  			</tr>
+			  		</tbody>
+			  	</table>
+			  	<#if storeGoods.storegoods.result??>
+			  	<form id="storeGoodsForm">
+				  	<table class="goodslist_bystore" cellpadding="0" cellspacing="0">
+				  		<thead>
+				  			<tr>
+				  				<th>选择</th>
+				  				<th>图片</th>
+				  				<th>名称</th>
+				  				<th>价格</th>
+				  				<th>库存</th>
+				  				<th>可用库存</th>
+				  				<th>时间</th>
+				  				<th>操作</th>
+				  			</tr>
+				  		</thead>
+				  		<tbody id="bbsTab">
+				  			<#list storeGoods.storegoods.result as storeGoods>
+				  			<tr>
+				  				
+								<td ><input type="checkbox" name="goods_id" value="${storeGoods.goods_id}" class="checkitem" ></td>
+				  				<td>
+				  					<#if storeGoods.thumbnail?exists && storeGoods.thumbnail != ''>
+				  					<@image src="${storeGoods.thumbnail!''}" alt="${storeGoods.name!''}" height="75" width="75" /> 
+				  					<#else>
+				  						暂无图片
+				  					</#if>
+				  				</td>
+				  				<td style="line-height:25px;width: 230px;">
+			  						<span style="color:#005ea6;line-height: 20px;">
+						    			${storeGoods.name}
+									</span>
+				  				</td>
+				  				<td>
+				  					${storeGoods.price?string.currency}
+				  				</td>
+				  				<td>
+				  					${storeGoods.store!''}件
+				  				</td>
+				  				<td>
+				  					${storeGoods.enable_store!''}件
+				  				</td>
+				  				<td>
+				  					<@dateformat time="${storeGoods.create_time?c}" pattern="yyyy-MM-dd HH:mm"/>
+				  				</td>
+				  				<td class="storegoodslist_tools">
+									<a href="javascript:void(0);" goods_id="${storeGoods.goods_id}" operational="revertGoods" val="还原商品" name="goodsOperation" class="tool1">还原</a>
+									<!-- <a href="javascript:void(0);" goods_id="${storeGoods.goods_id}" operational="cleanGoods" val="清除商品" name="goodsOperation" class="tool2">清除</a> -->
+				  				</td>
+				  			</tr>
+				  			</#list>
+				  		</tbody>
+				  	</table>
+			  	</form>
+			  	<@pager pageno="${storeGoods.page!'1'}" pagesize="${storeGoods.storegoods.pageSize}" totalcount="${storeGoods.totalCount}" />
+			  	<#else>
+			  	<p class="no_blank">暂无符合条件的数据记录</p>
+			  	</#if>
+			</div>
+			<table class="search_form" style="position:absolute;bottom: 0px">
+				<tbody>
+				<tr>
+					<td style="width:100px">&nbsp;&nbsp; <input type="checkbox"  class="checkall" />&nbsp;&nbsp;&nbsp;&nbsp;全选
+						<div class="tabmenu_1">
+							<div class="store_goods_tool" style="margin-left:780px">
+								<a class="ncu_btn3 other_store_goods revert" href="javascript:void(0);">还原 </a>
+								<!-- <a class="ncu_btn3 other_store_goods clean" href="javascript:void(0);">清除 </a> -->
+							</div>
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+	<script>$("#bbsTab").find("tr:odd").addClass("odd");</script>
+	<!-- 全选功能-->
+	<script>
+		$(".checkall").click(function(){
+
+			if($(this).attr("checked")=="checked"){
+				$(".checkitem").each(function(){
+					$(this).attr("checked",true);
+				})
+			}else{
+				$(".checkitem").each(function(){
+					$(this).attr("checked",false);
+				})
+			}
+
+		});
+	</script>
+<script type="text/javascript">
+$(function(){
+	document.onkeydown=function(event){
+ 	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+ 	      if(e && e.keyCode==13){ // enter 键
+ 	    	var goodsName=$("input[name='goodsName']").val();
+ 	   		location.href="recycle_bin.html?goodsName="+goodsName+"&menu=store_goods"+"&disable=1";
+ 	      }
+ 	 };
+	
+	$("#btnSearch").click(function(){
+		var goodsName=$("input[name='goodsName']").val();
+
+		location.href="recycle_bin.html?goodsName="+goodsName+"&menu=store_goods"+"&disable=1";
+	});
+	
+	$("a[name='goodsOperation']").click(function(){
+		if(!confirm("确定要"+$(this).attr("val")+"吗？"))
+			return false;
+		var operation=$(this).attr("operational");
+		$.ajax({
+			url : "${ctx}/api/b2b2c/goods!"+operation+".do?goods_id="+$(this).attr("goods_id"),
+			cache : false,
+			dataType : 'json',
+			success : function(json) {
+				alert(json.message);
+				if(json.result==1)
+					location.href="recycle_bin.html?disable=1&menu=store_goods";
+			},
+			error : function() {
+				alert("出现错误，请重试");
+			}
+		});	
+	});
+	
+	$(".revert").click(function(){
+		var options = {
+			url : "${ctx}/api/b2b2c/goods!revertGoods.do",
+			type : "POST",
+			dataType : 'json',
+			success : function(data) {	
+				alert(data.message);
+				location.reload();
+			},
+			error : function(e) {
+				alert("出现错误 ，请重试");
+			}
+		};
+		$("#storeGoodsForm").ajaxSubmit(options);
+	});
+	$(".clean").click(function(){
+		var options = {
+				url : "${ctx}/api/b2b2c/goods!cleanGoods.do",
+				type : "POST",
+				dataType : 'json',
+				success : function(data) {	
+					alert(data.message);
+					location.reload();
+				},
+				error : function(e) {
+					alert("出现错误 ，请重试");
+				}
+			};
+			$("#storeGoodsForm").ajaxSubmit(options);
+	});
+})
+</script>
+<script>
+$(function(){
+	selectMenu(5);
+})
+</script>
+
+<#include '/common/footer.html' />

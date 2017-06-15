@@ -1,0 +1,35 @@
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text {
+	width: 200px;
+}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<div style="padding: 10px 0 10px 20px">
+			<form id="shippingForm" method="post" class="validate">
+				<table>
+				<tr>
+				<td>物流公司：</td>
+					<td>
+						<select id="shipping_id" name="shipping_id"  >
+							<#list shippingList as shipping> 
+								<option  value="${shipping.id!''}" <#if orderDetail.shipping_id?? && shipping.id+""==orderDetail.shipping_id >selected="selected"</#if>>${shipping.shipping_name!''}</option>
+							</#list>
+						</select>
+					</td>
+				</tr>
+				<tr>
+				<td>物流单号：</td>
+					<td><input class="input_text easyui-validatebox" type="text"  id="shipping_no" name="shipping_no"
+							name="zip" value="${orderDetail.shipping_no!''}" data-options="required:true"></input>
+						<input type="hidden" id="order_sn" name="order_sn" value="${order_sn!''}" >
+					</td>
+				</tr>
+				
+				</table>
+			</form>
+		</div>
+	</div>
+</div> 

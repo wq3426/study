@@ -1,0 +1,333 @@
+<#include '/store/store_header.html' />
+<#assign storeCostTag=newTag("storeCostTag")>
+<#assign storeCost=storeCostTag("{'sale_type':4}")/>
+<#assign storeCostForBuyTag=newTag("storeCostForBuyTag")>
+<#assign storeCostForBuy=storeCostForBuyTag("'saleType':4")!''/>
+<script  src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>  .odd {background-color: #f7f7f7!important;}</style>
+<div class="store_center">
+	<#include '../left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color:#999;">您的位置：</span>
+			<span>营销管理 </span>
+			<span> > </span>信息推送
+		</div>
+		<div class="store_right_main">
+			<div class="tabmenu">
+				<ul class="tab pngFix">
+					<li class=" commont_list">
+						<a class="normal" href="${ctx}/store/adv/edit_adv.html?menu=promotion">广告发布</a>
+						<a class="active" href="${ctx}/store/server/server_list.html?menu=promotion">信息推送</a>
+					</li>
+					<li class="mt10 mr20">&nbsp;&nbsp;用于对APP信息推送，位于APP首页信息栏。</li>
+					<li>
+						<!-- <a onclick="purchase(0)" style="margin-right: 70px;" class="ncu_btn5">免费申请</a> -->
+						<a href="${ctx}/store/server/server_add.html?menu=promotion" class="ncu_btn5" >新 增</a>
+					</li>
+				</ul>
+			</div>
+			<p class="pt10">
+				<#if storeCost.storeCost?? >
+						<input type="hidden" name="surpNumForFree" class="text" value="${storeCost.storeCost.surp_num}">
+						<span style="float: left;">&nbsp;&nbsp;本月已经使用免费发布次数:<b class="f16 color_r">${storeCost.storeCost.used_num}</b>,剩余免费发布次数:<b class="f16 color_r">${storeCost.storeCost.surp_num}</b><!--<span onclick="purchase(0)" class="color_r fr pl10 cp">免费申请</span>--></span>
+					<#else>
+						<input type="hidden" name="surpNumForFree" class="text" value="0">
+						<span style="float: left;">&nbsp;&nbsp;本月已经使用免费发布次数:<b class="f16 color_r">0</b>,剩余免费发布次数:<b class="f16 color_r">0</b><!-- <span onclick="purchase(0)" class="color_r fr pl10 cp">免费申请</span> --></span>
+				</#if>
+				<#if storeCostForBuy.storeCost??>
+						<input type="hidden" name="surpNumForBuy" class="text" value="${storeCostForBuy.storeCost.surp_num}">
+						<span style="float: left;"  class="pl20">&nbsp;&nbsp;已经使用购买发布次数:<b class="f16 color_r">${storeCostForBuy.storeCost.used_num}</b>,剩余发布次数:<b class="f16 color_r">${storeCostForBuy.storeCost.surp_num}</b><span onclick="purchase(1)" class="color_r fr pl10 cp">点击购买</span></span>
+					<#else>
+						<input type="hidden" name="surpNumForBuy" class="text" value="0">
+						<span style="float: left;"  class="pl20">&nbsp;&nbsp;已经购买发布次数:<b class="f16 color_r">0</b>,剩余发布次数:<b class="f16 color_r">0</b><span onclick="purchase(1)" class="color_r fr pl10 cp">点击购买</span> </span>
+				</#if>
+			</p>
+		</div>
+		<div class="bonuslist s_commont_list mt20">
+			<#assign appMessageListTag=newTag("appMessageListTag")> 
+			<#assign msdata=appMessageListTag()/>
+			<#assign i=0>
+			<table class="list_table" >
+				<thead>
+					<tr>
+						<th class="w30 bl">序号</th>
+						<th class="w180">资讯详情</th>
+						<th class="w60">责任编辑</th>
+						<th class="w60">发布时间</th>
+						<th class="w60">状态</th>
+						<th class="w60 br" >操作</th>
+					</tr>
+				</thead>
+				<#if msdata.totalCount != 0 >
+				<tbody id="bbsTab">
+					<#list msdata.result as ms>
+					<#assign  i = i + 1>  
+						<tr>
+							<td>${i}</td>
+							<#if ms.image?exists && ms.image != ''>
+			  					<td style="text-align: left">
+									 <img class="ml10 mr10" src="${ms.image}" alt=""/> 
+									<p>${ms.title}</p>
+								</td>
+			  					<#else>
+			  					<td style="text-align: left">
+			  						<img class="ml10 mr10" src="/mall/themes/b2b2cv2/images/default_goods_image_tiny.gif" alt=""/>
+									<p>${ms.title}</p>
+								</td>
+		  					</#if>
+							<td>${ms.author}</td>
+							<td><@dateformat pattern="yyyy-MM-dd hh:mm:ss" time="${ms.create_time}" /></td>
+							<td><#if ms.status==1>已发布<#else>未发布</#if></td> 
+							<td class="storegoodslist_tools">
+								<#if ms.status == 1>
+                            	<a href="#" onclick="changeStatus(${ms.id},${ms.status})" class="tool5">撤回</a>
+                            	<#else>
+                            	<a href="#" onclick="changeStatus(${ms.id},${ms.status})" class="tool5">发布</a>
+								<a href="${ctx}/store/server/server_edit.html?id=${ms.id}&menu=promotion"  class="tool2">编辑</a>
+                            	</#if>
+								<a href="#" onclick="delBonus(${ms.id},${ms.status})" href="javascript:void(0);"  class="tool3">删除</a>
+							</td>
+						</tr>
+					</#list>
+				</tbody>
+			</table>
+			<@pager pageno="${msdata.page!'1'}" pagesize="${msdata.pageSize}" totalcount="${msdata.totalCount}" />
+			<#else>	
+		  		</table>
+		  		<p class="no_blank">暂无符合条件的数据记录</p>
+		  	</#if>
+		</div>
+	</div>	
+</div>
+	<!--购买信息服务/免费申请信息服务-->
+	<script>
+		var dialog;
+		function purchase(isfree) {
+			var map = {}; // 相当于Map map = new HashMap();
+			if (isfree == 1) {
+				map["title"] = "购买信息推送栏位数/推送次数";
+				map["html"] = "purchase_server.html";
+				map["url"] = "${ctx}/api/b2b2c/saleaudit!add_buyBonus.do";
+				map["form"] = "#add_buy_form";
+				openDialogForBuy(map);
+			} else {
+				map["title"] = "申请信息服务专栏";
+				map["html"] = "apply_server.html";
+				map["url"] = "${ctx}/api/b2b2c/saleaudit!apply_freeServer.do";
+				map["form"] = "#add_free_form";
+				openDialogForFree(map);
+			}
+		}
+		//购买广告栏位和发布次数
+		function openDialogForBuy(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:500
+			});
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '购买',
+						callback : function() {
+							var val=$('input:radio[name="saleFreeId"]:checked').val();
+							if(typeof(val) == "undefined"){
+								$.alert("请选择购买条数");
+								return false;
+							}
+							formSubmitForBuy(dialog, map);
+							this.button({
+										name: '购买',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function() {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+		
+		function formSubmitForBuy(dialog, map) {
+			var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) { 
+					 	if(result.result==1){ 
+							dialog.title('购买成功，3秒后关闭此窗口。').time(5); 
+							dialog.reload();
+						}else{
+							dialog.title('购买失败，'+result.message);
+							dialog.reload();
+						} 
+					},
+					error:function(XmlHttpRequest, textStatus, errorThrown) {
+						alert(XmlHttpRequest);
+						alert(textStatus);
+						alert(errorThrown);
+						alert("出现错误，请重试");
+						}
+				};
+				$(map["form"]).ajaxSubmit(options);
+				return false;
+		}
+		
+		//免费申请广告栏位和发布次数
+		function openDialogForFree(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:500
+			});
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '申请',
+						callback : function() {
+							var val=$('input:radio[name="auditId"]:checked').val();
+							if(typeof(val) == "undefined"){
+								$.alert("请选择申请条数");
+								return false;
+							}
+							formSubmitForFree(dialog, map);
+							this.button({
+										name: '申请',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function() {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+
+		function formSubmitForFree(dialog, map) {
+			var options = {
+				url : map["url"],
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if(result.result==1){
+						dialog.title('申请成功，3秒后关闭此窗口。').time(3);
+						dialog.reload();
+					}else{
+						dialog.title('申请失败，'+result.message);
+						$("input[type='button']").each(function(){
+							$(this).removeAttr("disabled");
+						});
+					}
+				},
+				error : function(e) {
+					alert("出现错误，请重试");
+				}
+			};
+			$(map["form"]).ajaxSubmit(options);
+			return false;
+		}
+	</script>
+<!--隔行变色-->
+<script language="javascript" type="text/javascript">
+			//撤回,发布
+			function changeStatus(msid,status){
+				if(status == 1){
+					if(confirm("确定撤回这条信息服务吗？")){
+						change(msid,status);
+					}else{
+						return;
+					}
+				}else{
+					var surpNumForFree = $("input[name='surpNumForFree']").val();
+					var surpNumForBuy =  $("input[name='surpNumForBuy']").val();
+					if(surpNumForFree == 0 &&　surpNumForBuy　== 0){
+						alert("您本月免费发布次数已经使用完，如需发布请点击【购买】");
+						return;
+					}else{
+						if(confirm("确定发布这条信息服务吗？")){
+							change(msid,status);
+						}else{
+							return;
+						}
+					}
+				}
+			}
+			function change(msid,status){
+				$.ajax({
+					url : "${ctx}/api/shop/appMessageAction!changeStatus.do?msid="+msid+"&status="+status,
+					cache : false,
+					dataType: "json",
+					success : function(data) {
+						if(data.result==1){
+							alert(data.message);
+							location.reload();
+						}else{
+							alert(data.message);
+						}
+					},
+					error : function() {
+						alert("出现错误，请重试");
+					}
+				});
+			}
+			/* 删除服务信息 */
+			function delBonus(msid,status){
+				if(status == 1){
+					alert("该信息已发布，不能删除！");
+					return;
+				}else if(confirm("确定删除这条数据吗？")){
+					$.ajax({
+						url : "${ctx}/api/shop/appMessageAction!del.do?msid="+msid,
+						cache : false,
+						dataType: "json",
+						success : function(data) {
+							if(data.result==1){
+								alert(data.message);
+								location.reload();
+							}else{
+								$.alert(data.message);
+							}
+						},
+						error : function() {
+							$.alert("出现错误，请重试");
+						}
+					});
+				}else{
+					return false;	
+				}
+			}
+
+
+	window.onload = function () {
+		var oTable = document.getElementById("bbsTab");
+		if(oTable != null){
+			for (var i = 0; i < oTable.rows.length; i++) {
+				oTable.rows[i].cells[0].innerHTML = (i + 1);
+				if (i % 2 == 1)    //偶数行
+					oTable.rows[i].className = "odd";
+			}
+		}
+	}
+</script>
+<#include '/common/footer.html' />

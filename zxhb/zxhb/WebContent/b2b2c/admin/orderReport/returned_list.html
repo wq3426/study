@@ -1,0 +1,77 @@
+<#include '/admin/header.html' > <#assign
+dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<div class="main">
+	<div class='buttonArea' style="height: auto">
+		 <span style="float: right;"> 
+		 	<span id="simpleSearch"> 
+			 	<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px" placeholder="请输入退货单号,收货人" name="keyword">
+				<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchOrder()">搜索</a>
+			</span> 
+		</span>
+	</div>
+	<div class="clear height10"></div>
+	<div class="shadowBoxWhite tableDiv">
+		<table id="orderReturndata" class="easyui-datagrid"
+			data-options="url:'${ctx}/b2b2c/admin/storeOrderReport!returnedListJson.do',pageList: [10,15,20,30],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" width="width">
+			<thead>
+				<tr>
+					<th data-options="field:'id',width:35">退货ID</th>
+					<th data-options="field:'tradeno',width:100">退货单号</th>
+					<th data-options="field:'refund_way',width:100" >退款方式</th>
+					<th data-options="field:'tradestatus',width:100" formatter="formatType">退货状态</th>
+					<th data-options="field:'ordersn',width:100">退货订单号</th>
+					<th data-options="field:'regtime',width:100" formatter="formatTime">操作时间</th>
+					<th data-options="field:'alltotal_pay',width:100">退货金额</th>
+					<th data-options="field:'action',width:50,align:'center'" formatter="formatOperation">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="pay_detail"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	window.top["reload_Abnormal_Monitor"]=function(){
+	    $("#orderReturndata").datagrid("reload");
+	};
+	function formatType(value, row, index) {
+		var val;
+		if (value == 2) {
+			val = "已审核";
+		}
+		if (value == 3) {
+			val = "已完成";
+		}
+		if (value == 4) {
+			val = "已取消";
+		}
+		
+		return val;
+	}
+
+	function formatTime(value, row, index) {
+		return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+	}
+	function formatOperation(value, row, index) {
+		var val;
+		if(row.tradestatus==2){
+			val = "<a href='javascript:void(0);' onclick=newTab('退货结算','${ctx}/shop/admin/sellBack!payment.do?id="+row.id+"'); >查看</a>";
+		}else if(row.tradestatus==0){
+			val="等待商家审核";
+		}
+		return val;
+	}
+	
+	
+    function searchOrder(){
+    	var keyword = $("#searchKeyword").val();
+    	
+    	$("#orderReturndata").datagrid('load', {
+    		 keyword:keyword,
+    		 page:1
+        });
+    }
+</script>
+<div id="log"></div>
+
+<#include '/admin/footer.html' >

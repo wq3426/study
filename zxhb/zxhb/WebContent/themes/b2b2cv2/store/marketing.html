@@ -1,0 +1,347 @@
+<#include '/store/store_header.html' />
+<#assign myGoodsListTag=newTag("myGoodsListTag")>
+    <#assign storeGoods=myGoodsListTag()>
+        <#-- 创建店铺商品分类标签 -->
+            <#assign storeGoodsCatListTag= newTag("storeGoodsCatListTag") >
+                <#-- 查询店铺商品分类列表 0表示查子分类 -->
+                    <#assign storeGoodsCatList= storeGoodsCatListTag("'type':0")!''>
+<style>
+
+</style>
+<div class="store_center">
+    <#include "left_menu.html" />
+    <div id="sotre_right_content" class="sotre_right_content">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>营销管理</span>
+        </div>
+        <div style="padding: 20px;">
+            <div class="marketing">
+                <div class="w475 fl">
+                    <div class="w475 h30" >
+                        <div class="fl "></div>
+                        <div class="fl"><i></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>热门商品</b></div>
+                        <div class="fr top_radius">热门商品更换剩余：<lable>30次</lable></div>
+                    </div>
+                    <div style="width: 460px;">
+                        <div class="bgc_yellow bdc_yellow mt15 pt5 pb5">&nbsp;&nbsp;&nbsp;&nbsp;出售中热门商品：<span>25</span></div>
+                        <div class="mt10">
+                            <table>
+                                <tr class="lh30">
+                                    <th class="w90 tac">热门商品1:</th>
+                                    <th class="w190 tac">点击量: <span>1232300次</span></th>
+                                    <th class="w200 tac">下单率：<span>45%</span><a class="fr btn" href="javascript:void(0)" >更换</a></th>
+                                </tr>
+                                <tr>
+                                    <td class="mt10"><img class="w90 h100" src="/mall/themes/b2b2cv2/images/store_right_main_list_img1.png" alt=""></td>
+                                    <td><canvas id="canvas_line" height="110" width="180"></canvas></td>
+                                    <td  style="position: relative"><img class="yxgl yxgl_1 " src="/mall/themes/b2b2cv2/images/yxgl_1.png" alt="">
+                                       <div class="doughnut_pa1">访客量：235</div> <canvas class="doughnut" id="canvas_doughnut" height="130" width="100"></canvas>
+                                        <div class="doughnut_pa2">下单量：100</div><img class="yxgl yxgl_2" src="/mall/themes/b2b2cv2/images/yxgl_2.png" alt=""></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="mt10">
+                            <table>
+                                <tr class="lh30">
+                                    <th class="w90 tac">热门商品2:</th>
+                                    <th class="w190 tac">点击量: <span>1232300次</span></th>
+                                    <th class="w200 tac">下单率：<span>45%</span><a class="fr btn" href="javascript:void(0)" >更换</a></th>
+                                </tr>
+                                <tr>
+                                    <td class="mt10"><img class="w90 h100" src="/mall/themes/b2b2cv2/images/store_right_main_list_img1.png" alt=""></td>
+                                    <td><canvas id="canvas_line1" height="110" width="180"></canvas></td>
+                                    <td  style="position: relative"><img class="yxgl yxgl_1 " src="/mall/themes/b2b2cv2/images/yxgl_1.png" alt="">
+                                       <div class="doughnut_pa1">访客量：235</div> <canvas class="doughnut" id="canvas_doughnut1" height="130" width="100"></canvas>
+                                        <div class="doughnut_pa2">下单量：100</div><img class="yxgl yxgl_2" src="/mall/themes/b2b2cv2/images/yxgl_2.png" alt=""></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="w475 h30" >
+                        <div class="fl "></div>
+                        <div class="fl"><i></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>优惠券</b></div>
+                        <div class="fr top_radius">可发放优惠券数量：<lable>1000条</lable></div>
+                    </div>
+                    <div style="width: 460px;" class="mb30">
+                        <div class="bgc_yellow bdc_yellow mt15 pt5 pb5">&nbsp;&nbsp;&nbsp;&nbsp;已发放优惠券数量：<span>254</span></div>
+                        <div class="mt10">
+                            <table style="width: 460px;height:130px; ">
+                                <tr class="lh30">
+                                    <th class=" w190 tal">使用率: <span>40%</span></th>
+                                    <th class=" w200 tac">成交金额：<span>45%</span><a class="fr btn" href="javascript:void(0)" >发放</a></th>
+                                </tr>
+                                <tr>
+                                    <td style="position: relative"><img class="yxgl yxgl_3 " src="/mall/themes/b2b2cv2/images/yxgl_1.png" alt="">
+                                       <div class="doughnut_pa3">发放量：235</div> <canvas class="doughnut" id="canvas_doughnut2" height="130" width="100"></canvas>
+                                        <div class="doughnut_pa4">使用量：100</div><img class="yxgl yxgl_4" src="/mall/themes/b2b2cv2/images/yxgl_2.png" alt=""></td>
+                                    <td><canvas id="canvas_line2" height="160" width="240"></canvas><div class="fr"><p>优惠券金额: <span class="bgc_red inblock"></span></p><p style="padding-left: 13px;">订单金额: <span class="bgc_b inblock"></span></p></div></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="w475 fr">
+                    <div class="w475 h30" >
+                        <div class="fl "></div>
+                        <div class="fl"><i></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>广告咨询</b></div>
+                        <div class="fr top_radius">广告咨询剩余量：<lable>30次</lable></div>
+                    </div>
+                    <div style="width: 460px;">
+                        <div class="bgc_yellow bdc_yellow mt15 pt5 pb5">&nbsp;&nbsp;&nbsp;&nbsp;已发布广告咨询：<span>25</span></div>
+                        <div class="mt10">
+                            <table>
+                                <tr class="lh30">
+                                    <th class="w90 tac">广告管理：</th>
+                                    <th class="w190 tac">点击量: <span>1232300次</span></th>
+                                    <th class="w200 tac">下单率：<span>45%</span><a class="fr btn" href="javascript:void(0)" >发布</a></th>
+                                </tr>
+                                <tr>
+                                    <td class="mt10"><img class="w90 h100" src="/mall/themes/b2b2cv2/images/store_right_main_list_img1.png" alt=""></td>
+                                    <td><canvas id="canvas_line3" height="110" width="180"></canvas></td>
+                                    <td  style="position: relative"><img class="yxgl yxgl_1 " src="/mall/themes/b2b2cv2/images/yxgl_1.png" alt="">
+                                       <div class="doughnut_pa1">访客量：235</div> <canvas class="doughnut" id="canvas_doughnut3" height="130" width="100"></canvas>
+                                        <div class="doughnut_pa2">下单量：100</div><img class="yxgl yxgl_2" src="/mall/themes/b2b2cv2/images/yxgl_2.png" alt=""></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="mt10">
+                            <table>
+                                <tr class="lh30">
+                                    <th class="w90 tac">热门资讯:</th>
+                                    <th class="w190 tac">点击量: <span>1232300次</span></th>
+                                    <th class="w200 tac">下单率：<span>45%</span><a class="fr btn" href="javascript:void(0)" >发布</a></th>
+                                </tr>
+                                <tr>
+                                    <td class="mt10"><img class="w90 h100" src="/mall/themes/b2b2cv2/images/store_right_main_list_img1.png" alt=""></td>
+                                    <td><canvas id="canvas_line4" height="110" width="180"></canvas></td>
+                                    <td  style="position: relative"><img class="yxgl yxgl_1 " src="/mall/themes/b2b2cv2/images/yxgl_1.png" alt="">
+                                       <div class="doughnut_pa1">访客量：235</div> <canvas class="doughnut" id="canvas_doughnut4" height="130" width="100"></canvas>
+                                        <div class="doughnut_pa2">下单量：100</div><img class="yxgl yxgl_2" src="/mall/themes/b2b2cv2/images/yxgl_2.png" alt=""></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="w475 h30" >
+                        <div class="fl "></div>
+                        <div class="fl"><i></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>短信</b></div>
+                        <div class="fr top_radius">短信剩余量：<lable>2000条</lable></div>
+                    </div>
+                    <div style="width: 460px;" class="mb30">
+                        <div class="bgc_yellow bdc_yellow mt15 pt5 pb5">&nbsp;&nbsp;&nbsp;&nbsp;已发放短信息数量：<span>1500</span></div>
+                        <div class="mt10">
+                            <table style="width: 460px;height:130px; ">
+                                <tr class="lh30">
+                                    <th></th>
+                                    <th class="tar"><a class="fr btn" href="javascript:void(0)" >发放</a></th>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2"><canvas id="canvas_line5" height="200" width="350"></canvas></td>
+                                    <td>
+                                        <div style="position: relative;top: 70px">
+                                        <p>保险: <span class="bgc_red inblock"></span></p>
+                                        <p>保养: <span class="bgc_b inblock"></span></p>
+                                        <p>优惠: <span class="bgc_green inblock"></span></p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                        <!--热门商品0-->
+                        <script>
+                        var doughnutData = [
+                            {value: 10, color:"#19B977"},
+                            {value : 20, color : "#D5D5D5"}
+                        ];
+                        var myDoughnut = new Chart(document.getElementById("canvas_doughnut").getContext("2d")).Doughnut(doughnutData);
+                    </script>
+                        <script>
+
+                            var lineChartData = {
+                                labels : ["日","一","二","三","四","五","六"],
+                                datasets : [
+                                    {
+                                        fillColor : "rgba(255,83,0,0.5)",
+                                        strokeColor : "rgba(255,83,0,1)",
+                                        pointColor : "rgba(255,83,0,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,40,50,60,80,75,100]
+                                    }
+                                ]
+
+                            }
+
+                            var myLine = new Chart(document.getElementById("canvas_line").getContext("2d")).Line(lineChartData);
+
+                        </script>
+                        <!--热门商品1-->
+                        <script>
+                        var doughnutData = [
+                            {value: 10, color:"#19B977"},
+                            {value : 20, color : "#D5D5D5"}
+                        ];
+                        var myDoughnut = new Chart(document.getElementById("canvas_doughnut1").getContext("2d")).Doughnut(doughnutData);
+                    </script>
+                        <script>
+
+                            var lineChartData = {
+                                labels : ["日","一","二","三","四","五","六"],
+                                datasets : [
+                                    {
+                                        fillColor : "rgba(255,83,0,0.5)",
+                                        strokeColor : "rgba(255,83,0,1)",
+                                        pointColor : "rgba(255,83,0,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [230,404,506,606,806,756,1000]
+                                    }
+                                ]
+
+                            }
+
+                            var myLine = new Chart(document.getElementById("canvas_line1").getContext("2d")).Line(lineChartData);
+
+                        </script>
+                        <!--优惠卷2-->
+                        <script>
+                        var doughnutData = [
+                            {value: 10, color:"#19B977"},
+                            {value : 20, color : "#D5D5D5"}
+                        ];
+                        var myDoughnut = new Chart(document.getElementById("canvas_doughnut2").getContext("2d")).Doughnut(doughnutData);
+                    </script>
+                        <script>
+
+                            var lineChartData = {
+                                labels : ["日","一","二","三","四","五","六"],
+                                datasets : [
+                                    {
+                                        fillColor : "rgba(255,255,255,0.5)",
+                                        strokeColor : "rgba(255,83,0,1)",
+                                        pointColor : "rgba(255,83,0,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,40,50,60,80,75,100]
+                                    },
+                                    {
+                                        fillColor : "rgba(255,255,255,0.5)",
+                                        strokeColor : "rgba(58,161,244,1)",
+                                        pointColor : "rgba(58,161,244,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,70,50,80,50,75,90]
+                                    }
+                                ]
+
+                            }
+
+                            var myLine = new Chart(document.getElementById("canvas_line2").getContext("2d")).Line(lineChartData);
+
+                        </script>
+                        <!--广告资讯 广告管理3-->
+                        <script>
+                        var doughnutData = [
+                            {value: 10, color:"#19B977"},
+                            {value : 20, color : "#D5D5D5"}
+                        ];
+                        var myDoughnut = new Chart(document.getElementById("canvas_doughnut3").getContext("2d")).Doughnut(doughnutData);
+                    </script>
+                        <script>
+
+                            var lineChartData = {
+                                labels : ["日","一","二","三","四","五","六"],
+                                datasets : [
+                                    {
+                                        fillColor : "rgba(255,255,255,0.5)",
+                                        strokeColor : "rgba(255,83,0,1)",
+                                        pointColor : "rgba(255,83,0,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,40,50,60,80,75,100]
+                                    },
+                                    {
+                                        fillColor : "rgba(255,255,255,0.5)",
+                                        strokeColor : "rgba(58,161,244,1)",
+                                        pointColor : "rgba(58,161,244,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,70,50,80,50,75,90]
+                                    }
+                                ]
+
+                            }
+
+                            var myLine = new Chart(document.getElementById("canvas_line3").getContext("2d")).Line(lineChartData);
+
+                        </script>
+                        <!--热门资讯4-->
+                        <script>
+                        var doughnutData = [
+                            {value: 10, color:"#19B977"},
+                            {value : 20, color : "#D5D5D5"}
+                        ];
+                        var myDoughnut = new Chart(document.getElementById("canvas_doughnut4").getContext("2d")).Doughnut(doughnutData);
+                    </script>
+                        <script>
+
+                            var lineChartData = {
+                                labels : ["日","一","二","三","四","五","六"],
+                                datasets : [
+                                    {
+                                        fillColor : "rgba(255,255,255,0.5)",
+                                        strokeColor : "rgba(255,83,0,1)",
+                                        pointColor : "rgba(255,83,0,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,40,50,60,80,75,100]
+                                    },
+                                    {
+                                        fillColor : "rgba(255,255,255,0.5)",
+                                        strokeColor : "rgba(58,161,244,1)",
+                                        pointColor : "rgba(58,161,244,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,70,50,80,50,75,90]
+                                    }
+                                ]
+
+                            }
+
+                            var myLine = new Chart(document.getElementById("canvas_line4").getContext("2d")).Line(lineChartData);
+
+                        </script>
+                        <!--短信5-->
+                        <script>
+
+                            var lineChartData = {
+                                labels : ["日","一","二","三","四","五","六"],
+                                datasets : [
+                                    {
+                                        fillColor : "rgba(255,255,255,0)",
+                                        strokeColor : "rgba(255,83,0,1)",
+                                        pointColor : "rgba(255,83,0,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,40,50,60,80,75,100]
+                                    },
+                                    {
+                                        fillColor : "rgba(255,255,255,0)",
+                                        strokeColor : "rgba(58,161,244,1)",
+                                        pointColor : "rgba(58,161,244,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [23,70,50,80,50,75,90]
+                                    },
+                                    {
+                                        fillColor : "rgba(255,255,255,0)",
+                                        strokeColor : "rgba(20,185,125,1)",
+                                        pointColor : "rgba(20,185,125,1)",
+                                        pointStrokeColor : "#fff",
+                                        data : [44,60,50,90,50,65,90]
+                                    }
+                                ]
+
+                            }
+
+                            var myLine = new Chart(document.getElementById("canvas_line5").getContext("2d")).Line(lineChartData);
+
+                        </script>
+
+<#include '/common/footer.html' />

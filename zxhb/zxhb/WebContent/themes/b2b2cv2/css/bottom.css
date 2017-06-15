@@ -1,0 +1,43 @@
+/*底部信息栏样式*/
+/*字体*/
+.f16{font-size:16px;}
+.t2 { text-indent:2em;}
+.fc_Orange{color: #ff6200;}
+.fc333{color:#333;}
+.lh30{line-height: 30px;}
+.w970{width:970px;}
+/*边框*/
+.bd7_orange{border-left: 7px solid #ff6200}
+.bd_Orange{border: 1px solid  #FF9900;}
+/*导航start*/
+.leftNav ul li{margin-top: 3px;}
+.leftNav ul li a, .leftNav ul li a:link {  list-style-type: none; display: block;
+ text-align: center; color: #333;  font-size: 16px;  text-decoration: none;  position: relative;  z-index: 9999;}
+.leftNav ul li:hover{background-color: #FFFFFF;list-style-type: none; display: block; font-size: 18px;  text-decoration: none;  border-left: solid 3px #FB7E21; position: relative;  z-index: 9999;}
+.leftNav ul li a:hover{  color: #ff4a00; }
+.selected2{background-color: #FFFFFF; list-style-type: none;display: block;  color:#ff4a00;  font-size: 18px;  text-decoration: none;  border-left: solid 3px #FB7E21; position: relative;  z-index: 9999;}
+/*导航stop*/
+
+/*用户协议start*/
+#agreement .header{font-size: 16px;font-weight: 900;text-align: center;margin-top: 20px;color:#333; width:95%;
+ border-bottom: 2px solid #666;margin-bottom:10px;padding-bottom:10px;margin-left:2%;}
+#agreement .body > p {text-indent: 1em;  }
+#agreement .body > p > span {  font-weight: 600;  }
+#agreement .body > h4 {  font-weight: 600;}
+#agreement .body >  i {font-style: normal;display: block;text-indent: 2em;}
+#agreement .body{line-height: 24px;width: 970px;margin-left: 15px; color:#333;}
+.sotre_right_content{border: 1px solid #D5D5D5;}
+/*用户协议stop*/
+
+/*平台守则start*/
+
+/*平台守则stop*/
+
+/*联系我们start*/
+
+/*联系我们stop*/
+
+/*关于我们start*/
+
+/*关于我们stop*/
+

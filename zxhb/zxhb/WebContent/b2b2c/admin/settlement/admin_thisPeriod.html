@@ -1,0 +1,251 @@
+<#include '/admin/header.html' >
+<#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<!--admin结算展示-->
+        <style>
+            .input_text{
+                width: 150px;
+            }
+            .header_box{border:1px solid #ccc;text-align:right;border-collapse: collapse;line-height: 30px; float: left;}
+            .header_box td{border:1px solid #ccc;padding:0 10px;}
+            .bc_ff{background-color:#fff;}
+            .link_box{float: left;}
+            .link_box a{display: inline-block;padding: 0px 15px;border-right: 3px;margin-left: 15px;}
+            .link_box h2{margin:7px 0 0 15px;}
+             .blueButton{line-height: 28px;}
+        </style>
+        <div id="detail" style="display: none; overflow:hidden"></div>
+        <div id="loading"></div>
+        <div class="main">
+            <table class="header_box">
+                <tr>
+                    <td>收入:</td><td class="bc_ff"><a><span id="income_money">0</span> 元</a></td><td class="bc_ff" id=""><span id="income_number">0</span>笔</td>
+                </tr>
+                <tr>
+                   <td>支出:</td><td class="bc_ff"><a><span id="expend_money">0</span> 元</a></td><td class="bc_ff"><span id="expend_number">0</span>笔</td>
+                </tr>
+            </table> 
+            <div class="link_box">
+          		<h2>${store_name}</h2>
+                <p>
+                    <a href="javascript:void(0)" class="blueButton" onclick='newTab("本期","${ctx}/b2b2c/admin/adminReckoning!thisPeriodList.do?store_id=${store_id}&store_name=${store_name}");'>本期</a>
+                    <a href="javascript:void(0)" class="button" onclick='newTab("往期","${ctx}/b2b2c/admin/adminReckoning!settledList.do?store_id=${store_id}&store_name=${store_name}");'>往期</a>
+                    <a href="javascript:void(0)" class="button" onclick='newTab("账户交易流水","${ctx}/b2b2c/admin/adminReckoning!transactionList.do?store_id=${store_id}&store_name=${store_name}");'>账户交易流水</a>
+                </p>
+            </div>
+    <div class='buttonArea' style="height: auto;clear: both;">
+		<span style="float: right;">
+		 	<span id="simpleSearch">
+			 	<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;" placeholder="请输入流水号" name="searchKeyWord">
+				<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchSettlement()">搜索</a>
+			</span>
+			<a href="javascript:void(0)" class="button" data-options="plain:true" id="aAdvanced">高级搜索</a>
+            <a class="button blueButton"  id="dowmloadThisPeriodExcel" href="javascript:void(0)">下载账单</a>
+		</span>
+            </div>
+            <div style="display: block;" class="searchAdvanced" >
+                <input id="Advanced" name="Advanced" type="hidden" value="0" />
+                <table width="98%" border="0" cellspacing="0" cellpadding="8">
+                    <tr>
+                    	<td width="" align="right">流水号：</td>
+                        <td style=""><input type="text" value="" id="sn" name="sn" class="input_text">
+                        </td>
+                        <td width="" align="right">买家信息:</td>
+                        <td style=""><input type="text" value="" id="userInfo" name="userInfo" class="input_text">
+                        </td>
+                        <td width="" align="right">交易类型:</td>
+                        <td style=""><select id="order_type" class="inputSelect valid"
+                                    style="width: 145px;">
+                            <option value="">---所有---</option>
+                            <option value="0">经销商-商城</option>
+                            <option value="1">中安-保险</option>
+                            <option value="2">经销商-保养</option>
+                            <option value="3">中安-商城</option>
+                            <option value="4">经销商-保险</option>
+                            <option value="5">中安-服务</option>
+                            
+                        </select></td>
+                        <td width="" align="right">交易时间</td>
+                        <td style=""><input class="easyui-datebox" style="width: 90px;height: 28px;"
+                                   id="startTime" data-options="buttons:buttons" /> <span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                            <input class="easyui-datebox" style="width: 90px;height: 28px;" id="endTime"
+                                   data-options="buttons:e_buttons" /></td>
+                        <td style="" align="center"><a id="searchAdvance"
+                                                          class="button blueButton " onclick="searchSettlement()"
+                                                          href="javascript:;">开始搜索</a></td>
+
+                    </tr>
+                </table>
+            </div>
+            <div class="clear height10"></div>
+            <div class="shadowBoxWhite tableDiv">
+                <table  id="dgs" class="easyui-datagrid"
+                        data-options="url:'${ctx}/b2b2c/admin/adminReckoning!thisPeriodListJson.do?store_id=${store_id}',remoteSort:false,pageList: [10,20,40],pageSize:${pageSize},fitColumns:'true'"
+                        pagination="true" width="width">
+                    <thead>
+                    <tr>
+                        <th  data-options="field:'sn',width:100">流水号</th>
+                        <th  data-options="field:'order_sn',width:100">订单编号</th>
+                        <th  data-options="field:'trade_time',width:100,align:'center'" formatter="formatTime">付款时间</th>
+                        <th  data-options="field:'order_type',width:100" formatter="formatType">服务类型</th>
+                        <th  data-options="field:'paymoney',width:50"  formatter="formatMoney">实付金额</th>
+                        <th  data-options="field:'service_charge',width:50" formatter="formatMoney">服务费</th>
+                        <th  data-options="field:'handling_charge',width:50"formatter="formatMoney" >手续费</th>
+                        <th  data-options="field:'settlement_money',width:70" formatter="formatMoney">结算金额</th>
+                        <th  data-options="field:'fullname',width:50" >买家信息</th>
+                        <th  data-options="field:'username',width:50" >电话号码</th>
+						<th data-options="field:'action',width:100" formatter="formatAction">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function formatMoney(value,row,index){
+                var val="￥"+value;
+                return val;
+            }
+
+            function formatTime(value,row,index){
+                if(value==null||value==0){
+                    return "";
+                }
+                else{
+                    return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+                }
+            }
+            function formatType(value,row,index){
+                var val;
+                if(value==0){val="经销商-商城";}
+                else if(value==1){val="中安-保险";}
+                else if(value==2){val="经销商-保养";}
+                else if(value==3){val="中安-商城";}
+                else if(value==4){val="经销商-保险";}
+                else if(value==5){val="中安-服务";}
+                return val;
+            }
+	
+            function formatAction(value,row,index){
+            	//var val="<a class='edit' title='查看' href='#' onclick=\"newTab('查看订单详细','${ctx}/b2b2c/admin/storeOrder!orderDetail.do?orderId="+row.order_id+"&sn="+row.sn+"&logi_no="+row.logi_no+"&uname="+row.uname+"&ship="+row.ship_name+"&status="+row.status+"')\"></a>";
+	            var val = "<a href='#' onclick=\"newTab('查看订单详情','${ctx}/b2b2c/admin/storeOrder!specifics.do?orderId="+row.order_id+"&sn="+row.sn+"')\">"+row.sn+"</a>"
+		 	 	return val;
+            }
+            
+            
+            var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+            buttons.splice(1, 0, {
+                text: '清空',
+                handler: function(target){
+                    $('#startTime').datebox('setValue',"");
+                }
+            });
+
+            var e_buttons = $.extend([], $.fn.datebox.defaults.buttons);
+            e_buttons.splice(1, 0, {
+                text: '清空',
+                handler: function(target){
+                    $('#endTime').datebox('setValue',"");
+                }
+            });
+            
+            
+            
+            function searchSettlement(){
+                var searchtype = $("#Advanced").val();
+                var startTime = "";
+                var endTime = "";
+                var userInfo = "";
+                var order_type ="";
+                var sn = "";
+                if(searchtype==1){
+                	startTime = $('#startTime').datebox('getValue');
+                	endTime = $('#endTime').datebox('getValue');
+                    userInfo = $("#userInfo").val();
+                    order_type = $("#order_type").val();
+                    sn = $("#sn").val();
+                }else{
+                    sn = $("#searchKeyword").val();
+                }
+                if(startTime>endTime){
+                    $.Loading.error("结束时间不能小于开始时间");
+                    return;
+                }
+                $("#dgs").datagrid('load', {
+                    stype:searchtype,
+                    userInfo:userInfo,
+                    startTime:startTime,
+                    endTime:endTime,
+                    order_type:order_type,
+                    sn:sn,
+                    page:1
+                });
+                var dgs =  $("#dgs").datagrid("getData");
+                $("#income_money").text(dgs.income_money);
+                $("#income_number").text(dgs.income_number);
+                $("#expend_money").text(dgs.expend_money);
+                $("#expend_number").text(dgs.expend_number);
+            }
+			
+            $(function(){
+                $(".searchAdvanced").hide();
+                //高级查询按钮
+                $("#aAdvanced").click(function () {
+                    if ($("#Advanced").val() == "0") {
+                        $("#Advanced").val(1);
+                        $("#simpleSearch").hide();
+                        //$("#aAdvanced").text("简单搜索")
+                        $("#aAdvanced").addClass("searchAdvancedS");
+                    } else {
+                        $("#Advanced").val(0);
+                        $("#simpleSearch").show();
+                        //$("#aAdvanced").text("高级搜索");
+                        $("#aAdvanced").removeClass("searchAdvancedS");
+                    }
+                    $(".searchAdvanced").slideToggle("slow");
+                });
+                $("#searchBtn").click(function(){
+                    $("#searchcbox").show();
+                });
+
+                $("#closeBtn").click(function(){
+                    $("#searchcbox").hide();
+                });
+                $("#dgs").datagrid({onLoadSuccess : function(data){
+                     $("#income_money").text(data.income_money);
+                     $("#income_number").text(data.income_number);
+                     $("#expend_money").text(data.expend_money);
+                     $("#expend_number").text(data.expend_number);
+                }});
+              //  $("#dgs").datagrid('hideColumn','sn');
+             	
+
+               
+            });
+            
+            
+            
+            $("#dowmloadThisPeriodExcel").click(function(){
+            /* 	var searchKeyword = $("#searchKeyword").val();
+            	var sn = $("#sn").val()
+            	var object_name = $("#object_name").val();
+            	var trade_big_type = $("#trade_big_type").val();
+            	var startTime = $('#startTime').datebox('getValue');
+                var endTime = $('#endTime').datebox('getValue');
+                if(startTime>endTime){
+                    $.Loading.error("结束时间不能小于开始时间");
+                    return;
+                } */
+            	var url = "${ctx}/b2b2c/admin/adminReckoning!downloadThisPeriodExcel.do?time="+new Date().getMilliseconds();
+            	url += "&store_id="+${store_id!''};
+            	/*url += "&sn="+sn;
+            	url += "&object_name="+object_name;
+            	url += "&trade_big_type="+trade_big_type;
+            	url += "&start_time="+start_time;
+            	url += "&end_time="+end_time; */
+            	window.location = url;
+		     });
+        </script>
+		
+        <div id="log"></div>
+
+        <#include '/admin/footer.html' >
+

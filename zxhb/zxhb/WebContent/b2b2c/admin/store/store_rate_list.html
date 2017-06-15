@@ -1,0 +1,179 @@
+<#include '/admin/header.html' > 
+<#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<div class="main">
+	<div class="buttonArea">
+		<div style="float:left;">
+		<a href="javascript:void(0)" class="button blueBlue" data-options="iconCls:'icon-add',plain:true"  onclick="newTab('新增费率项','${ctx}/b2b2c/admin/storerate!add.do')">新增费率项</a>
+		<a href="javascript:void(0)" class="button"
+			data-options="iconCls:'icon-remove',plain:true" onclick="del()">删除</a>
+		&nbsp;&nbsp;<span style="float: right;height:28px;"> 
+			店铺等级：<select id="level_id" class="inputSelect valid" style="width: 145px; margin-right: 10px;" onchange="javascript:searchRate();" >
+				<option value="" selected="selected">---所有---</option> 
+				<#if storeLevels??>
+					<#list storeLevels as lv>
+						<option value="${lv.level_id!''}">${lv.level_name}</option> 
+					</#list>
+				</#if>
+			</select>
+			&nbsp;&nbsp;<span style="float: right;height:28px;"> 
+			订单类型：<select id="order_type" class="inputSelect valid" style="width: 145px; margin-right: 10px;" onchange="javascript:searchRate();" >
+				<option value="" selected="selected">---所有---</option> 
+				<option value="0" >经销商-商城</option>
+				<option value="1">中安-保险</option>
+				<option value="2">经销商-保养</option>
+				<option value="3">中安-商城</option>
+				<option value="4">经销商-保险</option>
+				<option value="5">中安-服务</option>
+				</select>
+		</span>
+		</div>
+	</div>
+	<div class="shadowBoxWhite tableDiv">
+		<form id="rateform">
+			<table class="easyui-datagrid"
+				data-options="url:'${ctx}/b2b2c/admin/storerate!rate_listJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'" pagination="true" width="width" id="ratedata"
+				sortName="rate_id" sortOrder="desc">
+				<thead>
+					<tr>
+						<th data-options="field:'rate_id',checkbox:true,width:100"></th>
+				   	 	<th  data-options="field:'level_name',sortable:'true',width:100">店铺等级</th>
+				   	 	<th  data-options="field:'order_type_name',sortable:'true',width:100">订单类型</th>
+				   	 	<th  data-options="field:'original_service_rate',sortable:'true',width:100">4S保有客户服务费率</th>
+			<!-- 	   	 	<th  data-options="field:'flow_service_rate',sortable:'true',width:100" >导流客户服务费率</th> -->
+				   	 	<th  data-options="field:'original_handling_rate',sortable:'true',width:100">4S保有客户手续费率</th>
+				   	 <!-- 	<th  data-options="field:'flow_handling_rate',sortable:'true',width:100" >导流客户手续费率</th> -->
+				   	 	<th  data-options="field:'action',width:100"  formatter="formatAction">操作</th>
+					</tr>
+				</thead>
+			</table>
+			
+		</form>
+	</div>
+</div>
+
+<div id="divdia"></div>
+
+<script type="text/javascript">
+function formatAction (value,row,index){
+	var val="";
+	val+="<a href='javascript:void(0);' class='edit' onclick='append("+row.rate_id+")' title='修改'></a>";
+	return val;
+}
+
+function del(){
+	var rows = $('#ratedata').datagrid("getSelections"); 
+	if(rows.length<1){
+		$.Loading.error('请选择要删除的费率选项');
+		return;
+	}
+	if(!confirm("确认要删除选定费率选项吗？")){	
+		return ;
+	}
+	 var options = {
+		url : "${ctx}/b2b2c/admin/storerate!delStoreRate.do",
+		type : "POST",
+		dataType : 'json',
+		success : function(result) {
+			if(result.result==1){
+				var rows = $('#ratedata').datagrid("getSelections"); 
+				for(var i =0;i<rows.length;i++){      
+					var index = $('#ratedata').datagrid('getRowIndex',rows[i]); 
+					$('#ratedata').datagrid('deleteRow',index);      
+				}
+			}
+			if(result.result==0){ 
+				$.Loading.error(result.message);
+			}
+		},
+		error : function(e) {
+			$.Loading.error("出现错误 ，请重试");
+		}
+	};
+	$('#rateform').ajaxSubmit(options);	
+}
+ 
+function searchRate(){
+	var order_type = $("#order_type").val();
+	var level_id=$("#level_id").val();
+	$("#ratedata").datagrid('load', {
+		level_id:level_id,
+		order_type:order_type,
+		page:1
+   });
+}
+
+
+//编辑
+
+function append(id,name) {
+	var map = {}; // Map map = new HashMap();
+	map["href"] = "storerate!editPage.do?rate_id="+id,
+	map["formId"] = "#editForm";
+	map["url"] = "storerate!editStoreRate.do?ajax=yes";
+	map["title"] = "费率修改";	
+	map["divDialog"] = "#divdia";
+	map["gridreload"] = "#ratedata";
+	addDialog(map);
+}  
+
+
+function addDialog(map) {
+	$(map["divDialog"]).show();
+	$(map["divDialog"]).dialog({
+		title : map["title"],
+		width : 800,
+		height : 550,
+		top:10,
+		closed : false,
+		cache : false,
+		href : map["href"],
+		modal : true,
+		buttons : [ {
+			text : '保存',
+			iconCls : 'icon-ok',
+			handler : function() {
+				var savebtn = $(this);
+　　				var disabled=savebtn.hasClass("l-btn-disabled");
+　　				if(!disabled){
+					submitForm(map,savebtn);
+				}
+			}
+		}, {
+			text : '取消',
+			handler : function() {
+				$(map["divDialog"]).dialog('close');
+			}
+		} ]
+	});
+}
+
+function submitForm(map,savebtn) {
+	var formflag = $(map["formId"]).form().form('validate');
+	if (formflag) {
+		$.Loading.show("正在保存请稍后...");
+		savebtn.linkbutton("disable");
+		var options = {
+			url : map["url"],
+			type : "POST",
+			dataType : 'json',
+			success : function(result) {
+				if (result.result == 1) {
+					$.Loading.success(result.message);
+					$(map["divDialog"]).dialog('close');
+					$(map["gridreload"]).datagrid('reload');
+				}
+				if (result.result == 0) {
+					$.Loading.error(result.message);
+				}
+				savebtn.linkbutton("enable");
+			},
+			error : function(e) {
+				$.Loading.error("出现错误 ，请重试");
+				savebtn.linkbutton("enable");
+			}
+		};
+		$(map["formId"]).ajaxSubmit(options);
+	}
+}
+</script>
+<#include '/admin/footer.html' >

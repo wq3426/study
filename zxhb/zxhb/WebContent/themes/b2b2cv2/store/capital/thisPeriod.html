@@ -1,0 +1,324 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<!-- 店铺本期流水信息 -->
+<#assign reckoningThisPeriodTag=newTag("reckoningThisPeriodTag")>
+<#assign reckoningThisPeriod=reckoningThisPeriodTag()>
+<!-- 店铺流水头信息 -->
+<#assign reckoningHeadInfoTag=newTag("reckoningHeadInfoTag")>
+<#assign reckoningHead=reckoningHeadInfoTag()>
+<!-- 店铺类型 -->
+<#assign reckoningTypeTag = newTag("reckoningTypeTag")>
+<#assign reckoningType = reckoningTypeTag()>
+<!-- 店铺状态 -->
+<#assign reckoningStatusTag = newTag("reckoningStatusTag")>
+<#assign reckoningStatus = reckoningStatusTag()>
+    <style>
+        .tabmenu ul .active a {padding: 0px;}
+        .store_index .store_list tbody tr td{line-height: 18px;}
+        .store_index .store_list tbody tr td a:hover{color: #FF4A00;}
+        .tabmenu{z-index:0;}
+    </style>
+<!-- 清算状态-->
+<#assign reckoningStatusAndTypeModel="com.enation.app.b2b2c.core.tag.reckoning.ReckoningStatusAndTypeModel"?new()>
+        <div class="store_center">
+            <#include '/store/left_menu.html' />
+            <div class="sotre_right_content" id="sotre_right_content">
+                <div class="path">
+                    <a href="${ctx}/store/business_center.html?menu=store_index">商家中心 </a>>账单明细
+                </div>
+                <div class="store_right_main f14">
+                    <div class="intro" style="height: 197px;">
+                        <div class="intro_left mt30 ml15">
+                            <div class="store_intro_pic">
+                                <div class="store_intro_up ">
+						<span class="thumb">
+							<@image src="${myStoreDetail.store_logo!''}" id="logo"/>
+						</span> 
+                                </div>
+                            </div>
+                            <div class="store_name" style="margin:10px 0px 0px 220px">
+                                <div class="store_name1" style="width: 480px;"><h1>${myStoreDetail.store_name!''}</h1>
+                                </div>
+                                <div class="" style="top:20px;">
+                                    <h2>电话：${myStoreDetail.customer_phone!'--'} </h2>
+
+                                    <div class="w450 ofh" style="top: 20px;">地址：${myStoreDetail.store_province!''}&nbsp;${myStoreDetail.store_city!''}&nbsp;${myStoreDetail.store_region!''}</div>
+                                    <div class="w450 ofh" style="top: 40px;">用户评分：<span class="pjxx dip"></span>
+                                    <span>
+                                    	<#if myStoreDetail.comment_grade?? && ( myStoreDetail.comment_grade > -1 )>
+                                    		${myStoreDetail.comment_grade}
+                                    		<#else>
+                                    		暂无评价
+                                    	</#if>
+                                    </span><a href="${ctx}/store/service_evaluation.html?menu=store_index"">查看详情</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="store_intro_fraction">
+                            <ul class="f14">
+                                <li class="h40"><span class="ml25">已提现金额：</span><label class="red">  <#if reckoningHead.settlementCountHistory??>${reckoningHead.settlementCountHistory?string.currency} </#if></label></li>
+                                <li class="h40"><span class="ml25">待结算金额：</span><label class="red">  <#if reckoningHead.noSettlementCount??>${reckoningHead.noSettlementCount?string.currency} </#if> </label>
+                                 <a class=" store_btn2 bdc_d5 bgc_f9 mr10 mt5 fr" style="font-size: 14px; display:inline-block;"  id="no_settlement" onclick="javascript:void(0)" >未结算账单</a>
+                                </li>
+                                <li style="height: 75px;"><span class="fl ml40 mt10">账户金额：</span><label
+                                        class="fl red mt10">
+                                        <#if reckoningHead.yetSettlementCount??>${reckoningHead.yetSettlementCount?string.currency}</#if></label>
+                                    <div class="fr">
+                                        <a  href="${ctx}/store/capital/thisPeriod.html?menu=store_index" class="dip store_btn2 bdc_d5 bgc_f9 mr10 mt5" style="font-size: 14px;">查看明细</a>
+                                        <input class=" store_btn bgc_green color_w mr10 mt10" style="font-size: 14px;"
+                                               type="button" value="提现" onclick="saveOrUpdate()">
+                                    </div>
+                                </li>
+                                <li class="h40">
+                                    <div class="fl w160 br">
+                                        <span class="ml15 ">收入：</span><label class="color_b"><#if reckoningThisPeriod.income??>${reckoningThisPeriod.income?string.currency}<#else>0	</#if></label>
+                                    </div>
+                                    <div class="fl">
+                                        <span class="ml15">支出：</span><label class="color_b"><#if reckoningThisPeriod.pay??>${reckoningThisPeriod.pay?string.currency}<#else>0	</#if></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="store_index" style="font-size: 12px">
+                        <div class="tabmenu">
+                            <ul>
+                                <li class="active"><a href="${ctx}/store/capital/thisPeriod.html?menu=store_index">本期</a></li>
+                                <li class="normal"><a href="${ctx}/store/capital/settled.html?menu=store_index" name="">往期</a></li>
+                                <li class="normal"><a href="${ctx}/store/capital/transactionDetail.html?menu=store_index" name="">账户交易流水</a></li>
+                            </ul>
+                        </div>
+                        <table class="mt10 ">
+                            <thead>
+                            <tr>
+                           		 <th style="width: 24px"></th>
+                                <th>买家信息：<input type="text" id="userInfo" name="userInfo" class="text"></th>
+                                <th class="pl30">服务类型：
+                                <select style="width: 123px;" class="select" id = "order_type" >
+                                   		<option  value="" >全部</option>
+                                   		<option  value="0" <#if reckoningThisPeriod.order_type??&&reckoningThisPeriod.order_type=='0'>selected="selected"</#if>>经销商-商城</option>
+                                   		<option  value="1" <#if reckoningThisPeriod.order_type??&&reckoningThisPeriod.order_type=='1'>selected="selected"</#if>>中安-保险</option>
+                                   		<option  value="2" <#if reckoningThisPeriod.order_type??&&reckoningThisPeriod.order_type=='2'>selected="selected"</#if>>经销商-保养</option>
+                                   		<option  value="3" <#if reckoningThisPeriod.order_type??&&reckoningThisPeriod.order_type=='3'>selected="selected"</#if>>中安-商城</option>
+                                   		<option  value="4" <#if reckoningThisPeriod.order_type??&&reckoningThisPeriod.order_type=='4'>selected="selected"</#if>>经销商-保险</option>
+                                   		<option  value="5" <#if reckoningThisPeriod.order_type??&&reckoningThisPeriod.order_type=='5'>selected="selected"</#if>>中安-服务</option>
+                                 </select>
+                                </th>
+                                <td class="pl30 pr">
+                                     <span class=" lh30">交易时间：</span>
+                                     <label class="pr"><input class="startTime" type="text" placeholder="起始日期"  name="startTime" onClick="WdatePicker()" value="${reckoningThisPeriod.startTime!''}"/>
+                                         <span class="storeorderStarTime"></span>
+                                     </label>
+                                        <i class="">-</i>
+                                        <label class="pr"><input class="endTime" type="text" placeholder="截止日期" name="endTime" onClick="WdatePicker()" value="${reckoningThisPeriod.endTime!''}">
+                                            <span class="storeorderEndTime"></span>
+                                        </label>
+                                </td>
+                                <td class="pr15 "><input type="button" style="width: 68px" class="submit ml20" id="btnSearch"  value="搜索"></td>
+                                <td><input type="button" onclick="javascript:void(0)" id = "downloadExcel" style="width: 68px" class="submit"  value="下载"></td>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="store_list mt10" >
+                            <thead>
+                            <tr class="bdc_d5 lh30">
+                           		<th class="w230">流水号</th>
+                                <th class="w200 ">订单编号</th>
+                                <th class="w100">付款时间</th>
+                                <th class="w100">服务类型</th>
+                                <th class="w120">实付金额</th>
+                                <th class="w100">结算金额</th>
+                                <th class="w110">买家信息</th>
+                                <th class="w120">操作</th>
+                            </tr>
+                            </thead>
+                            <#if reckoningThisPeriod.totalCount != 0 >
+	                            <tbody class="tc transaction_detail">
+	                            <#list reckoningThisPeriod.thisPeriodList.result as reckoning >
+	                                <tr>
+	                               		 <td>${reckoning.sn!''}</td>
+	                               		<td>${reckoning.order_sn!''}</td>
+	                                    <td>
+	                                    	<#if reckoning.trade_time??>
+	                                    		<@dateformat time="${reckoning.trade_time?c}" pattern="yyyy-MM-dd HH:mm:ss"/>
+	                                    	<#else>
+	                                    		--
+	                                    	</#if>
+										</td>
+	                                    <td>
+	                                    	<#if reckoning.order_type??>
+	                                   		 	<@reckoningStatusAndTypeModel status="${reckoning.order_type!''}" type="order_type" />
+	                                   		</#if>
+	                                    </td>
+	                                    <td >
+                                            <p>
+                                            	<#if reckoning.paymoney??>
+		                                    	${reckoning.paymoney?string.currency}	
+	                                    		<#else>
+	                                    		--
+	                                    		</#if>
+                                            </p>
+                                            <p class="color_9">手续费:${reckoning.handling_charge?string.currency}</p>
+                                            <p class="color_9">服务费:${reckoning.service_charge?string.currency}</p>
+                                        </td>
+	                                    <td>
+	                                    	${reckoning.settlement_money?string.currency}
+	                                    </td>
+                                        <td>
+                                            <p>${reckoning.fullname!'--'}</p>
+                                            <p>${reckoning.username!'--'}</p>
+                                        </td>
+	                                    <td class=" pr">
+	                                    		<#if reckoning.order_type??>
+	                                   		 		<#if reckoning.order_type != 5>
+			                                            <!--跳转到商品订单详情中-->
+				                                        <a target="_blank" href="${ctx}/mall/store/order/order_detail.html?ordersn=${reckoning.order_sn}&menu=transaction" >查看详情</a>
+	                                   		 		<#else>
+	                                   		 			 <a target="_blank" href="${ctx}/mall/store/adv/purchaseHistory.html?menu=promotion" >查看详情</a>
+	                                   		 		</#if>
+	                                   			</#if>
+	                                    </td>
+	                                </tr>
+	                               </#list>
+	                             
+                            </tbody>
+                           </table>
+                              <@pager pageno="${reckoningThisPeriod.page!'1'}" pagesize="${reckoningThisPeriod.pageSize}"
+                   				 totalcount="${reckoningThisPeriod.totalCount}" />
+                    		<#else>
+                    		 </table>
+                      		 <p class="no_blank">暂无符合条件的数据记录</p>
+                             </#if>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(".transaction_detail tr:odd").addClass("bgc_f7");
+        </script>
+        <script type="text/javascript">
+          
+	      $("#btnSearch").click(function () {
+	            search();
+	      });
+	      $("#no_settlement").click(function(){
+	      	location.href = "transactionDetail.html?trade_status=1&menu=store_index" ;
+       
+	      });
+	      
+	      
+         function search() {
+            var userInfo = $("#userInfo").val();
+            var startTime = $("input[name='startTime']").val();
+            var endTime = $("input[name='endTime']").val();
+			var order_type = $("#order_type").val();
+            if (endTime < startTime) {
+                alert("开始时间不得大于结束时间！");
+                return;
+            }
+            location.href = "thisPeriod.html?userInfo=" + userInfo + "&startTime=" + startTime + "&endTime=" + endTime + "&order_type=" + order_type + "&menu=store_index" ;
+          }
+  		</script>
+    <!--提现弹出框-->
+    <script>
+        var dialog;
+
+        function saveOrUpdate() {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "提现申请";
+            map["html"] = "withdraw.html";
+            map["url"] = "${ctx}/api/reckoning/storeReckoning!drawMoneyApply.do";
+            map["form"] = "#adt_form";
+            openDialog(map);
+        }
+
+        function openDialog(map) {
+            dialog = $.dialog({
+                title : map["title"],
+                lock : true,
+                min : false,
+                max : false,
+                width:590
+            });
+
+            $.ajax({
+                url : map["html"],
+                cache : false,
+                success : function(html) {
+                    dialog.content(html);
+                    dialog.button([ {
+                        name : '申请',
+                        callback : function() {
+                        	var draw_money = $("#draw_money");
+                    		var balance = ${reckoningHead.yetSettlementCount!0};
+                    		if(draw_money.val() > balance){
+                    			alert("您提现的金额不能大于您的账户余额");	
+                    			return false;
+                    		}
+                            if(!$(map["form"]).validate()){
+                                return false;
+                            }
+                            if(!$(map["form"]).checkall()){
+                                return false;
+                            }
+                            formSubmit(dialog, map);
+                            this.button({
+                                        name: '申请',
+                                        disabled: true
+                                    })
+                                    .lock();
+                            return false;
+                        }
+                    }, {
+                        name : '取消'
+                    } ]);
+                },
+                error : function() {
+                    $.alert("出现错误,请重试！");
+                }
+            });
+        }
+        function formSubmit(dialog, map) {
+            var options = {
+                url : map["url"],
+                type : "POST",
+                dataType : 'json',
+                success : function(result) {
+                    if(result.result==1){
+                        dialog.title('申请成功，2秒后关闭此窗口。').time(3);
+                        dialog.reload();
+                    }else{
+                        dialog.title('申请失败，'+result.message);
+                        $("input[type='button']").each(function(){
+                            $(this).removeAttr("disabled");
+                        });
+                    }
+                },
+                error : function(e) {
+                    alert("出现错误，请重试");
+                }
+            };
+            $(map["form"]).ajaxSubmit(options);
+            return false;
+        }
+
+       $("#downloadExcel").click(function(){
+    	 var trade_status = "${trade_status!''}";
+           var startTime = "${startTime!''}";
+           var endTime = "${endTime!''}";
+           var trade_type = "${trade_type!''}";
+           if (endTime < startTime) {
+               alert("开始时间不得大于结束时间！");
+               return;
+           }
+           var order_state = $("#order_state").val(); 
+    	  //获取需要检索的字段
+    	  var url = "${ctx}/api/reckoning/storeReckoning!downloadThisPeriodExcel.do?time="+new Date().getMilliseconds()
+    			 +"&trade_status="+trade_status+"&startTime="+startTime
+    			 +"&endTime="+endTime+"&trade_type="+trade_type;
+    	  window.location = url;
+  /*   	  window.open(url, 'download', 'height=100, width=400, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+  */     });
+    </script>
+        <#include '/common/footer.html' />

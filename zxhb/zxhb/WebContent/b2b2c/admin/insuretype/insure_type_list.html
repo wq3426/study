@@ -1,0 +1,193 @@
+<#include '/admin/header.html' >  
+<#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text{
+	width: 95%;
+}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="insuretypeform">
+		<div class='buttonArea' style="height: auto">
+			 <span><a href="javascript:void(0)" class="button" onclick="append(id)">添加</a></span>
+			 <span><a href="javascript:void(0)" class="button" onclick="del()">删除</a></span>
+			 <span style="float: right;"> 
+			 	<span id="simpleSearch"> 
+				 	<input id="searchKeyword" class="input_text" type="text" value="${keyword!''}" size="30" style="width: 300px" placeholder="请输入保险公司或险种名称" name="searchKeyWord">
+					<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchOrder()">搜索</a>
+				</span> 
+			</span>
+		</div>
+
+		<div class="clear height10"></div>
+
+		<div class="shadowBoxWhite tableDiv">
+			<table class="easyui-datagrid"
+				data-options="url:'${ctx}/b2b2c/admin/carInsureAndRepair!listInsureTypeJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+				pagination="true" width="width" id="insuretypedata" sortName="sort" sortOrder="asc">
+				<thead>
+					<tr>
+						<th data-options="field:'id',checkbox:true,width:100"></th>
+						<th data-options="field:'company_name',width:100">保险公司</th>
+						<th data-options="field:'insure_name',width:100">险种名称</th>
+						<th data-options="field:'create_time',width:100">创建时间</th>
+						<th data-options="field:'update_time',width:100">更新时间</th>
+						<th data-options="field:'action',width:100" formatter="formatOperation">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</form>
+	
+	<div id="divdia" style="display: none;"></div>
+</div>
+	<!--添加按钮调用的JS-->
+	<script type="text/javascript">
+		function append(id) {
+			var map = {}; 
+			if (!id) {
+				map["href"] = "carInsureAndRepair!addInsureType.do";
+				map["formId"] = "#addForm";
+				map["url"] = "carInsureAndRepair!addInsureTypeSave.do?ajax=yes";
+				map["title"] = "添加保险险种";
+				map["loadshow"] = "正在添加......";
+			} else {
+				map["href"] = "carInsureAndRepair!editInsureType.do?id=" + id;
+				map["formId"] = "#editForm";
+				map["url"] = "carInsureAndRepair!editInsureTypeSave.do?ajax=yes";
+				map["title"] = "修改险种信息";
+				map["loadshow"] = "正在修改......";
+			}
+			map["divDialog"] = "#divdia";
+			map["gridreload"] = "#insuretypedata";
+
+			addDialog(map);
+		}
+		function addDialog(map) {
+			$(map["divDialog"]).show();
+			$(map["divDialog"]).dialog({
+				title : map["title"],
+				width : 620,
+				height : 310,
+				closed : false,
+				cache : false,
+				href : map["href"],
+				modal : true,
+				buttons : [ {
+					text : '保存',
+					iconCls : 'icon-ok',
+					handler : function() {
+						var savebtn = $(this);
+						var disabled = savebtn.hasClass("l-btn-disabled");
+						if(!disabled){
+							submitForm(map,savebtn);
+						}
+					}
+				}, {
+					text : '取消',
+					handler : function() {
+						$(map["divDialog"]).dialog('close');
+					}
+				} ]
+			});
+		}
+		function submitForm(map,savebtn) {
+			var company_id = $("#company_id").val();
+			var insure_type = $("#insure_type").val();
+			
+			if(company_id == 0){
+				alert("请选择险种所属的保险公司");
+				return;
+			}
+			if(insure_type == 0){
+				alert("请选择险种类型");
+				return;
+			}
+			
+			var formflag = $(map["formId"]).form().form('validate');
+			if (formflag) {
+				$.Loading.show(map["loadshow"]);
+				savebtn.linkbutton("disable");
+				var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) {
+						if (result.result == 1) {
+							$(map["divDialog"]).dialog('close');
+							$(map["gridreload"]).datagrid('reload');
+							$.Loading.success(result.message);
+						}
+						if (result.result == 0) {
+							$.Loading.error(result.message);
+						}
+						savebtn.linkbutton("enable");
+					},
+					error : function(e) {
+						$.Loading.error("出现错误 ，请重试");
+						savebtn.linkbutton("enable");
+					}
+				};
+				$(map["formId"]).ajaxSubmit(options);
+			}
+		}
+		function clearForm(map) {
+			$(map["formId"]).form('clear');
+		}
+		function formatOperation(value, row, index) {
+			var val = "<a class='edit' title='修改' href='javascript:void(0);' onclick='append(" + row.id + ")' ></a>";
+
+			return val;
+		}
+		
+		//删除
+		function del() {
+			var rows = $("#insuretypedata").datagrid("getSelections");
+			if (rows.length < 1) {
+				$.Loading.error('请选择要删除的记录');
+				return;
+			}
+			if (!confirm("确认要将这些记录删除吗？")) {
+				return;
+			}
+			var options = {
+				url : "carInsureAndRepair!deleteInsureType.do?ajax=yes",
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$.Loading.success('删除成功');
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					location.reload();
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			};
+			$('#insuretypeform').ajaxSubmit(options);
+		}
+	</script>
+
+<script type="text/javascript">
+	function forMoney(value, row, index) {
+		var val = "￥" + value;
+		return val;
+	}
+	
+	function searchOrder(){
+	var keyword = $("#searchKeyword").val();
+	
+	$("#insuretypedata").datagrid('load', {
+		 keyword:keyword,
+		 
+		 page:1
+    });
+}
+</script>
+
+<#include '/admin/footer.html' >
+
+

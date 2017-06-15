@@ -1,0 +1,129 @@
+<script>
+    function load() {
+        location.href = "${ctx}/store/login.html";
+    }
+    <#if !member??>
+            load();
+    </#if>
+</script>
+<style type="text/css">
+    .menu_list {
+        width: 268px;
+        margin: 0 auto;
+    }
+
+    .menu_head {
+        font-size: 14px;
+        color: #525252;
+        cursor: pointer;
+        border-left: 1px solid #e1e1e1;
+        border-right: 1px solid #e1e1e1;
+        border-bottom: 1px solid #e1e1e1;
+        border-top: 1px solid #e1e1e1;
+        position: relative;
+        margin: 0px;
+        font-weight: bold;
+        background: #f1f1f1 url(images/pro_left.png) center right no-repeat;
+    }
+    .menu_list .current {
+        background: #f1f1f1 url(images/pro_down.png) center right no-repeat;
+    }
+
+    .menu_head a:hover {
+        background-color: #ffffff;
+        border-left: 4px solid #FF4A00;
+        color: #FF4A00 !important;
+        text-align: left;
+        position: relative;
+        left: -4px;
+
+    }
+
+    .menu_body {
+        line-height: 38px;
+        border-left: 1px solid #e1e1e1;
+        border-right: 1px solid #e1e1e1;
+    }
+
+    .menu_body a {
+        display: block;
+        height: 38px;
+        line-height: 38px;
+        padding-left: 38px;
+        color: #777777;
+        text-decoration: none;
+        border-bottom: 1px solid #e1e1e1;
+
+    }
+
+    .menu_body span {
+        display: block;
+        padding-top: 4px;
+        height: 28px;
+        padding-left: 38px;
+        color: #aeaeae;
+        text-decoration: none;
+        border-bottom: 1px solid #e1e1e1;
+        font: 14px/24px "microsoft yahei";
+
+    }
+
+    .menu_body a:hover {
+        text-decoration: none;
+        color: #FF4A00;
+        border-left: 4px solid #ff4a00;
+        background-color: #FFFFFF;
+        margin-left: -1px;
+    }
+</style>
+<!--
+商品管理:store_goods/交易管理transaction/促销管理promotion/店铺管理store/客服管理server
+ -->
+
+<div class="store_left_menu">
+    <div class="sidebar" id="sidebar">
+        <dl>
+            <dt id="sidebar_goods_manage">
+                <span class="message_log"></span>
+                 <p>消息中心</p>
+            </dt>
+        </dl>
+        <div class="store_left">
+            <ul id="firstpane" class="menu_list">
+                <li class="menu_head current"><a href="#">消息中心</a></li>
+                <li style="display:block" class="menu_body">
+                    <a href="${ctx}/store/message/message_unread.html">&nbsp;&nbsp;&nbsp;&nbsp;未查看</a>
+                    <a href="${ctx}/store/message/message_view.html">&nbsp;&nbsp;&nbsp;&nbsp;已查看</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--控制列表伸缩-->
+<script>
+    $(document).ready(function () {
+        $("#firstpane .menu_body:eq(9)").show();
+        $("#firstpane li.menu_head").click(function () {
+            $(this).addClass("current").next("li.menu_body").slideToggle(300).siblings("li.menu_body").slideUp("slow");
+            $(this).siblings().removeClass("current");
+        });
+        $("#secondpane .menu_body:eq(0)").show();
+        $("#secondpane li.menu_head").mouseover(function () {
+            $(this).addClass("current").next("li.menu_body").slideDown(500).siblings("li.menu_body").slideUp("slow");
+            $(this).siblings().removeClass("current");
+        });
+    });
+</script>
+<script>
+    $(function () {
+        // 如果没有店铺名称 就说明他是未设置过店铺信息
+        if ("${myStoreDetail.store_name!''}" == "") {
+            $("#firstpane li.menu_head").unbind("click");
+        } else {
+            $("#firstpane li.menu_head").bind("click");
+        }
+    })
+</script>
+
+

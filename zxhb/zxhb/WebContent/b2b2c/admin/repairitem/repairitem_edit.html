@@ -1,0 +1,41 @@
+<style>
+	.input_text {
+		width: 210px;
+	}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="editForm" method="post" class="validate">
+			<input type="hidden" name="repairItem.id" value="${repairItem.id!''}"/>
+			<table width="100%">
+				<tr>
+					<th style="width:200px">项目名称：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="repairItem.itemname" id="item_name" value="${repairItem.itemname!''}"/>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">是否必选：</th>
+					<td>
+						<select name="repairItem.is_necessary" id="item_is_necessary">
+							<option value="0" <#if repairItem.is_necessary == 0>selected="selected"</#if>>否</option>
+							<option value="1" <#if repairItem.is_necessary == 1>selected="selected"</#if>>是</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>排序号：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="repairItem.sort" id="item_sort" value="${repairItem.sort!''}"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#item_is_necessary").val('${repairItem.is_necessary}');
+	});
+</script>

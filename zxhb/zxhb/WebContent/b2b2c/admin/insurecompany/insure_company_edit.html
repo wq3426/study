@@ -1,0 +1,39 @@
+<style>
+	.input_text {
+		width: 210px;
+	}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="editForm" method="post" class="validate">
+			<input type="hidden" name="insureCompany.id" value="${insureCompany.id!''}"/>
+			<input type="hidden" name="insureCompany.logo" value="${insureCompany.logo!''}"/>
+			<table width="100%">
+				<tr>
+					<th style="width:200px">保险公司名称：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="insureCompany.company_name" value="${insureCompany.company_name!''}"/>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">保险公司LOGO：</th>
+					<td>
+						<input type="file" class="input_text" data-options="required:true"  name="data" id="insurecompany_logo"/>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">保险公司电话：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="insureCompany.telephone" value="${insureCompany.telephone!''}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>排序号：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="insureCompany.sort" value="${insureCompany.sort!''}"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

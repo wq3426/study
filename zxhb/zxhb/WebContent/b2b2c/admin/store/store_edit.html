@@ -1,0 +1,632 @@
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+
+<style>
+.input_text {
+	width: 200px;
+}
+
+.bar {
+	background-color:#00c0ff;
+	height:30px;
+	line-height:30px;   
+    overflow:hidden; 
+}
+.title {
+	font-size:16px;
+}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<div style="padding: 10px 0 10px 20px">
+			<form id="editForm" method="post" class="validate">
+				<div  class="bar" ><span class="title">&nbsp;&nbsp;企业基本信息</span></div><br/>
+				<table>
+					<tr>
+						<td>会员名称：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="member_name" value="${store.member_name!''}" disabled="disabled" >  
+						</td>
+					</tr>
+					<tr>
+						<td>店铺名称：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							data-options="required:true" name="store_name" id="store_name"
+							value="${store.store_name!''}">
+							<span class="store_name_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>店铺logo：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+			        		<input type="hidden" name="store_logo" id="store_logo" value="${store.store_logo!''}"/>
+			        		<span class="specImage"> 
+			        			<a href="javascript:;" class="sysbtn upload" onclick="openImgDlg(getImgPath1);">上传图片</a> 
+			        			<span id="fileUploadMsg1"> </span>
+			        		</span>
+							<div style="width:100px; height:100px;">
+								<img id="img1" src="<#if store.store_logo??&&store.store_logo!=''>${store.store_logo!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;"> 
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>所在地区：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<@regionSelectDirective province_name='store_province' city_name='store_city' region_name='store_region' 
+							province_id="${store.store_provinceid!''}" city_id="${store.store_cityid!''}" region_id="${store.store_regionid!''}" />
+						</td>
+					</tr>
+					<tr>
+						<td>详细地址：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<input id="attr" class="input_text easyui-validatebox" type="text"
+							data-options="required:true" name="attr"
+							value="${store.attr!''}">
+							<span class="attr_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>邮编：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+							data-options="required:true" name="zip" id="zip" placeholder="100000"
+							value="${store.zip!''}">
+							<span class="zip_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>客服电话：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							data-options="required:true" name="customer_phone" id="customer_phone"
+							value="${store.customer_phone!''}" placeholder="010-64860393">
+							<span class="customer_phone_span red_span"></span>
+						</td>
+					</tr>
+				</table>
+				<br/><div  class="bar"><span class="title">&nbsp;&nbsp;联系人信息</span></div> <br/>
+				<table>
+					<tr>
+						<td>联系人姓名：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="contacts_name" value="${store.contacts_name!''}" id="contacts_name" >
+							<span class="contacts_name_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>联系方式：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							data-options="required:true" name="tel" id="tel" placeholder="15666666666"
+							value="${store.tel!''}">
+							<span class="tel_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>办公电话：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							data-options="required:true" name="office_phone" id="office_phone"
+							value="${store.office_phone!''}">
+							<span class="office_phone_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>电子邮箱：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							data-options="required:true" name="email" id="email"
+							value="${store.email!''}">
+							<span class="email_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>联系人身份证照片 <br/>（正面）：</td>
+						<td>
+			        		<input type="hidden" name="id_img" id="id_img" value="${store.id_img!''}"/>
+			        		<span class="specImage"> 
+			        		 	<a href="javascript:;" class="sysbtn upload" onclick="openImgDlg(getImgPath2);">上传图片</a> 
+			        		 	<span id="fileUploadMsg2"> </span>
+			        		</span>
+							<div style="width:100px; height:100px;">
+								<img id="img2" src="<#if store.id_img??&&store.id_img!=''>${store.id_img!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;"> 
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>联系人身份证照片 <br/>（背面）：</td>
+						<td>
+			        		<input type="hidden" name="contact_idimg_back" id="contact_idimg_back" value="${store.contact_idimg_back!''}"/>
+			        		<span class="specImage"> 
+			        		 	<a href="javascript:;" class="sysbtn upload" onclick="openImgDlg(getImgPath6);">上传图片</a> 
+			        		 	<span id="fileUploadMsg6"> </span>
+			        		</span>
+							<div style="width:100px; height:100px;">
+								<img id="img6" src="<#if store.contact_idimg_back??&&store.contact_idimg_back!=''>${store.contact_idimg_back!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;"> 
+							</div>
+						</td>
+					</tr>
+				</table>
+				<br/><div  class="bar" ><span class="title">&nbsp;&nbsp;经营范围</span> </div> <br/>
+				<table>
+					<tr>
+						<td>企业法人姓名：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="corporation" data-options="required:true" id="corporation"
+							value="${store.corporation!''}">
+							<span class="corporation_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>企业法人身份证号：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="corporation_id_number" data-options="required:true" id="corporation_id_number"
+							value="${store.corporation_id_number!''}">
+							<span class="corporation_id_number_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>企业法人身份证照片 <br/>（正面）：</td>
+						<td>
+			        		<input type="hidden" name="corporation_id_img" id="corporation_id_img" value="${store.corporation_id_img!''}"/>
+			        		<span class="specImage"> 
+			        		 	<a href="javascript:;" class="sysbtn upload" onclick="openImgDlg(getImgPath3);">上传图片</a> 
+			        		 	<span id="fileUploadMsg3"> </span>
+			        		</span>
+							<div style="width:100px; height:100px;">
+								<img id="img3" src="<#if store.corporation_id_img??&&store.corporation_id_img!=''>${store.corporation_id_img!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;"> 
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>企业法人身份证照片 <br/>（背面）：</td>
+						<td>
+			        		<input type="hidden" name="corporate_idimg_back" id="corporate_idimg_back" value="${store.corporate_idimg_back!''}"/>
+			        		<span class="specImage"> 
+			        		 	<a href="javascript:;" class="sysbtn upload" onclick="openImgDlg(getImgPath7);">上传图片</a> 
+			        		 	<span id="fileUploadMsg7"> </span>
+			        		</span>
+							<div style="width:100px; height:100px;">
+								<img id="img7" src="<#if store.corporate_idimg_back??&&store.corporate_idimg_back!=''>${store.corporate_idimg_back!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;"> 
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>营业执照注册号：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="bussiness_license_number" data-options="required:true"
+							value="${store.bussiness_license_number!''}">
+							<span class="bussiness_license_number_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>营业执照照片：</td>
+						<td>
+			        		<input type="hidden" name="license_img" id="license_img" value="${store.license_img!''}"/>
+			        		 <span class="specImage"> 
+			        		 	<a href="javascript:;" class="sysbtn upload" onclick="openImgDlg(getImgPath4);">上传图片</a> 
+			        		 	<span id="fileUploadMsg4"> </span>
+			        		 </span>
+							<div style="width:100px; height:100px;">
+								<img id="img4" src="<#if store.license_img??&&store.license_img!=''>${store.license_img!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;">
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>代理品牌：</td>
+						<td>
+							<select name="brandId" class="easyui-validatebox">
+								<#if brand_list??> 
+									<#list brand_list as bl>
+										<option value="${bl.brand_id!''}" <#if store.brand_id==bl.brand_id>selected="selected"</#if> >${bl.name }</option> 
+									</#list> 
+								</#if>
+							</select>
+						</td>
+					</tr>
+				</table>
+				<br/><div  class="bar" ><span class="title">&nbsp;&nbsp;账户信息</span> </div> <br/>	
+				<table>
+					<tr>
+						<td>银行开户名：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="bank_account_name" data-options="required:true"   id="bank_account_name"
+							value="${store.bank_account_name!''}">
+							<span class="bank_account_name_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>公司银行账号：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+							name="bank_account_number" data-options="required:true"    id="bank_account_number"
+							value="${store.bank_account_name!''}">
+							<span class="bank_account_number_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>开户银行支行名称：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="bank_name" data-options="required:true"  id="bank_name"
+							value="${store.bank_name!''}">
+							<span class="bank_name_span red_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>银行开户许可证：</td>
+						<td>
+			        		<input type="hidden" name="bank_license_img" id="bank_license_img" value="${store.bank_license_img!''}"/>
+			        		 <span class="specImage"> 
+			        		 	<a href="javascript:;" class="sysbtn upload" onclick="openImgDlg(getImgPath5);">上传图片</a> 
+			        		 	<span id="fileUploadMsg5"> </span>
+			        		 </span>
+							<div style="width:100px; height:100px;">
+								<img id="img5" src="<#if store.bank_license_img??&&store.bank_license_img!=''>${store.bank_license_img!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;">
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>支付宝账号：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="alipay_account" data-options="required:true"
+							value="${store.alipay_account!''}">
+						</td>
+					</tr>
+					<tr>
+						<td>微信账号：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="weichat_account" data-options="required:true"
+							value="${store.weichat_account!''}">
+						</td>
+					</tr>
+				</table>
+				<br/><div  class="bar" ><span class="title">&nbsp;&nbsp;提现信息</span> </div> <br/>
+				<table>
+					<tr>
+						<td>提现人手机号：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="cashingouter_phone" data-options="required:true" id="cashingouter_phone"
+							value="${store.cashingouter_phone!''}">
+							<span class="cashingouter_phone_span red_span"></span>
+						</td>
+					</tr>
+				</table>
+				<br/><div  class="bar" ><span class="title">&nbsp;&nbsp;对接人信息</span> </div> <br/>
+				<table>
+					<tr>
+						<td>对接人姓名：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="docker" data-options="required:true"
+							value="${store.docker!''}">
+						</td>
+					</tr>
+					<tr>
+						<td>对接人工号：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="docker_job_number" data-options="required:true"
+							value="${store.docker_job_number!''}">
+						</td>
+					</tr>
+					<tr>
+						<td>联系方式：</td>
+						<td>
+							<input class="input_text easyui-validatebox" type="text"
+							name="docker_tel" data-options="required:true" id="docker_tel"
+							value="${store.docker_tel!''}"> 
+						</td>
+					</tr>
+				</table>
+				<br/><div  class="bar" ><span class="title">&nbsp;&nbsp;其他信息</span> </div> <br/>
+				<table>
+					<tr>
+						<td>店铺所属等级：</td>
+						<td>
+							<select name="store_level" class="easyui-validatebox">
+								<#if level_list??> 
+									<#list level_list as lv>
+										<option value="${lv.level_id!''}" <#if store.store_level==lv.level_id>selected="selected"</#if> >${lv.level_name }</option> 
+									</#list> 
+								</#if>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>店铺开启状态：</td>
+						<td>
+							<select name="disabled" >
+								<option value="1" <#if store.disabled==1>selected</#if>>开启</option>
+								<option value="0" <#if store.disabled==2>selected</#if>>关闭</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>店铺审核状态：</td>
+						<td>
+							<select name="auditstatus">
+								<option value="0" <#if store.auditstatus=='0'>selected</#if>>待修改</option>
+								<option value="1" <#if store.auditstatus=='1'>selected</#if>>待审核</option>
+								<option value="2" <#if store.auditstatus=='2'>selected</#if>>已审核</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>结算周期：</td>
+						<td>
+							<input class="easyui-numberspinner"  data-options="increment:1" style="width:80px;"
+							id="settlement_period"  name="settlement_period" value="${store.settlement_period!0}"
+							data-options="required:true"   maxlength="2"/> 天
+						</td>
+					</tr>
+					<tr>
+						<td>签约用户保养折扣：</td>
+						<td>
+							<input class="easyui-numberbox input_text" max="1.0" precision="2" data-options="required:true" type="text" name="discountcontract" value="${store.discountcontract!''}"/>
+						</td>
+					</tr>
+					<tr>
+						<td>非签约用户保养折扣：</td>
+						<td>
+							<input class="easyui-numberbox input_text" max="1.0" precision="2" data-options="required:true" type="text" name="discountnoncontract" value="${store.discountnoncontract!''}"/>
+						</td>
+					</tr>
+				</table>
+				<br/><br/>
+				<input type="hidden" name="storeId" value="${store.store_id!''}">
+			</form>
+		</div>
+	</div>
+</div> 	
+
+<script>
+	var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+	var isMob = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+	var isEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+//	var ok1=false,ok2=false,ok3=false,ok4=false,ok5=false,ok6=false,ok7=false,ok8=false,ok9=false,ok10=false,ok11=false,ok12=false,ok13=false,ok14=false,ok15=false;
+
+	//校验店铺名称
+	$('#store_name').blur(function(){
+		var store_name=$('#store_name').val();
+		if(store_name == "" || store_name == null) {
+			$('.store_name_span').css("color","red").text("请输入店铺名称!");
+//			ok1=false;
+		}else {
+			$('.store_name_span').text("");
+//			ok1=true;
+		}
+	});
+	//校验详细地址
+	$('#attr').blur(function(){
+		var attr=$('#attr').val();
+		if(attr == "" || attr == null) {
+			$('.attr_span').css("color","red").text("请输入详细地址!");
+//			ok2=false;
+		}else {
+			$('.attr_span').text("");
+//			ok2=true;
+		}
+	});
+
+	//校验邮编
+	$("#zip").blur(function(){
+		var zip = $("#zip").val();
+		if(zip == "" || zip == null) {
+			$('.zip_span').css("color","red").text("请输入邮政编码!");
+//			ok3=false
+		}
+		else if(zip.length != 6) {
+			$('.zip_span').css("color","red").text("请输入正确邮政编码!");
+//			ok3=false
+		}
+		else {
+			$('.zip_span').css("color","red").text("");
+//			ok3=true
+		}
+	});
+
+	//校验客服电话
+	$("#customer_phone").blur(function(){
+		var customer_phone = $("#customer_phone").val();
+		if(customer_phone == "" || customer_phone == null) {
+			$('.customer_phone_span').css("color","red").text("请输入客服电话!");
+//			ok4=false
+		}
+//		else if(!isPhone.test(customer_phone)) {
+//			$('.customer_phone_span').css("color","red").text("请输入正确格式的客服电话!");
+		else{
+			$('.customer_phone_span').css("color","red").text("");
+//			ok4=true
+		}
+	});
+
+	//联系人姓名
+	$('#contacts_name').blur(function(){
+		var contacts_name=$('#contacts_name').val();
+		if(contacts_name == "" || contacts_name == null) {
+			$('.contacts_name_span').css("color","red").text("请输入联系人姓名!");
+//			ok5=false;
+		}else {
+			$('.store_name_span').text("");
+//			ok5=true;
+		}
+	});
+
+	//校验联系方式
+	$("#tel").blur(function(){
+		var tel = $("#tel").val();
+		if(tel == "" || tel == null) {
+			$('.tel_span').css("color","red").text("请输入联系电话!");
+//			ok6=false;
+		}
+		else if(!(isMob.test(tel)||isPhone.test(tel))) {
+			$('.tel_span').css("color","red").text("请输入正确的联系方式!");
+//			ok6=false;
+		}else{
+			$('.tel_span').css("color","red").text("");
+//			ok6=true;
+		}
+	});
+
+	//校验办公电话
+	$("#office_phone").blur(function(){
+		var office_phone = $("#office_phone").val();
+		if(office_phone == "" || office_phone == null) {
+			$('.office_phone_span').css("color","red").text("请输入联系电话!");
+//			ok7=false;
+		}
+		else if(!(isMob.test(office_phone)||isPhone.test(office_phone))) {
+			$('.office_phone_span').css("color","red").text("请输入正确的办公电话!");
+//			ok7=false;
+		}else {
+			$('.office_phone_span').css("color","red").text("");
+//			ok7=true;
+		}
+	});
+
+	//校验电子邮箱
+	$("#email").blur(function(){
+		var email = $("#email").val();
+		if(email == "" || email == null) {
+			$('.email_span').css("color","red").text("请输入电子邮箱!");
+//			ok8=false;
+		}else if(!isEmail.test(email)) {
+			$('.email_span').css("color","red").text("请输入正确的电子邮箱!");
+//			ok8=false;
+		}else {
+			$('.email_span').css("color","red").text("");
+//			ok8=true;
+		}
+	});
+
+
+	//校验企业法人姓名
+	$('#corporation').blur(function(){
+		var corporation=$('#corporation').val();
+		if(store_name == "" || store_name == null) {
+			$('.corporation_span').css("color","red").text("请输入企业法人姓名!");
+//			ok9=false;
+		}else {
+			$('.corporation_span').css("color","red").text("");
+//			ok9=true;
+		}
+	});
+
+	//校验企业法人身份证号
+	$('#corporation_id_number').blur(function(){
+		var corporation_id_number=$('#corporation_id_number').val();
+		if(store_name == "" || store_name == null) {
+			$('.corporation_id_number_span').css("color","red").text("请输入企业法人身份证号!");
+//			ok10=false;
+		}else {
+			$('.corporation_id_number_span').css("color","red").text("");
+//			ok10=true;
+		}
+	});
+	//营业执照注册号
+	$('#bussiness_license_number').blur(function(){
+		var bussiness_license_number=$('#bussiness_license_number').val();
+		if(bussiness_license_number == "" || bussiness_license_number == null) {
+			$('.bussiness_license_number_span').css("color","red").text("请输入营业执照注册号!");
+//			ok11=false;
+		}else {
+			$('.bussiness_license_number_span').css("color","red").text("");
+//			ok11=true;
+		}
+	});
+	//银行开户名
+	$('#bank_account_name').blur(function(){
+		var bank_account_name=$('#bank_account_name').val();
+		if(bank_account_name == "" || bank_account_name == null) {
+			$('.bank_account_name_span').css("color","red").text("请输入银行开户名!");
+//			ok12=false;
+		}else {
+			$('.bank_account_name_span').css("color","red").text("");
+//			ok12=true;
+		}
+	});
+	//公司银行账号
+	$('#bank_account_number').blur(function(){
+		var bank_account_number=$('#bank_account_number').val();
+		if(bank_account_number == "" || bank_account_number == null) {
+			$('.bank_account_number_span').css("color","red").text("请输入公司银行账号!");
+//			ok13=false;
+		}else {
+			$('.bank_account_number_span').css("color","red").text("");
+//			ok13=true;
+		}
+	});
+	//开户银行支行名称
+	$('#bank_name').blur(function(){
+		var bank_name=$('#bank_name').val();
+		if(bank_name == "" || bank_name == null) {
+			$('.bank_name_span').css("color","red").text("请输入开户银行支行名称!");
+//			ok14=false;
+		}else {
+			$('.bank_name_span').css("color","red").text("");
+//			ok14=true;
+		}
+	});
+
+	//提现人手机号
+	$("#cashingouter_phone").blur(function(){
+		var cashingouter_phone = $("#cashingouter_phone").val();
+		if(cashingouter_phone == "" || cashingouter_phone == null) {
+			$('.cashingouter_phone_span').css("color","red").text("请输入提现人手机号!");
+//			ok15=false;
+		}else if(!isMob.test(cashingouter_phone)) {
+			$('.cashingouter_phone_span').css("color","red").text("请输入正确的提现人手机号!");
+//			ok15=false;
+		}else {
+			$('.cashingouter_phone_span').css("color","red").text("");
+//			ok15=false;
+		}
+	});
+
+
+        //提交按钮,所有验证通过方可提交
+        $('#btnForm').click(function () {
+            if (ok1 && ok2) {
+                //$('#registerForm').submit();
+            	var options = {
+                        url: "${ctx}/b2b2c/admin/merchant!mermberRegister.do?ajax=yes",
+                        type: "POST",
+                        async: false,
+                        dataType: "json",
+                       	data:{},
+                        success: function (json) {
+                            if (json.result == 1) {
+                                alert(json.message);
+                                //TODO 跳转到首页
+                            } else {
+                                alert(json.message);
+                            }
+                        },
+                        error: function (e) {
+                            alert("出现错误，请重试");
+                        }
+                    };  
+                $('#registerForm').ajaxSubmit(options);
+            } else {
+                if (company ==""|| company == null){
+                    $(".email_span").html("  电子邮箱不能为空");
+                }
+                if (password==""||password==null){
+                    $("#password_span").html("  密码不能为空");
+                }
+                return false;
+            }
+        });
+
+    </script>				 

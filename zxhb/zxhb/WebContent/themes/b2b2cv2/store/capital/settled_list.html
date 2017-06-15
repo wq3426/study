@@ -1,0 +1,29 @@
+<style>
+    .ui_inner{width: 500px!important;}
+    .select{width: 157px;}
+</style>
+<#assign settledStageNoList=newTag("settledStageNoListTag")/>
+<#assign settledStageNoList=settledStageNoList()/>
+<div  style="width:400px;" class="tal">
+	<form id="logistics_form">
+    <div class="">
+      <lable class="f12">选择下载期号 : </lable>
+      <select name="stage_no" id="stage_no" class="select">
+        <option value="0" >未选择</option>
+        <#if settledStageNoList??>
+	        <#list settledStageNoList.list as list>
+	         	<option value="${list.stage_no}" >${list.stage_no}</option>
+	        </#list>
+        </#if>
+    </select>
+    </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".scalability").click(function () {
+            $(this).parent().addClass("history").next("li.history_body").slideToggle(300);
+            $(this).toggleClass("hyzztp2");
+        });
+    })
+</script>

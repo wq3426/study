@@ -1,0 +1,96 @@
+<#assign storeBonusDetailTag=newTag("storeBonusDetailTag")> 
+<#assign bonus=storeBonusDetailTag('"bonusid":${bonusid}')/>
+	<style>
+		.sotre_bonus dl dd input{
+			width: 230px;
+		}
+	</style>
+<div class="dialog_content" style="margin: 0px; padding: 0px;">
+	<div class="sotre_bonus">
+		<form id="edit_form"  method="post" class="validate" >
+		<input type="hidden" name="status" class="text" value="${bonus.status!''}">
+			<dl>
+				<dt>优惠券名称：</dt>
+				<dd>
+					<input type="text" name="type_name" class="text" placeholder="请输入6个以内汉字" style="width:230px;" value="${bonus.type_name!''}" maxlength="6" autocomplete="off">
+				</dd>
+			</dl>
+			
+			<dl>
+				<dt>优惠券面额：</dt>
+				<dd>
+					<input type="text" name="type_money" id="type_money"　isrequired="true" dataType="double"  class="text" value="${bonus.type_money!''}" autocomplete="off" >
+				</dd>
+			</dl>
+				
+			<dl>
+				<dt>买家消费满：</dt>
+				<dd>
+					<input type="text"  name="min_goods_amount"　id="min_goods_amount" isrequired="true" dataType="double" class="text w100 mr5" value="${bonus.min_goods_amount}" autocomplete="off"><i>元使用</i>
+				</dd>
+			</dl>
+			<dl>
+				<dt>使用期限：</dt>
+				<dd><input class="Wdate" readonly="readonly" type="text" id="useTimeStart" name="useTimeStart" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd 00:00:00'})" isrequired="true" value="<@dateformat time='${(bonus.use_start_date/1000)?c}' pattern='yyyy-MM-dd 00:00:00'/>"  >
+					<i>至</i> 
+					<input class="Wdate" readonly="readonly" type="text" id="useTimeEnd" name="useTimeEnd" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd 23:59:59'})" isrequired="true" value="<@dateformat time='${(bonus.use_end_date/1000)?c}' pattern='yyyy-MM-dd 23:59:59'/>" >
+				</dd>
+			</dl>
+			<dl>
+				<dt class="required">
+					发行量：
+				</dt>
+				<dd>
+					<input type="text" name="create_num" class="text w100 mr5" id="create_num" isrequired="true" dataType="int" value="${bonus.create_num}" autocomplete="off"
+					onkeyup="this.value=this.value.replace(/\D/g,'')"   
+					onafterpaste="this.value=this.value.replace(/\D/g,'')" >
+				</dd>
+			</dl>
+			<dl>
+				<dt class="required">
+					每人限领：
+				</dt>
+				<dd>
+					<input type="text"  name="limit_num" class="text w100 mr5" id="create_num" isrequired="true" dataType="int"  value="${bonus.limit_num}" readOnly="true" autocomplete="off">
+				</dd>
+			</dl>
+			<input type="hidden" name="type_id" value="${bonus.type_id}" >
+		</form>
+	</div>
+</div>
+	<script>
+		$("input[name='min_goods_amount']").on("blur",function(){
+			var price = $("input[name='type_money']").val();
+			var rewards_limit =  $("input[name='min_goods_amount'").val();
+			price = price.replace(',',"");
+			rewards_limit = rewards_limit.replace(',',"");
+			if(parseFloat(price) > 0){
+				if(parseFloat(price) >= parseFloat(rewards_limit)){
+					alert("买家消费满减金额不得小于等于优惠券面额！");
+					return  $(this).val("");
+				}
+			}else{
+				if(parseFloat(price) > parseFloat(rewards_limit)){
+					alert("买家消费满减金额不得小于等于优惠券面额！");
+					return  $(this).val("");
+				}
+			}
+		});
+		$("input[name='type_money']").on("blur",function(){
+			var price = $("input[name='type_money']").val();
+			var rewards_limit =  $("input[name='min_goods_amount'").val();
+			price = price.replace(',',"");
+			rewards_limit = rewards_limit.replace(',',"");
+			if(parseFloat(price) > 0){
+				if(parseFloat(price) >= parseFloat(rewards_limit)){
+					alert("买家消费满减金额不得小于等于优惠券面额！");
+					return  $(this).val("");
+				}
+			}else{
+				if(parseFloat(price) > parseFloat(rewards_limit)){
+					alert("买家消费满减金额不得小于等于优惠券面额！");
+					return  $(this).val("");
+				}
+			}
+		});
+	</script>

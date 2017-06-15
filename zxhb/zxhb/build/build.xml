@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<project name="core" default="pack" basedir="../">
+	<property file="build.properties" /> 
+	
+	<!--要编译的类目录-->
+	<property name="build.dir"  value="${tempdir}/classes" />
+
+	<!--classpath-->
+	<path id="buildpath">
+	    	<fileset dir="WebContent/WEB-INF/lib">
+	    		  <include name="**/*.jar"/>   
+			</fileset>
+	    	<fileset dir="WebContent/WEB-INF/jars">
+	    		  <include name="**/*.jar"/>   
+			</fileset>	    		
+		    <dirset dir="${build.dir}">   
+		    </dirset>  		  	
+	</path>
+	
+	<!--编译-->
+    <target name="compile"  >
+    	
+    	<!--创建编译目录-->
+    	<mkdir dir="${build.dir}"/>
+    	
+    	<!--编译src目录下的类文件-->
+        <javac srcdir="." destdir="${build.dir}/"   >
+        	<classpath refid="buildpath"></classpath>
+        	<include name="**/eop/**"/>
+        	<include name="**/shop/**"/>
+        	<include name="**/fastdfs/**"/>
+			<include name="**/cms/**"/>				
+        	<include name="**/test/**"/>	
+        </javac>
+
+
+    </target>
+	
+	
+
+	
+		 	
+	<!--测试-->
+	<target name="test" depends="compile">
+		<junit printsummary="yes" haltonfailure="yes">
+		  <classpath refid="buildpath"></classpath>
+		  <formatter type="plain"/>
+		  <batchtest fork="yes">
+		    <fileset dir="test/com/enation/newtest">
+		      <include name="**/*Test*.java"/>
+		    </fileset>
+		  </batchtest>
+		</junit>
+	</target>
+	
+	<!--部署-->
+    <target name="deploy" depends="test"  >
+    	<!--部署至web服务器-->
+		 <copy todir="${server.testweb}">
+		      <fileset dir="WebContent" >
+		      		<exclude name="**/products/**"/>
+		      </fileset>	
+		 </copy>
+    </target>	
+	
+	<!--独立版打war包至下载目录-->
+	<target name="pack" depends="deploy">
+    	<!--创建下载目录-->
+    	<mkdir dir="${server.download}/${version}"/>
+		<war destfile="${server.download}/${version}/javashop.war" webxml="WebContent/WEB-INF/web_standalone.xml">
+		  <fileset dir="WebContent" >
+		  	<exclude name="**/car/**"/>	
+			<exclude name="**/cmsblank/**"/>
+		  	<exclude name="**/company1/**"/>
+		  	<exclude name="**/company2/**"/>
+		  	<exclude name="**/company/**"/>
+			<exclude name="**/eopsaler/**"/>
+			<exclude name="**/food/**"/>
+			<exclude name="**/it360/**"/>
+			<exclude name="**/jsmarker/**"/>
+			<exclude name="**/zhumei/**"/>
+		  </fileset>
+		  <classes dir="${build.dir}"/>
+		</war>		 
+	</target>
+	
+
+</project>

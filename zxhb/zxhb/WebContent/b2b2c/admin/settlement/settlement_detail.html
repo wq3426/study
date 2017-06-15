@@ -1,0 +1,151 @@
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text {
+	width: 200px;
+}
+.dialog-content td {padding-bottom:0px;}
+.dialog-content th{padding: 0px;}
+/*第一个弹出框*/
+table{border-collapse: collapse;/* 边框合并属性  */}
+.ejectOne table tr th,.ejectOne table tr td{width: 180px; text-align: center;border:1px solid #ccc;line-height: 30px;}
+.ejectOne table thead{background-color: #e6e6e6;}
+/*第二个弹出框*/
+.ejectTow table tr th,.ejectTow table tr td{width: 237px; text-align: center;border:1px solid #ccc;line-height: 30px;}
+.ejectTow table tr th{background-color: #e6e6e6;}
+.ejectTow table tr td img{width: 710px;height: 430px;}
+/*第三个弹出框*/
+.ejectThree table tr th,.ejectThree table tr td{width: 101px; text-align: center;border:1px solid #ccc;line-height: 30px;}
+.ejectThree table tr td span{margin-left: 10px;}
+.ejectThree table tr th{background-color: #e6e6e6;}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<div style="padding: 10px 20px 10px 10px;">
+		<#if trade_big_type??>
+			<form id="" method="post" class="ejectOne" style="display:none;">
+				<table>
+					<thead>
+						<tr>
+							<th>店铺账户余额</th>
+							<th>交易小类</th>
+							<th>购买额度</th>
+							<th>剩余额度</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>5000</td>
+							<td>广告推送</td>
+							<td>100</td>
+							<td>30</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<#if  trade_big_type=='2' && drawMoneyDetail??>
+			<form id="" method="post" class="ejectTow" style="display:block;">
+				<table>
+					<tbody>
+						<tr>
+							<th>店铺账户余额</th>
+							<#if drawMoneyDetail.pay_type=="">
+								<th>支付方式</th>
+								<th>银行卡号</th>
+							<#elseif drawMoneyDetail.pay_type=="bank">
+								<th>支付方式</th>
+								<th>银行卡号</th>
+							<#elseif drawMoneyDetail.pay_type=="weichat">
+								<th>支付方式</th>
+								<th>支付账号</th>
+							<#elseif drawMoneyDetail.pay_type=="alipay">
+								<th>支付方式</th>
+								<th>支付账号</th>
+							</#if>
+						</tr>
+						<tr>
+							<td>${drawMoneyDetail.balance!'0'}</td>
+							<#if drawMoneyDetail.pay_type=="" ||  drawMoneyDetail.pay_type="bank">
+								<td>${drawMoneyDetail.bank_account_name!''}</td>
+								<td>${drawMoneyDetail.bank_account_number!''}</td>
+								<#elseif drawMoneyDetail.pay_type="weichat">
+								<td>微信支付</td>
+								<td>${drawMoneyDetail.weichat_account!''}</td>
+							<#elseif drawMoneyDetail.pay_type="alipay">
+								<td>支付宝支付</td>
+								<td>${drawMoneyDetail.alipay_account!''}</td>
+							</#if>
+						</tr>
+						<tr>
+							<th>提现金额</th>
+							<th>处理时间</th>
+							<th>备注</th>
+						</tr>
+						<tr>
+							<td>${drawMoneyDetail.er_trade_money!''}</td>
+							<td><#if drawMoneyDetail.trade_time??><@dateformat time="${drawMoneyDetail.trade_time?c}" pattern="yyyy-MM-dd HH:mm:ss"/><#else>--</#if></td>
+							<td>${drawMoneyDetail.apply_remarks!''}</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<img <#if drawMoneyDetail.receipt_file??>src="${drawMoneyDetail.receipt_file!''}"<#else>src="/mall/themes/b2b2cv2/images/no_upload.jpg"</#if>>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			</#if>
+			<#if  trade_big_type=='1' && settlementDetail??> 
+			<form id="" method="post" class="ejectThree" style="display:block;">
+				<table>
+					<tbody>
+						<tr>
+							<td colspan="7" style="text-align:left;">
+								<span>订单号：${settlementDetail.order_sn!'--'}</span> <span>支付宝流水号：${settlementDetail.pay_sn!'--'}</span>
+								<#if settlementDetail.order_type?? && settlementDetail.order_type==2> <span>保养币抵扣：${settlementDetail.repair_coin!''}</span></#if>
+							</td>
+						</tr>
+						<tr>
+							<th>结算对象</th>
+							<th>订单总价</th>
+							<th>安全奖励抵扣</th>
+							<th>优惠券抵扣</th>
+							<th>实际支付</th>
+							<th>支付方式</th>
+							<th>交易费用</th>
+						</tr>
+						<tr>
+							<td>${settlementDetail.service_store_name!'--'}</td>
+							<td>${settlementDetail.need_pay_money!'--'}</td>
+							<td>${settlementDetail.gain!'--'}</td>
+							<td>${settlementDetail.type_money!'--'}</td>
+							<td>${settlementDetail.paymoney!'--'}</td>
+							<td>${settlementDetail.payment_name!'--'}</td>
+							<td>${settlementDetail.bank_handling_charge!'--'}</td>
+						</tr>
+						<tr>
+							<th>经销商等级</th>
+							<th>服务时间</th>
+							<th>服务类型</th>
+							<th>手续费</th>
+							<th>服务费</th>
+							<th>结算金额</th>
+							<th>到帐时间</th>
+						</tr>
+						<tr>
+							<td>${settlementDetail.level_name!'--'}</td>
+							<td><#if settlementDetail.service_time??><@dateformat time="${settlementDetail.service_time?c}" pattern="yyyy-MM-dd"/><#else>--</#if></td>
+							<td>${settlementDetail.order_type_text!'--'}</td>
+							<td>${settlementDetail.handling_charge!'--'}</td>
+							<td>${settlementDetail.service_charge!'--'}</td>
+							<td>${settlementDetail.settlement_money!'--'}</td>
+							<td><#if settlementDetail.settlement_time??><@dateformat time="${settlementDetail.settlement_time?c}" pattern="yyyy-MM-dd"/><#else>--</#if></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			</#if>
+		</#if>
+		</div>
+	</div>
+</div> 

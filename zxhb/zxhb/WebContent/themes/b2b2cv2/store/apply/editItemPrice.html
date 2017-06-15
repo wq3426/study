@@ -1,0 +1,151 @@
+<style>
+    .ui_content {  margin: 20px; }
+    .goodslist_bystore tr th{  padding: 0px;}
+    .ui_buttons {  display: none;}
+</style>
+<#assign storeCarRepairPriceEditListTag=newTag("storeCarRepairPriceEditListTag")>
+<#assign msdata=storeCarRepairPriceEditListTag("'store_id':${store_id}", "'carmodel_id':${carmodel_id}")/>
+<div id="server_iframe" class=" " style="height: 100%;">
+    <div class="">
+        <form id="storeGoodsForm" style="width:570px;height:450px;overflow-y: auto;" class="">
+            <table class="goodslist_bystore" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="w180">保养项目</th>
+                    <th class="w130">价格</th>
+                    <th class="w130">工时费</th>
+                    <th class="w130">操作</th>
+                </tr>
+                </thead>
+                <#if msdata.result.store_carmodel_item_list ??>
+                <tbody id="bbsTab">
+                <#list msdata.result.store_carmodel_item_list as item>
+                <tr class="h30">
+                    <td>${item.itemname!''}</td>
+                    <td class="color_b ro">${item.item_price!''}</td>
+                    <td class="color_b or">${item.repair_price!''}</td>
+                    <td>
+                        <span class="btn_too btn_edit cp" id="${item.id!''}" onclick="editItemPrice(this)">编辑</span>
+                        <span class="btn_too cp ml10" onclick="delItemPrice('${item.id!''}')">删除</span>
+                    </td>
+                </tr>
+                </#list>
+                </tbody>
+                <#else>
+					</table>
+					<p class="no_blank">暂无该车型的保养项目价格数据记录</p>
+				</#if>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script>
+	var dialog;
+
+	//店铺保养项目价格修改
+    function editItemPrice(item){
+    	var id = $(item).attr("id");
+    	if($(item).text()=="编辑"){
+    		var item_price = $(item).parent().parent().find(".ro")[0].innerText;
+            var repair_price = $(item).parent().parent().find(".or")[0].innerText;
+
+            $(item).parent().parent().find(".ro").empty();
+            $(item).parent().parent().find(".or").empty();
+            $(item).parent().parent().find(".ro").append("<input type='text' id='price_input_"+ id +"' value='"+item_price+"'/>");
+            $(item).parent().parent().find(".or").append("<input type='text' id='repair_price_input_"+ id +"' value='"+repair_price+"'/>");
+            $(item).text("保存");
+            $(item).attr("class","btn_too btn_submit");
+    	}else if($(item).text()=="保存"){
+    		var item_price = $("#price_input_"+id).val();
+    		var repair_price = $("#repair_price_input_"+id).val();
+
+    		if(!/^[0-9]+(\.[0-9]{1,2})?$/.test(item_price)){
+				alert("请输入正确的价格(保留两位小数)");
+				return;
+			}
+    		if(!/^[0-9]+(\.[0-9]{1,2})?$/.test(repair_price)){
+				alert("请输入正确的工时费(保留两位小数)");
+				return;
+			}
+
+    		$.ajax({
+        		url : "${ctx}/api/b2b2c/storeApi!editStoreRepairItem.do?id="+id+"&item_price="+item_price+"&repair_price="+repair_price,
+        		type : "POST",
+        		dataType : "json",
+        		success : function(result){
+        			alert(result.message);
+        			$(item).parent().parent().find(".ro").empty();
+            		$(item).parent().parent().find(".or").empty();
+            		$(item).parent().parent().find(".ro").append(item_price);
+            		$(item).parent().parent().find(".or").append(repair_price);
+            		$(item).text("编辑");
+            		$(item).attr("class","btn_too btn_submit");
+        			//location.reload();
+        		},
+        		error : function(){
+        			alert("请求出错");
+        		}
+        	});
+    	}
+    }
+        
+    //店铺保养项目删除
+    function delItemPrice(id){
+    	if(!confirm("确定要删除该项吗?")){
+    		return;
+    	}
+    	$.ajax({
+    		url : "${ctx}/api/b2b2c/storeApi!delStoreRepairItem.do?id="+id,
+    		type : "POST",
+    		dataType : "json",
+    		success : function(result){
+    			alert(result.message);
+    			parent.dialog.close();
+    			var map = {};
+    			map["title"] = "保养项目价格表修改";
+    			map["html"] = "editItemPrice.html?store_id="+${store_id}+"&carmodel_id="+${carmodel_id};
+    			openDialog(map);
+    		},
+    		error : function(){
+    			alert("请求出错");
+    		}
+    	});
+    }
+    
+    function openDialog(map) {
+        dialog = $.dialog({
+	            title: map["title"],
+	            lock: true,
+	            min: false,
+	            max: false,
+	            width: 500
+	        });
+
+        $.ajax({
+            url: map["html"],
+            cache: false,
+            success: function (html) {
+                dialog.content(html);
+                dialog.button([{
+                    name: '保存',
+                    callback: function () {
+                        formSubmit(dialog, map);
+
+                        this.button({
+                                    name: '保存',
+                                    disabled: false
+                                })
+                                .lock();
+                        return false;
+                    }
+                }, {
+                    name: '取消'
+                }]);
+            },
+            error: function () {
+                $.alert("出现错误,请重试！");
+            }
+        });
+    }
+</script>

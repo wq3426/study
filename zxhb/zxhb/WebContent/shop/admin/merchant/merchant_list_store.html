@@ -1,0 +1,282 @@
+<#include '/admin/header.html' >
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<style>
+.input_text{
+	width: 95%;
+}
+.color_red{color:blue;}
+.color_green{color:green;}
+.dn{display:none;}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="merchantform">
+		<div id="tb" style="height: auto">
+		    <span style="height: auto">
+				<!-- <a href="javascript:void(0)" class="easyui-linkbutton"
+					data-options="plain:true" onclick="append()"></a>   -->
+			    <a href="javascript:void(0)" class="easyui-linkbutton"
+				    data-options="plain:true" onclick="del()">删除</a>
+		    </span>
+			<span style="float: right;"> 
+				<span id="simpleSearch">
+					<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;"
+					placeholder="请输入公司名称，品牌，联系人，联系电话" name="searchKeyWord"> 
+					<a href="javascript:void(0)" class="easyui-linkbutton" 
+					data-options="plain:true" onclick="searchMerchant()">搜索</a>
+				</span>
+				<a href="javascript:void(0)" class="button" id="aAdvanced"  >高级搜索</a>
+			</span>
+		</div>
+		
+		<div style="display: block;" class="searchAdvanced" >
+		<input id="Advanced" name="Advanced" type="hidden" value="0" />
+			<table width="98%" border="0" cellspacing="0" cellpadding="8">
+				<tr>
+					<th width="70" align="right">公司名称</th>
+					<td width="280px">
+						<input type="text" value="" id="companyName"  class="input_text">
+					</td>				
+					<th width="70" align="right">主营品牌</th>
+					<td width="280px">
+						<input type="text" value="" id="brand"  class="input_text">
+					</td>
+					<th width="70" align="right">申请时间</th>
+					<td width="280px">
+						<input class="easyui-datebox" style="width: 90px;height: 28px;" id="start_time" />
+                        <span>&nbsp;~&nbsp;</span>
+                        <input class="easyui-datebox" style="width: 90px;height: 28px;" id="end_time" />
+					</td>
+				</tr>
+				<tr>
+					<th width="70" align="right">联系人</th>
+					<td width="280px">
+						<input type="text" value="" id="contactName"  class="input_text">
+					</td>
+					<th width="70" align="right">联系电话 </th>
+					<td width="280px">
+						<input type=" text" value="" id="contactPhone" maxlength="11" class="input_text easyui-numberbox">
+					</td>
+					<th width="70" align="right">电子邮箱</th>
+					<td width="280px">
+						<input type="text" value="" id="email"  class="input_text">
+					</td>
+				</tr>
+				<tr>
+					<td width="60" align="right"></td>
+					<td colspan="7" align="center">
+						<a id="searchAdvance" class="button blueButton" onclick="searchMerchant()" href="javascript:;">开始搜索</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="clear height10"></div>
+		<div class="shadowBoxWhite tableDiv">
+		<table class="easyui-datagrid"
+			data-options="url:'${ctx}/b2b2c/admin/merchant!merchantInfoListJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" id="merchantdata" sortName="id" sortOrder="desc" >
+			<thead>
+				<tr>
+				 	<th data-options="field:'id',checkbox:true,width:100"></th>
+					<th data-options="field:'company_name',width:200">公司名称</th>
+					<th data-options="field:'brand',width:150">主营品牌</th>
+					<th data-options="field:'contact_name',width:150">联系人</th>
+					<th data-options="field:'contact_phone',width:200,sortable:'true'">联系电话</th>
+					<th data-options="field:'email',sortable:'true',width:250">邮箱</th>
+					<th data-options="field:'address',width:250" >详细地址</th>
+					<th data-options="field:'signstatus',width:120,sortable:'true'" >注册状态</th>
+					<th data-options="field:'create_time',width:250,sortable:'true'"
+						formatter="formatRegtime">申请时间</th>
+					<th data-options="field:'action',width:160,align:'center'"
+						formatter="formatOperation">操作</th> 
+				</tr> 
+			</thead>
+		</table>
+		</div>
+	</form>
+	<div id="divdia" style="display: none;"></div>
+
+</div>
+<script type="text/javascript">
+
+    //操作
+	function formatOperation(value, row, index) {
+		var val = "<a href='javascript:void(0);' class='edit' onclick='append("+row.id+")' title='修改'></a>";
+		val += "<a href='javascript:void(0);' class='adde' onclick='goRegister("+row.id+")' title='注册'></a>";
+		return val;
+	}
+
+	//时间格式转换
+	function formatRegtime(value, row, index) {
+		return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+	}
+	
+	//搜索按钮切换
+	$(function() {
+		$(".searchAdvanced").hide();
+		//高级查询按钮
+		$("#aAdvanced").click(function() {
+			if ($("#Advanced").val() == "0") {
+				$("#Advanced").val(1);
+				$("#simpleSearch").hide();
+				//$("#aAdvanced").text("简单搜索")
+				$("#aAdvanced").addClass("searchAdvancedS");
+			} else {
+				$("#Advanced").val(0);
+				$("#simpleSearch").show();
+				//$("#aAdvanced").text("高级搜索");
+				$("#aAdvanced").removeClass("searchAdvancedS");
+			}
+			$(".searchAdvanced").slideToggle("slow");
+		});
+	});
+
+	//按条件查询商户信息
+	function searchMerchant() {
+		var searchKeyword = $("#searchKeyword").val();//简单查询
+		
+		var startTime = $('#start_time').datebox('getValue');
+		var endTime = $('#end_time').datebox('getValue');
+		var companyName = $("#companyName").val();
+		var brand = $("#brand").val();
+		var email = $("#email").val();
+		var contactName = $("#contactName").val();
+		var contactPhone = $("#contactPhone").val();
+		
+		$("#merchantdata").datagrid('load', {
+			searchKeyword : searchKeyword,
+
+			startTime : startTime,
+			endTime : endTime,
+			companyName : companyName,
+			brand : brand,
+			email : email,
+			contactName : contactName,
+			contactPhone : contactPhone,
+			
+			page : 1
+		});
+	}
+	
+	//删除商户信息
+	function del() {
+		var rows = $('#merchantdata').datagrid("getSelections");
+		if (rows.length < 1) {
+			$.Loading.error("请选择要删除的商家信息");
+			return;
+		}
+		if (!confirm("确认要删除该商家信息吗")) {
+			return;
+		}
+		var options = {
+			url : "${ctx}/b2b2c/admin/merchant!merchantDelete.do?ajax=yes",
+			type : "POST",
+			dataType : 'json',
+			success : function(result) {
+				$.Loading.success(result.message);
+				if (result.result == 1) {
+					var rows = $('#merchantdata').datagrid("getSelections");
+					for ( var i = 0; i < rows.length; i++) {
+						var index = $('#merchantdata').datagrid('getRowIndex',
+								rows[i]);
+						$('#merchantdata').datagrid('deleteRow', index);
+					}
+				}
+				if (result.result == 0) {
+					$.Loading.error(result.message);
+				}
+			},
+			error : function(e) {
+				alert("出现错误 ，请重试");
+			}
+		};
+		$('#merchantform').ajaxSubmit(options);
+	}
+	
+	//编辑商户信息
+	function append(id) {
+		var map = {}; 
+		map["href"] = "${ctx}/b2b2c/admin/merchant!merchantEdit.do?merchantId="+id,
+		map["formId"] = "#editForm";
+		map["url"] = "${ctx}/b2b2c/admin/merchant!saveMerchantEdit.do?ajax=yes";
+		map["title"] = "商家信息修改";
+		map["divDialog"] = "#divdia";
+		map["gridreload"] = "#merchantdata";
+
+		addDialog(map);
+	} 
+		
+	//商户注册
+	function goRegister(id) {
+		var map = {}; 
+		map["href"] = "${ctx}/b2b2c/admin/merchant!showMermberRegister.do?merchantId="+id,
+		map["formId"] = "#registerForm";
+		map["url"] = "${ctx}/b2b2c/admin/merchant!mermberRegister.do?ajax=yes";
+		map["title"] = "商家注册";
+		map["divDialog"] = "#divdia";
+		map["gridreload"] = "#merchantdata";
+
+		addDialog(map);
+	} 
+	
+	function addDialog(map) {
+		$(map["divDialog"]).show();
+		$(map["divDialog"]).dialog({
+			title : map["title"],
+			width : 800,
+			height : 550,
+			top:10,
+			closed : false,
+			cache : false,
+			href : map["href"],
+			modal : true,
+			buttons : [ {
+				text : '保存',
+				iconCls : 'icon-ok',
+				handler : function() {
+					var savebtn = $(this);
+	　　				var disabled=savebtn.hasClass("l-btn-disabled");
+	　　				if(!disabled){
+						submitForm(map,savebtn);
+					}
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					$(map["divDialog"]).dialog('close');
+				}
+			} ]
+		});
+	}
+	
+	function submitForm(map,savebtn) {
+		var formflag = $(map["formId"]).form().form('validate');
+		if (formflag) {
+			$.Loading.show("正在保存请稍后...");
+			savebtn.linkbutton("disable");
+			var options = {
+				url : map["url"],
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$.Loading.success(result.message);
+						$(map["divDialog"]).dialog('close');
+						$(map["gridreload"]).datagrid('reload');
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					savebtn.linkbutton("enable");
+				},
+				error : function(e) {
+					$.Loading.error("出现错误 ，请重试");
+					savebtn.linkbutton("enable");
+				}
+			};
+			$(map["formId"]).ajaxSubmit(options);
+		}
+	}
+	
+</script>
+<#include '/admin/footer.html' >

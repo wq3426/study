@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=1280">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content=""> 
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <style>
+    .recipient li{width: 300px;padding: 10px;float: left;margin-left: 10px;margin-top: 10px;}
+    .method li{padding: 5px 20px;float: left;margin-left: 10px;margin-top: 10px;}
+
+    .order_information table thead tr th{text-align: center; border-bottom:3px solid #e2effc;}
+    .order_information table {margin-top: 10px;background-color: #fbfdff; font-size: 14px;color: #666666;}
+    .order_information table tbody tr td{text-align: center;}
+    .order_information table tbody tr td img{text-align: center;    width: 110px;  height: 70px;   padding: 10px;  border: 1px solid #dddddd;float: left;}
+    .order_information table tbody tr {border: 1px solid #dddddd; margin-top: 10px;}
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="box">
+        <a href="${ctx}/cardorder/index.html"><div class="logo w250 h70"></div></a>
+        <div class="nav ">
+            <ul class="fl tc">
+                <li class="fl ml160"><a href="${ctx}/cardorder/index.html">首页</a></li>
+                <li class="fl selected"><a href="${ctx}/cardorder/selecting.html">立即购买</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/order_list.html">订单查询</a></li>
+                <li class="fl"><a href="${ctx}/cardorder/about_us.html">关于我们</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<#assign zxOrderInfoTag=newTag("zxOrderInfoTag")/>
+<#assign orderInfo=zxOrderInfoTag("'mobile':'${mobile!''}', 'order_id':'${order_id!''}'")/>
+<div class="box cb ">
+	<form action="${ctx}/api/b2b2c/storeApi!payOrder.do" id="payOrder" method="POST" target="_blank">
+		<input type="hidden" name="out_trade_no" value="${orderInfo.order_info.order_sn}"/>
+		<input type="hidden" name="subject" value="${orderInfo.order_info.goods_name}"/>
+		<!-- <input type="hidden" name="total_fee" value="${orderInfo.order_info.total_price}"/> -->
+		<input type="hidden" name="total_fee" value="0.01"/>
+		<input type="hidden" name="body" value="${orderInfo.order_info.intro}"/>
+		<input type="hidden" name="access_type" value="1">
+	</form>
+	
+	<input type="hidden" id="pay_type" value="2">
+	
+    <div class="ff14">
+        <div class="lh50"><b>请核对订单信息</b></div>
+        <div class="p10 bde7">
+            <p class="lh25">收货人信息</p>
+            <div class="nh120 ">
+                <ul class="recipient of pb20">
+                    <li class="jb_yellow">
+                        <p>${orderInfo.order_info.receive_user!''} <span class="fr cc4" onclick="editItemContent(this)">编辑</span></p>
+                        <p class="ro">${orderInfo.order_info.address!''}</p>
+                        <p>${orderInfo.order_info.user_telephone!''}</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="bb"></div>
+            <p class="lh25 mt10">选择支付方式</p>
+            <div class=" of pb20">
+                <ul class="method ">
+                	<li class="jb_yellow" value="2">
+                        <p>微信</p>
+                    </li>
+                    <li class="bdc0" value="1">
+                        <p>支付宝</p>
+                    </li>
+                    <li class="bdc0" style="display:none">
+                        <p>银联卡</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="bb"></div>
+            <p class="lh25 mt10">订单信息</p>
+            <div class="order_information">
+                <table class="m0">
+                    <thead>
+                        <tr>
+                            <th colspan="" class="w700 lh40">订单详情</th>
+                            <th class="w150">数量</th>
+                            <th class="w150">小计</th>
+                        </tr>
+                    </thead>
+                </table>
+                <table>
+                    <tbody>
+                    <tr>
+                        <td colspan="" class="w700 tl">
+                            <div class="m10 dip">
+                                <img src="${orderInfo.order_info.ta_spec_image!''}" alt="" >
+                                <div class="w250 dip ml10 fl">
+                                    <p class="f16 fb c333">${orderInfo.order_info.goods_name!''}</p>
+                                    <p>${orderInfo.order_info.intro!''}</p>
+                                </div>
+                                <div class="w250 dip ml20 ">
+                                    <p>规格：${orderInfo.order_info.gg_spec_value!''}</p>
+                                    <p>图案：${orderInfo.order_info.ta_spec_value!''}</p>
+                                </div>
+
+                            </div>
+                        </td>
+                        <td class="w150">${orderInfo.order_info.order_count!''}</td>
+                        <td class="w150"><span class="cred">&yen;${orderInfo.order_info.total_price!''}</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="tr of bgf9 mt10 p15">
+            <div class="w150 fr ">
+                <ul class="fl">
+                    <li>商品金额：</li>
+                    <li>运费：</li>
+                    <li>应付金额：</li>
+                </ul>
+                <ul class="fl">
+                    <li>&yen;${orderInfo.order_info.total_price!''}</li>
+                    <li>&yen;0</li>
+                    <li class="cred">&yen;${orderInfo.order_info.total_price!''}</li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <div>
+                <span class=" info cb mr50 mt10 fr" onclick="toPayOrder();">立即支付</span>
+                <p class="mt10 fl" style="color: #b28850 ;background-color: #fcf8e2;border: 1px solid #fbeed4;padding: 5px 10px;">快递通知：春节期间暂不发货，2月6日后正常发货，谢谢理解！</p>
+            </div>
+            <div class="cb c999">
+                <p>温馨提示：</p>
+                <p>请确认您购买信息，提交后将不能更改；</p>
+                <p>本纪念卡一经售出除质量外概不退换；</p>
+                <p>本纪念卡可在加入全国交通一卡通城市的公交、地铁等公共交通上进行使用，目前仅限在发卡地区进行充值。</p>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<footer class="tc f14 mt30">
+    版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+</footer>
+<script>
+
+    $(".method li").click(function () {
+    	$("#pay_type").val($(this).val());
+        $(this).removeClass("bdc0").addClass("jb_yellow").siblings().removeClass("jb_yellow").addClass("bdc0");
+    });
+    //编写地址
+    function editItemContent(item){
+        var id = $(item).attr("id");
+        if($(item).text()=="编辑"){
+            var item_content = $(item).parent().parent().find(".ro")[0].innerText;
+
+            $(item).parent().parent().find(".ro").empty();
+            $(item).parent().parent().find(".ro").append("<textarea style='max-width: 300px;min-height: 63px;' type='text' class='bdda w300' id='price_input_"+ id +"' value='"+item_content+"'>"+item_content+"</textarea>");
+            $(item).text("保存");
+            $(item).attr("class","fr cc4");
+        }else if($(item).text()=="保存"){
+        	var order_id = '${order_id}';
+            var item_content = $("#price_input_"+id).val();
+            if(item_content=="" || item_content==null){
+                alert("请输入正确的收货地址");
+                return;
+            }
+			
+            $.ajax({
+                url : "${ctx}/api/b2b2c/storeApi!editZxOrderAddress.do?order_id="+order_id+"&address="+item_content,
+                type : "POST",
+                dataType : "json",
+                success : function(result){
+                    alert(result.message);
+                    $(item).parent().parent().find(".ro").empty();
+                    $(item).parent().parent().find(".ro").append(item_content);
+                    $(item).text("编辑");
+                    $(item).attr("class","fr cc4");
+                    //location.reload();
+                },
+                error : function(){
+                    alert("请求出错");
+                }
+            });
+        }
+    }
+    
+    //订单支付
+    function toPayOrder(){
+    	var pay_type = $("#pay_type").val();
+
+    	if(pay_type == 1){
+    		$("#payOrder").submit();
+    	}
+    	if(pay_type == 2){
+    		window.location.href = "${ctx}/cardorder/weChat_payment.html?order_sn=${orderInfo.order_info.order_sn}";
+    	}
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<#include '/admin/header.html' >
+
+	<style>
+		.text_b{width: 191px;height: 28px;background-color: #E9E9E9;
+			border-right:1px solid #C8C8C8;border-radius: 3px;}
+		.form{border: 1px solid #c8c8c8;width: 1200px; margin: auto;
+			height: 200px; background-color: #ffffff;}
+		.list{width: 1200px;  background-color: #ffffff; border: 1px solid #C8C8C8;
+				text-align: center; margin: auto;margin-top: 20px; }
+		.list table { border-collapse: collapse;}
+		.list th,.list td{ border: 1px solid #C8C8C8; }
+	</style>
+	<script type="text/javascript" src="${ctx}/themes/b2b2cv2/js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="${ctx}/themes/b2b2cv2/js/jquery.form.js"></script>
+
+<div class="main">
+	<div style="clear:both; font-size: 14px;color: #ABABAB;" >
+		<form class="form" id="fileUploadForm">
+		<table>
+			<tbody style="line-height: 40px;">
+				<tr>
+					<td>更新版本号：</td>
+					<td><input type="text" class="text_b" id="vNumber" name="vNumber"></td>
+				</tr>
+				<tr>
+					<td>上传更新文件：</td>
+					<td><input type="file" id="app" name="app"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><span id="btn" class="button">确认上传</span></td>
+				</tr>
+			</tbody>
+		</table>
+		</form>
+	</div>
+</div>
+
+<div class="main">
+	<form id="appform">
+		<div class='buttonArea'>
+			<div style="float:left">
+				<!-- <a href="javascript:void(0)" class="button blueButton" onclick="append()">添加</a> -->
+				<a href="javascript:void(0)" class="button" onclick="del()">删除</a>
+			</div>
+			<span style="float: right;"> 
+				<span id="simpleSearch">
+					<a href="javascript:void(0)" class="button b_fr" 
+					data-options="plain:true" onclick="searchBrand()">搜索</a>
+					<input id="keyword" class="input_text b_fr mr5" type="text" value="" size="30"
+					placeholder="请输入模糊关键字" name="searchKeyWord"> 
+				</span>
+			</span>
+		</div>
+		<div class="clear height10"></div>
+		<div class="shadowBoxWhite tableDiv">
+			<table class="easyui-datagrid"
+				data-options="url:'app-update!listJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+				pagination="true" id="appdata">
+				<thead>
+					<tr>
+						<th data-options="field:'app_id',checkbox:true,width:100"></th>
+						<th data-options="field:'version_no',width:200">版本号</th>
+						<th data-options="field:'app_url',width:300">文件路径</th>
+						<th data-options="field:'action',width:25" formatter="formatOperation">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</form>
+	<div id="addBrand" ></div>
+	
+	<input type="hidden" id="versionNoArray" value="${versionNoArray}"/>
+
+	<script type="text/javascript">
+		$("#btn").click(function(){
+			var vNumber = $.trim($("#vNumber").val());
+			var appFile = $("#app").val();
+
+			if(vNumber == ""){
+				alert("请输入版本号");
+				return;
+			}
+			var versionNoArray = $("#versionNoArray").val();
+			if(versionNoArray.indexOf(vNumber) != -1){
+				alert("版本号重复，请重新输入");
+				return;
+			}
+			if(appFile == ""){
+				alert("请选择要上传的文件");
+				return;
+			}
+			$.ajaxFileUpload( {  
+		        url : '${ctx}/core/admin/app-update!updateApp.do?vNumber='+vNumber,//用于文件上传的服务器端请求地址 
+		        type : "POST",
+		        secureuri : false,//一般设置为false  
+		        fileElementId : 'app',//文件上传控件的id属性  
+		        dataType : 'json',//返回值类型 一般设置为json
+		        success : function(data, status) //服务器成功响应处理函数  
+		        {  
+		        	var result = data.result;
+		        	if(result == 0){
+		        		alert(data.message);
+		        	}else{
+		        		alert("文件上传成功，文件路径：" + data.data);
+		        		location.reload();
+		        	}
+		        },  
+		        error : function(data, status, e)//服务器响应失败处理函数  
+		        {  
+		            alert(e);
+		        }  
+		    });
+		});
+	
+		$("#appdata").datagrid({"onLoadSuccess":function(data){
+			
+			var rows = $(this).datagrid("getRows");
+			for(var i=0; i<rows.length; i++){
+				var index = $(this).datagrid("getRowIndex", rows[i]);
+				var flag = rows[i].release_flag;
+				if(flag == 1){//在数据加载后，将发布版本高亮
+					$(this).datagrid("selectRow",index);
+					break;
+				}
+			}
+		    
+		}}).datagrid("loadData", "");
+		
+		function release(app_id){
+			$.ajax({
+				url : "app-update!releaseApp.do?release_app_id="+app_id,
+				type : "post",
+				dataType : "json",
+				success : function(data){
+					if (data.result == 1) {
+						$.Loading.success('版本发布成功');
+						$('#appdata').datagrid('reload');
+					}
+					if (data.result == 0) {
+						$.Loading.error(result.message);
+					}
+				},
+				error : function(){
+					$.Loading.error("出现错误，请重试");
+				}
+			});
+		}
+	
+		var flag=false;
+	
+		function append(brandid) {
+			var map = {}; // Map map = new HashMap();
+			if (!brandid) {
+				map["href"] = "brand!add.do";
+				map["formId"] = "#brandForm";
+				map["url"] = "brand!save.do?ajax=yes";
+				map["title"] = "添加品牌";
+			} else {
+				map["href"] = "brand!edit.do?brandId=" + brandid;
+				map["formId"] = "#brandEditForm";
+				map["url"] = "brand!saveEdit.do?ajax=yes";
+				map["title"] = "修改品牌";
+			}
+			map["divDialog"] = "#addBrand";
+			map["gridreload"] = "#branddata";
+
+			addDialog(map);
+		}
+		function addDialog(map) {
+			$(map["divDialog"]).show();
+			$(map["divDialog"]).dialog({
+				title : map["title"],
+				width : 800,
+				top:10,
+				height : 400,
+				closed : false,
+				cache : false,
+				href : map["href"],
+				modal : true,
+				onLoad : function() {
+					if(flag){
+						UE.getEditor('editor').destroy();
+					}
+					var ue = UE.getEditor('editor', {
+					    zIndex: 99999
+					});
+					flag = true;
+				},
+				buttons : [ {
+					text : '保存',
+					iconCls : 'icon-ok',
+					handler : function() {
+						 var savebtn = $(this);
+		　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+		　　				 if(!disabled){
+							 submitForm(map,savebtn);
+			　　			 }
+					}
+				}, {
+					text : '取消',
+					handler : function() {
+						$(map["divDialog"]).dialog('close');
+					}
+				} ]
+			});
+		}
+		function submitForm(map,savebtn) {
+			var formflag = $(map["formId"]).form().form('validate');
+			if (formflag) {
+				$.Loading.show("正在保存请稍后...");
+　				savebtn.linkbutton("disable");
+				var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) {
+						if (result.result == 1) {
+							$.Loading.success(result.message);
+							$(map["divDialog"]).dialog('close');
+							$(map["gridreload"]).datagrid('reload');
+						}
+						if (result.result == 0) {
+							$.Loading.error(result.message);
+						}
+						savebtn.linkbutton("enable");
+					},
+					error : function(e) {
+						$.Loading.error("出现错误 ，请重试");
+						savebtn.linkbutton("enable");
+					}
+				};
+				$(map["formId"]).ajaxSubmit(options);
+			}
+		}
+
+		//清空
+		function clearForm(map) {
+			$(map["formId"]).form('clear');
+		}
+		
+		//操作
+		function formatOperation(value, row, index) {
+			var val = "当前发布版本";
+			if(row.release_flag != 1){
+				val = "<a title='发布版本' href='javascript:void(0);' onclick='release(" + row.app_id + ")'>发布</a>";
+			}
+			return val;
+		}
+
+		//删除
+		function del() {
+			var rows = $('#appdata').datagrid("getSelections");
+			if (rows.length < 1) {
+				$.Loading.error('请选择要删除的app版本记录');
+				return;
+			}
+			if (!confirm("确认要将这些版本记录删除吗？")) {
+				return;
+			}
+			var options = {
+				url : "app-update!delete.do?ajax=yes",
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$.Loading.success('删除成功');
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					location.reload();
+				},
+				error : function(e) {
+					$.Loading.error("出现错误，请重试");
+				}
+			};
+			$('#appform').ajaxSubmit(options);
+		}
+		
+		function searchBrand(){
+			var keyword = $("#keyword").val();
+
+			$("#appdata").datagrid('load', {
+				 keyword:keyword
+		    });
+		}
+	</script>
+	<#include '/admin/footer.html' >

@@ -1,0 +1,135 @@
+<#include '/admin/header.html' >
+    <#assign dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+        <!--提现申请-->
+        <style>
+            .input_text {  width: 150px;  }
+            .main {  width: 1200px;  }
+            .shadowBoxWhite{width: 100%;background-color: #ebebeb;}
+            .shadowBoxWhite table {width: 100%;border-collapse: collapse;margin-top: 20px;    background: #fff;}
+            .shadowBoxWhite table tbody{width: 100%}
+            .shadowBoxWhite table tbody tr{width: 30%}
+            .shadowBoxWhite table thead tr th{background-color:#f1f1f1;border:1px solid #c2c2c2;padding-left: 10px; }
+            .shadowBoxWhite table tbody tr td{width: 40%;border: 1px solid #c2c2c2; padding-bottom: 10px;}
+            .shadowBoxWhite table tbody tr td p{font-size: 16px; border-bottom:1px solid #c2c2c2; margin: 0px 10px;padding: 10px 0px;  }
+            .shadowBoxWhite table tbody tr td ul li{margin-top: 10px;width: 44%;float: left;margin-left: 3%}
+            .shadowBoxWhite table tbody tr td ul li span{color: #00a0e9;}
+            .pagination{ text-align: center;margin-top: 20px;}
+            .tac{text-align: center;}
+			.page {float: right;margin: 20px 10px 20px 0px;  display: inline;}
+			.page span {  background-color: #fafafa;  border: 1px solid #e6e6e6;  color: #aaa;  display: block;  font: 14px/20px "microsoft yahei";  min-width: 20px;  padding: 8px;  position: relative;  text-align: center;  z-index: 1;  float: left;  }
+			.page ul {  float: left;  display: inline;}
+			.page ul li {  float: left;  display: inline;}
+			.page ul li .selected {  color: #ec4f4a;  font-size: 16px;  font-weight: 600;  vertical-align: middle;}
+			.page ul li a {  background-color: #fafafa;  border: 1px solid #e6e6e6;  color: #aaa;  display: block;  font: 14px/20px "microsoft yahei";  min-width: 20px;  padding: 8px;  position: relative;  text-align: center;  z-index: 1;  }
+			a:link, a:visited, a:active { text-decoration: none;  }
+		</style>
+        <div id="apply_detail" style="display: none; overflow:hidden"></div>
+        <div id="loading"></div>
+        <div class="main">
+            <div class='buttonArea' style="height: auto">
+		        <span style="float: right;">
+		 	        <span id="simpleSearch">
+			 	    <input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;"
+                       placeholder="请输入店铺名称" name="searchKeyWord">
+				    <a   href="javascript:showPage('1');"  class="easyui-linkbutton" id="search" data-options="plain:true"
+                    >搜索</a>
+			        </span>
+		        </span>
+            </div>
+            <div class="clear height10"></div>
+            <div id = "listInvoice" class="shadowBoxWhite">
+            </div>
+            <div class="pagination">	
+            </div>
+        </div>
+		<script type = "text/javascript" src = "${ctx}/themes/b2b2cv2/js/pagerUtils.js" ></script>
+        <script type="text/javascript">
+        $(function(){
+        	showPage(1);
+        });
+        
+        
+    	function showPage(pageNo){
+    		var store_name = $("#searchKeyword").val();
+    		var data = {
+    			"store_name":store_name,
+    			"pageNo":pageNo
+    		};
+    		$.ajax({
+    			type : "post",
+    			data : data,
+    			url : "${ctx}/b2b2c/admin/adminInvoice!listJSON.do",
+    			success : function(res) {
+    				listJSON(res);
+    			},
+    			error : function() {
+    				alert("发票处理显示失败");
+    			}
+    		});
+    	}
+    	
+    	function listJSON(res){
+    		/*后台数据分页处理*/
+    		var json = $.parseJSON(res);
+    		var dd =$("#listInvoice");
+    		if(json.data.totalCount == 0 || json.result == 0){
+    			dd.html("<p class=\"no_blank\">暂无符合条件的数据记录</p>");
+    		}else{
+    			var result = json.data.result;
+    			var html = "";
+    			for(var i = 0 ; i < result.length ; i++){
+    				var order_count = result[i].order_count;
+    				var settlement_count = result[i].settlement_count;
+    				if(order_count =="null" || order_count==null){
+    					order_count=0;
+    				}
+    				if(settlement_count == "null" || settlement_count ==null){
+    					settlement_count =0;
+    				}
+    				html+="<table>";
+    				html+="<thead>";
+    				html+="  <tr>";
+    				html+="     <th colspan='3'>经销商名称: "+result[i].store_name+"</th>";
+    				html+="  </tr>";
+    				html+="  </thead>";
+    				html+="  <tbody>";
+    				html+="     <tr>";
+    				html+="        <td>";
+    				html+="             <p>昨日统计</p>";
+    				html+="            <ul>";
+    				html+="               <li>昨日订单数: <span>"+order_count+"</span></li>";
+    				html+="               <li>昨日结算数: <span>"+settlement_count+"</span></li>";
+    				html+="                <li>昨日结算金额: <span>"+result[i].settlement_money+"</span></li>";
+    				html+="             </ul>";
+    				html+="          </td>";
+    				html+="           <td>";
+    				html+="              <p>账户概况</p>";
+    				html+="           <ul>";
+    				html+="                  <li>待服务订单金额: <span>"+result[i].no_service_money+"</span></li>";
+    				html+="                  <li>经销商账户余额: <span>"+result[i].balance+"</span></li>";
+    				html+="                   <li>待结算金额: <span>"+result[i].no_settlement_money+"</span></li>";
+    				html+="                   <li>待结算发票金额: <span>无</span></li>";
+    				html+="                </ul>";
+  					html+="           </td>";
+    				html+="           <td class=\"tac\">";
+    				html+="              <a href=\"javascript:void(0)\"  class=\"button \" data-options=\"plain:true\">发票明细</a>";
+    				html+="              <a href=\"javascript:void(0)\" onclick='newTab(\"本期\",\"${ctx}/b2b2c/admin/adminReckoning!thisPeriodList.do?store_name="+result[i].store_name+"&store_id="+result[i].store_id+"\")' class=\"button \" data-options=\"plain:true\">账单明细</a>";
+    				html+="          </td>";
+    				html+="        </tr>";
+    				html+="    </tbody>";
+    				html+=" </table>";
+    			}
+    			var currentPageNo = json.data.currentPageNo;
+    			var pageSize = json.data.pageSize;
+    			var totalCount = json.data.totalCount;
+    			var fuc = "javascript:showPage";
+    			html+=pagerUtils(currentPageNo,pageSize,totalCount,fuc);
+    			dd.html(html);
+    		}
+    	}     
+        </script>
+
+        <div id="log"></div>
+
+        <#include '/admin/footer.html' >
+

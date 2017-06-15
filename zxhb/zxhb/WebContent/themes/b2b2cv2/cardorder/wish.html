@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--关于我们-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=1280">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <style>
+        .top{position: relative;  top: -140px;  left: 15%;}
+        .mt40{margin-top: 40px!important;}
+        .footer_us {
+            line-height: 35px;
+            padding: 20px 0px;
+            color: #999;
+            width: 100%;
+            background-color: #eeeeee;
+        }
+        .w1000{width: 1000px;margin: auto;}
+    </style>
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+</head>
+
+<body >
+<header>
+    <div class="box">
+        <a href="index.html"><div class="logo w250 h70"></div></a>
+        <div class="nav ">
+            <ul class="fl tc">
+                <li class="fl ml160"><a href="${ctx}/cardorder/index.html">首页</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/selecting.html">立即购买</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/order_list.html">订单查询</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/about_us.html">关于我们</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+	
+	<input type="hidden" id="order_sn" 
+		<#if dataObj??>
+			value="${dataObj.order_sn!''}"
+		<#elseif order_sn??>
+			value="${order_sn!''}"
+		</#if>
+	/>
+	<input type="hidden" id="receive_user" 
+		<#if dataObj??>
+			value="${dataObj.receive_user!''}"
+		<#elseif receive_user??>
+			value="${receive_user!''}"
+		</#if>
+	/>
+	<input type="hidden" id="user_telephone" 
+		<#if dataObj??>
+			value="${dataObj.user_telephone!''}"
+		<#elseif user_telephone??>
+			value="${user_telephone!''}"
+		</#if>
+	/>
+    <input type="hidden" id="status" 
+    	<#if dataObj??>
+    		value="${dataObj.status!''}"
+    	<#elseif status??>
+			value="${status!''}"
+    	</#if>
+    />
+
+<div id="background" style="position:relative;z-index:-1;width:100%;height: auto;top:0px;left:0px;">
+    <img src="${ctx}/themes/b2b2cv2/cardorder/images/with_top.png" width="100%" height="100%"/>
+</div>
+<div class="tc m0 w1000">
+    <p class="f18 lh70 fb">2017年伊始，许个旅程心愿吧！</p>
+    <p class="tl t2">西藏一个神秘地域，它有震撼心灵的神山圣湖，广袤无边的荒漠草原，濒临灭绝的珍禽异草，虔诚的信徒，淳朴的藏民，飘着酥油香味的风...这一切令人神往，我们邀您去西藏，您最想领略哪里风光？</p>
+    <p class="lh50"><b>许愿人：<input type="text" id="wisher" style="border: 0px;border-bottom: 1px solid #333;"></b><b style="margin-left: 150px;">联系方式：<input type="text" id="mobile" style="border: 0px;border-bottom: 1px solid #333;"></b></p>
+</div>
+<div class="m0 w1000 bde7 tl wish_list" >
+    <p class="mt15">＊最想去的地方（最多可选3项）</p>
+    <p><input type="checkbox" name="place" value="1">布达拉宫</p>
+    <p><input type="checkbox" name="place" value="2">珠穆朗玛峰</p>
+    <p><input type="checkbox" name="place" value="3">纳木错</p>
+    <p><input type="checkbox" name="place" value="4">大昭寺</p>
+    <p><input type="checkbox" name="place" value="5">然乌湖</p>
+    <p><input type="checkbox" name="place" value="6">古格王朝遗址</p>
+    <p><input type="checkbox" name="place" value="7">羊卓雍错</p>
+    <p><input type="checkbox" name="place" value="8">罗布林卡</p>
+    <p><input type="checkbox" name="place" value="9">札什伦布寺</p>
+    <p><input type="checkbox" name="place" value="10">鲁朗</p>
+</div>
+<div class=" w1000 tc " >
+    <div class="wish_click">许愿</div>
+</div>
+
+<div class="tc f14 footer_us mt30  lh35">
+    <div class="w1000 tl"><a >友情链接</a>
+    <p class="pb15"><a href="http://www.cttic.cn/index.php?m=content&c=index&a=show&catid=84&id=920/">北京中交金卡科技有限公司</a> <a class="pl50px" href="http://www.cttic.cn/">中国交通通信信息中心</a></p></div>
+    <div class="mt20">版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1</div>
+</div>
+<script>
+	$("#wisher").val($("#receive_user").val());
+	$("#mobile").val($("#user_telephone").val());
+
+    var isMob = /^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/;
+
+    //联系电话
+    $('#mobile').blur(function () {
+        var phone = $("#mobile").val();
+        if (isMob.test(phone)) {
+        } else {
+            alert("请输入正确的手机号");
+        }
+    });
+
+    $(".wish_click").click(function () {
+        var wisher = $("#wisher").val();
+        if (wisher == "" || wisher == null) {
+            alert("请填写许愿人名称！");
+            return;
+        }
+
+        var phone = $("#mobile").val();
+        if (phone == "" || phone == null) {
+            alert("联系方式不能为空！");
+            return;
+        }
+        
+        if(!isMob.test(phone)){
+        	alert("请输入正确的手机号");
+        	return;
+        }
+
+//       验证选取地区的个数
+        var checks = document.getElementsByName("place");
+        var n = 0;
+        for (var i = 0; i < checks.length; i++) {
+            if (checks[i].checked) {
+                n++;
+            }
+        }
+        if (n > 3 || n < 1) {
+            alert("最少选1个地方，最多选3个地方。");
+            return;
+        }
+        
+        var wish_items = "";
+        if(checks.length > 0){
+        	for (var i = 0; i < checks.length; i++) {
+                if (checks[i].checked) {
+                    if(wish_items == ""){
+                    	wish_items = checks[i].value;
+                    }else{
+                    	wish_items += "," + checks[i].value;
+                    }
+                }
+            }
+        }
+
+        var order_sn = $("#order_sn").val();
+        $.ajax({
+        	url : "${ctx}/api/b2b2c/storeApi!saveWishes.do?ajax=yes",
+        	type : "POST",
+        	data : "wisher="+wisher+"&wisher_telephone="+phone+"&wish_items="+wish_items+"&order_sn="+order_sn,
+        	async : false,
+        	dataType : "json",
+        	success : function(data){
+        		if(data.result == 1){
+        			alert(data.message);
+           			if(order_sn != ""){
+           				var user_telephone = $("#user_telephone").val();
+                    	var status = $("#status").val();
+               			window.location.href = "${ctx}/cardorder/order_list.html?user_telephone="+user_telephone+"&status="+status;
+               		}else{
+               			window.location.href = "${ctx}/cardorder/index.html";
+               		}
+        		}else{
+        			alert(data.message);
+        		}
+        	},
+        	error : function(){
+        		alert("请求失败");
+        	}
+        });
+
+    });
+</script>
+</body>
+</html>

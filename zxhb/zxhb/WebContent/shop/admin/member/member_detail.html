@@ -1,0 +1,24 @@
+<#include '/admin/header.html' >
+<!--admin会员详情-->
+<div id="member_detail">
+	<div>
+		<ul>
+			<li><b class="fl">头像: </b><img src="${member.face!''}" alt="头像" width="90" height="90"></li>
+			<li><b>昵称:</b>${member.nickname!''}</li>
+			<li><b>姓名:</b>${member.fullname!''}</li>
+			<li><b>手机号:</b>${member.username!''}</li>
+			<li><b>身份证号:</b>${member.idno!''}</li>
+			<li><b>驾龄:</b>${member.drivingyears!''}</li>
+			<li><b>邮箱:</b>${member.email!''}</li>
+			<li><b>年收入:</b>${member.annualincome!''}</li>
+			<li class="online"></li>
+		</ul>
+	</div>
+</div>
+
+<script>
+
+
+</script>
+
+<#include '/admin/footer.html' >

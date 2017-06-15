@@ -1,0 +1,104 @@
+<#include '/admin/header.html' > 
+
+<div class="main" style="background-color: white;">
+	<form id="addForm">
+		<table  width="98%" border="0" cellspacing="0" cellpadding="8">
+			<tr>
+				<th>店铺等级</th>
+				<td><select name="level_id" class="inputSelect valid">
+				<#if storeLevels??>
+					<option value="0">--请选择等级--</option> 
+					<#list storeLevels as lv>
+						<option value="${lv.level_id!''}">${lv.level_name}</option> 
+					</#list>
+				</#if>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<th>订单类型：</th>
+				<td><select name="order_type" class="inputSelect valid">
+					<option value="-1">--请选择订单类型--</option> 
+					<option value="0">经销商-商城</option> 
+					<option value="1">中安-保险</option>
+					<option value="2">经销商-保养</option>
+					<option value="3">中安-商城</option>
+					<option value="4">经销商-保险</option>
+					<option value="5">中安-服务</option>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<th>4S保有客户服务费率：</th>
+				<td><input class="easyui-numberspinner" value="0" data-options="increment:1" style="width:120px;"
+					 name="original_service_rate" id="original_service_rate"
+					data-options="required:true"   maxlength="2" />%
+				</td>
+			</tr>
+		<!-- 	<tr>
+				<th>导流客户服务费率：</th>
+				<td><input class="easyui-numberspinner" value="0" data-options="increment:1" style="width:120px;"
+					id="flow_service_rate"  name="flow_service_rate"
+					data-options="required:true"   maxlength="2"/>%
+				</td>
+			</tr> -->
+			<tr>
+				<th>4S保有客户手续费率：</th>
+				<td><input class="easyui-numberspinner" value="0" data-options="increment:1" style="width:120px;"
+					 name="original_handling_rate" id="original_handling_rate"
+					data-options="required:true"   maxlength="2" />%
+				</td>
+			</tr>
+		 	<!-- <tr>
+				<th>导流客户手续费率：</th>
+				<td><input class="easyui-numberspinner" value="0" data-options="increment:1" style="width:120px;"
+					id="flow_handling_rate"  name="flow_handling_rate"
+					data-options="required:true"   maxlength="2"/>%
+				</td>
+			</tr> -->
+		</table>
+	</form>
+	<div class="buttonWrap fixed">
+		<a id="searchAdvance" class="easyui-linkbutton" onclick="submitForm()"
+			href="javascript:;">保存</a>
+	</div>
+</div>
+<script>
+	function submitForm() {
+		var level_id = $("select[name='level_id']").val();
+		if(level_id==0){
+			alert("请选择店铺等级！");
+			return ;
+		}
+		var order_type = $("select[name='order_type']").val();
+		if(order_type==-1){
+			alert("请选择订单等级！");
+			return ;
+		}
+		var formflag = $("#addForm").form().form('validate');
+		if (formflag) {
+			$.Loading.show("正在添加......");
+			var options = {
+				url : "${ctx}/b2b2c/admin/storerate!save.do?ajax=yes",
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$.Loading.success(result.message);
+						parent.CloseTabByTitle("费率添加");
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+				},
+				error : function(e) {
+					alert("出现错误 ，请重试");
+					$.Loading.success(result.message);
+				}
+			};
+			$("#addForm").ajaxSubmit(options);
+		}
+	}
+</script>
+
+<#include '/admin/footer.html' >

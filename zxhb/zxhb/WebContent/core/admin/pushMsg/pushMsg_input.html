@@ -1,0 +1,52 @@
+<style>
+.input_text {
+	width: 200px;
+}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<form id="addForm" method="post" class="validate">
+			<input type="hidden" name="pushMsg.flag" value="0"/>
+			<input type="hidden" name="pushMsg.status" value="0"/>
+			<table width="100%">
+				<tr>
+					<th>消息标题：</th>
+					<td><input type="text" name="pushMsg.title" id="title" maxlength="15" placeholder="标题最大长度为15字符" class="easyui-validatebox input_text" isrequired="true"></input></td>
+				</tr>
+				<tr>
+					<th>消息类型：</th>
+					<td>
+						<select class="easyui-validatebox" name="pushMsg.push_id">
+							<#if pushMsgTypeList ??>
+								<#list pushMsgTypeList as list>
+									<option value="${list.push_id }">${list.push_type }</option>
+								</#list>
+							</#if>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>店铺名称：</th>
+					<td>
+						<select class="easyui-validatebox" name="pushMsg.storeId">
+							<#if storeList ??>
+									<option value="0">所有店铺</option>
+								<#list storeList as list>
+									<option value="${list.store_id }">${list.store_name }</option>
+								</#list>
+							<#else>
+								<option value="0">所有店铺</option>
+							</#if>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>消息内容：</th>
+					<td>
+						<script id="editor" name="pushMsg.msg" type="text/plain" style="height:200px;width:350px;"></script>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,104 @@
+<style>
+	.input_text {
+		width: 180px;
+	}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="addForm" method="post" class="validate">
+			<table width="100%">
+				<tr>
+					<th style="width:200px">首字母：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" id="car_capital" name="carmodel.capital"/>
+					</td>
+				</tr>
+				<tr>
+					<th>汽车品牌：</th>
+					<td>
+						<select class="input_text" name="carmodel.brand_id" id="car_brand">
+							<option value="0">----请选择品牌----</option>
+							<#list carbrandList as brand>
+							<option value="${brand.brand_id}">${brand.name}</option> 
+							</#list>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>类型：</th>
+					<td>
+						<select class="input_text" name="carmodel_type" id="car_type">
+							<option value="0">----请选择类型----</option>
+							<option value="1">国产</option>
+							<option value="2">进口</option> 
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>变速箱类型：</th>
+					<td>
+						<select class="input_text" name="carmodel.gearboxtype" id="car_gearboxtype">
+							<option value="0">----请选择类型----</option>
+							<option value="1">手动</option>
+							<option value="2">自动</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>车系：</th>
+					<td colspan="3">
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.series" id="car_series"/>
+					</td>
+				</tr>
+				<tr>
+					<th>汽车年款：</th>
+					<td colspan="3">
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.nk" id="car_nk"/>年
+					</td>
+				</tr>
+				<tr>
+					<th>销售名称：</th>
+					<td colspan="3">
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.sales_name" id="car_salesName"/>
+					</td>
+				</tr>
+				<tr>
+					<th>车型图片:</th>
+					<td>
+						<input type="file" class="input_text" data-options="required:true"  name="data" id="car_modelimage"/>
+					</td>
+				</tr>
+				<tr>
+					<th>核定载客数：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.seats" id="car_seats"/>座
+					</td>
+				</tr>
+				<tr>
+					<th>排量：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.discharge" id="car_discharge"/>
+					</td>
+				</tr>
+				<tr>
+					<th>新车购置价：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.price" id="car_price"/>万元
+					</td>
+				</tr>
+				<tr>
+					<th>保养间隔里程：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.repairinterval" id="car_repairinterval"/>公里
+					</td>
+				</tr>
+				<tr>
+					<th>保养间隔时间：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodel.repairintervaltime" id="car_repairintervaltime"/>个月
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

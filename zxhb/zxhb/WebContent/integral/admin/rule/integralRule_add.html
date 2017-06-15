@@ -1,0 +1,47 @@
+<style>
+.input_text, .lvPrice, .ipt{
+    border: 1px solid #D7D7D7;
+    border-radius: 3PX;
+    padding: 7px 0 7px 5px;
+    line-height: 14PX;
+    font-size: 12px;
+    display: inline-block;
+    width: 300px;
+}
+</style>
+<div class="easyui-panel" style="border-style:none;" >
+	<div style="padding: 10px 40px 10px 30px;text-align:right;">
+			<form id="integralForm" method="post" class="validate">
+					<div style="margin-top:10px"></div>
+					<div style="margin-top:10px">
+					积分规则内容：
+						<input class="easyui-validatebox input_text" type="text"  name="integral.integral_ruleContent"  autocomplete='off'></input>
+					</div>
+					<div style="margin-top:10px">
+					积分值：
+						<input class="easyui-validatebox input_text" type="text"  name="integral.integral_value"  autocomplete='off'></input>
+					</div>
+					<div style="margin-top:10px" id="isSetIntegralUp">
+					是否设置积分上限：
+						<select  style="width: 305px;" class="input_text" name="integral.isSet_integralUp"  onchange="checkField(this.value)">
+								<option  value="0">否</option> 
+								<option  value="1">是</option> 
+						</select>
+					</div>
+			</form>
+		</div>
+</div>
+<script>
+	function checkField(value){
+		if(value == 1){
+			$("#isSetIntegralUp").nextAll().empty();
+			$("#isSetIntegralUp").after("<div style='margin-top:10px'>"+
+										"积分上限："+
+											"<input type='text' class='input_text' name='integral.integral_upValue'  autocomplete='off'/>"+
+										"</div>");
+		}else{
+			$("#isSetIntegralUp").nextAll().empty();
+		}
+	}
+	
+</script>

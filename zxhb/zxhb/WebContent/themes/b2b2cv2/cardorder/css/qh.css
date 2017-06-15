@@ -1,0 +1,14 @@
+@charset "utf-8";
+/* CSS Document */
+.main_visual{height:550px; overflow:hidden;position:relative;}
+.main_image{height:550px;overflow:hidden;position:relative;}
+.main_image ul{width:9999px;height:550px;overflow:hidden;position:absolute;top:0;left:0}
+.main_image li{float:left;width:100%;height:550px;}
+
+
+div.flicking_con{position:absolute; text-align:center; bottom:56px;left:50%;z-index:999;width:300px;height:21px;margin:0 0 0 -150px;}
+div.flicking_con a{ display:inline-block !important;width:24px;height:4px;margin:0 5px;padding:0;background: url(../images/gt1.png) center center no-repeat; text-indent:-1000px}
+div.flicking_con a.on{background: url(../images/gt2.png) center center no-repeat;}
+#btn_prev,#btn_next{z-index:11111;position:absolute;display:block;width:56px!important;height:56px!important;top:50%;margin-top:-72px;display:none;}
+#btn_prev{background: no-repeat left top;left:0px;}
+#btn_next{background: no-repeat right top;right:0px;}

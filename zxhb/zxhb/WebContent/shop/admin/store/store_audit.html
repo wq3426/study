@@ -1,0 +1,395 @@
+<!-- admin经销商审核页面 -->
+<#include '/admin/header.html' >
+    <style>
+        .main {
+            padding: 0px;
+        }
+        .main_box{    background-color: #fff;  margin: 15px;border: 1px solid #999;}
+        .logo{width: 130px;height: 70px;}
+        .carded{ width: 140px; height: 80px;}
+        .chartered{width:120px;height: 170px }
+        .licence{ width: 240px;height: 160px;}
+        .left_td{  width: 200px;text-align: right;padding-right: 10px;display: inline-block;float: left;}
+        .herd{  height: 30px;line-height:30px;background-color: #eaeaea;padding-left: 20px; border: 1px solid #999;border-left: 0px;border-right: 0px; font-weight: 600;}
+        .bt0{border-top: 0px;}
+        .main_box table{padding: 10px 0;}
+        .main_box input[type="text"]{border: 1px solid #999;width: 250px;height: 20px;}
+        .span_red{color: red;}
+		.dbn{display: none;}
+		.dbk{display: block;}
+		.ml220{margin-left: 220px;}
+    </style>
+    <div class="main" style="background-color: white;">
+        <div class="easyui-panel" style="border-style: none;">
+            <div class="main_box">
+            	<form id="auditForm" method="post" class="validate">
+                	<div class="herd bt0 blr0"> 企业基本信息</div>
+               		 <div>
+	                    <table> 
+	                        <tbody>
+	                        <tr>
+	                            <td class="left_td"> 店铺名称:</td>
+	                            <td>${store.store_name!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">店铺LOGO:</td>
+	                            <td><img src="${store.store_logo!''}" alt="logo" class="logo" width="200px" height="126px"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">办公地址:</td>
+	                            <td>${store.attr!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">邮政编码:</td>
+	                            <td>${store.zip!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">客服电话:</td>
+	                            <td>${store.customer_phone!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td"></td>
+	                            <td>
+	                                <input type="button" class=" button adopt" id="adopt1" value="通过审核">
+	                                <input type="button" class=" button refuse "  value="拒绝">
+	                            </td>
+	                        </tr>
+							<tr>
+								<td></td>
+								<td>如果拒绝请填写拒绝理由,通过审核请忽略!</td>
+							</tr>
+							<tr class="">
+								<td colspan="2">
+									<span class="left_td pa">拒绝理由:</span>
+									<textarea id="remark1" name="remark"  class="w200 h100" cols="30" rows="10" ></textarea>
+									<!-- <p class="ml220"><input type="button" class="button" value="保 存" onclick="saveRemark()"></p> -->
+								</td>
+							</tr>
+
+	                        </tbody>
+	                    </table>
+	                </div>
+	                <div  class="herd">联系人信息</div>
+	                <div>
+	                    <table>
+	                        <tbody>
+	                        <tr>
+	                            <td class="left_td"> 联系人姓名:</td>
+	                            <td>${store.contacts_name!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">手机号:</td>
+	                            <td>${store.tel!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">办公电话:</td>
+	                            <td>${store.office_phone!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">电子邮箱:</td>
+	                            <td>${store.email!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">联系人身份证（正面）:</td>
+	                            <td>
+	                                <img src="${store.id_img!''}" alt="身份证正面" class="carded" width="200px" height="126px">
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">联系人身份证（背面）:</td>
+	                            <td>
+	                                <img src="${store.contact_idimg_back!''}" alt="身份证背面" class="carded" width="200px" height="126px">
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                            <td></td>
+	                            <td>
+	                                <input type="button" class=" button adopt"  id="adopt2"  value="通过审核">
+	                                <input type="button" class=" button refuse" value="拒绝">
+	                            </td>
+	                        </tr>
+							<tr>
+								<td></td>
+								<td>如果拒绝请填写拒绝理由,通过审核请忽略!</td>
+							</tr>
+							<tr class="">
+								<td colspan="2">
+									<span class="left_td pa">拒绝理由:</span>
+									<textarea id="remark2" name="remark"  class="w200 h100" cols="30" rows="10" ></textarea>
+									<!-- <p class="ml220"><input type="button" class="button" value="保 存" onclick="saveRemark()"></p> -->
+								</td>
+							</tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	                <div class="herd">经营范围</div>
+	                <div>
+	                    <table>
+	                        <tbody>
+	                        <tr>
+	                            <td class="left_td"> 企业法人姓名:</td>
+	                            <td>${store.corporation!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">企业法人身份证（正面）:</td>
+	                            <td> <img src="<#if store.corporation_id_img??&&store.corporation_id_img!=''>${store.corporation_id_img!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" 
+	                            alt="法人身份证正面" class="carded" width="200px" height="126px"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">企业法人身份证（背面）:</td>
+	                            <td> <img src="<#if store.corporate_idimg_back??&&store.corporate_idimg_back!=''>${store.corporate_idimg_back!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" 
+	                            alt="法人身份证背面" class="carded" width="200px" height="126px"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">营业执照注册号:</td>
+	                            <td>${store.bussiness_license_number!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">营业执照照片:</td>
+	                            <td><img src="${store.license_img!''}" alt="营业执照照片" class="chartered" width="200px" height="126px"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">代理品牌:</td>
+	                            <td>${store.brand_name!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td></td>
+	                            <td>
+	                                <input type="button" class=" button adopt"  id="adopt3" value="通过审核">
+	                                <input type="button" class=" button refuse" value="拒绝">
+	                            </td>
+	                        </tr>
+							<tr>
+								<td></td>
+								<td>如果拒绝请填写拒绝理由,通过审核请忽略!</td>
+							</tr>
+							<tr class="">
+								<td colspan="2">
+									<span class="left_td pa">拒绝理由:</span>
+									<textarea id="remark3" name="remark"  class="w200 h100" cols="30" rows="10" ></textarea>
+									<!-- <p class="ml220"><input type="button" class="button" value="保 存" onclick="saveRemark()"></p> -->
+								</td>
+							</tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	                <div class="herd">支付信息</div>
+	                <div>
+	                    <table>
+	                        <tbody>
+	                        <tr>
+	                            <td class="left_td"> 银行开户名:</td>
+	                            <td>${store.bank_account_name!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">公司银行账号:</td>
+	                            <td>${store.bank_account_number!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">开户银行支行名称:</td>
+	                            <td>${store.bank_name!''}</td>
+	                        </tr>
+	                       	<tr>
+	                            <td class="left_td">银行开户许可证:</td>
+	                            <td><img src="${store.bank_license_img!''}" alt="银行开户许可证照片" class="licence" width="200px" height="126px"></td>
+	                        </tr> 
+	                        <tr>
+	                            <td class="left_td">支付宝账户:</td>
+	                            <td>${store.alipay_account!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">微信账户:</td>
+	                            <td>${store.weichat_account!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td></td>
+	                            <td>
+	                                <input type="button" class=" button adopt"  id="adopt4" value="通过审核">
+	                                <input type="button" class=" button refuse" value="拒绝">
+	                            </td>
+	                        </tr>
+							<tr>
+								<td></td>
+								<td>如果拒绝请填写拒绝理由,通过审核请忽略!</td>
+							</tr>
+							<tr class="">
+								<td colspan="2">
+									<span class="left_td pa">拒绝理由:</span>
+									<textarea id="remark4" name="remark"  class="w200 h100" cols="30" rows="10" ></textarea>
+									<!-- <p class="ml220"><input type="button" class="button" value="保 存" onclick="saveRemark()"></p> -->
+								</td>
+							</tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	                <div class="herd">提现信息</div>
+	                <div>
+	                    <table>
+	                        <tbody>
+	                        <tr>
+	                            <td class="left_td">提现人手机号:</td>
+	                            <td>${store.cashingouter_phone!''}</td>
+	                        </tr>
+	                        <tr>
+	                            <td></td>
+	                            <td>
+	                                <input type="button" class=" button adopt"  id="adopt5" value="通过审核">
+	                                <input type="button" class=" button refuse" value="拒绝">
+	                            </td>
+	                        </tr>
+							<tr>
+								<td></td>
+								<td>如果拒绝请填写拒绝理由,通过审核请忽略!</td>
+							</tr>
+							<tr class="">
+								<td colspan="2">
+									<span class="left_td pa">拒绝理由:</span>
+									<textarea id="remark5" name="remark"  class="w200 h100" cols="30" rows="10" ></textarea>
+									<p class="ml220"><input type="button" class="button" value="提交驳回" onclick="saveRemark()"></p>
+								</td>
+							</tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	                <div class="herd">对接人信息</div>
+	                <div>
+	                    <table>
+	                        <tbody>
+	                        <tr>
+	                            <td  class="left_td">对接人姓名:</td>
+	                            <td><input type="text" class="easyui-validatebox" name="docker" value="" isrequired="true"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">对接人工号:</td>
+	                            <td><input type="text" name="docker_job_number" value="" isrequired="true"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">联系方式:</td>
+	                            <td><input type="text" id="phone" name="docker_tel" value="" isrequired="true"><span class="phone_span span_red"></span></td>
+	                        </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	                <div class="herd">经销商设置</div>
+	                <div>
+	                    <table>
+	                        <tbody>
+	                        <tr>
+	                            <td class="left_td">经销商等级设置:</td>
+	                            <td>
+                                    <select name="store_level" class="select">
+										<#if level_list??> 
+											<#list level_list as lv>
+												<option value="${lv.level_id!''}" <#if store.store_level==lv.level_id>selected="selected"</#if> >${lv.level_name }</option> 
+											</#list> 
+										</#if>
+									</select>
+                                </td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">结算周期设置:</td>
+	                            <td><input type="text" name="settlement_period" value="" isrequired="true"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">签约用户折扣:</td>
+	                            <td><input type="text" name="discountcontract" onkeyup="value=value.replace(/[^\d.]/g,'')" value="" isrequired="true"/></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="left_td">非签约用户折扣:</td>
+	                            <td><input type="text" name="discountnoncontract" onkeyup="value=value.replace(/[^\d.]/g,'')" value="" isrequired="true"></td>
+	                        </tr>
+	                        </tbody>
+	                    </table>
+	                    <input type="hidden" id="storeId" name="storeId" value="${store.store_id!''}">
+                    </div>
+                 </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--正文结束-->
+	<!--通过审核-->
+	<script>
+		var ok1=false;
+		var ok2=false;
+		var ok3=false;
+		var ok4=false;
+		var ok5=false;
+		$("#adopt1").click(function(){
+			ok1=true;
+		});
+		$("#adopt2").click(function(){
+			ok2=true;
+		});
+		$("#adopt3").click(function(){
+			ok3=true;
+		});
+		$("#adopt4").click(function(){
+			ok4=true;
+		});
+		$("#adopt5").click(function(){
+			ok5=true;
+		});
+		$(".l-btn-left").click(function(){
+			if(ok1 && ok2 && ok3 && ok4 && ok5){
+//				可以提交
+				alert ("审核通过");
+			}else{
+//				不可以提交
+				//alert("审核不通过");
+			}
+		});
+
+			$(".adopt").click(function(){
+				$(this).parent().children().css("color","#666666");
+				$(this).css("color","#00ff00");
+				$(this).parent().parent().next().next().children().children().css("display","none");
+				ok1=false;
+			});
+			$(".refuse").click(function(){
+				$(this).parent().children().css("color","#666666");
+				$(this).css("color","red");
+				$(this).parent().parent().next().next().children().children().css("display","block");
+			});
+	</script>
+    <script>
+        $(document).ready(function(){
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            var isMob = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+            //联系电话
+            $('#phone').blur(function () {
+                var phone= $("#phone").val();
+                if(isMob.test(phone)||isPhone.test(phone)){
+                    $(".phone_span").html("");
+                } else {
+                    $(".phone_span").html("请输入正确的联系方式");
+                }
+
+            });
+		});
+
+        
+        //弹框中点确定按钮的请求路径  ${ctx}/b2b2c/admin/storeadmin!StoreAuditReject.do
+        function saveRemark() {
+        	var data = {
+       			"storeId":$("#storeId").val(),
+       			"remark1":$("#remark1").val(),
+       			"remark2":$("#remark2").val(),
+       			"remark3":$("#remark3").val(),
+       			"remark4":$("#remark4").val(),
+       			"remark5":$("#remark5").val()
+        	};
+       		 $.ajax({
+                 url: "${ctx}/b2b2c/admin/storeadmin!showAuditReject.do?ajax=yes",
+                 type: "POST",
+                 data: data,
+                 async: false,
+                 dataType: "json",
+                 success: function (json) {
+                 	 alert(json.message);
+                 }
+             });
+        }	
+        	
+    </script>
+    <#include '/admin/footer.html' >

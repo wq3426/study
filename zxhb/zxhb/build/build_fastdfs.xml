@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="jarfastdfs" basedir="../">
+
+	<!--编译fastdfs-->
+	<target name="jar_fastdfs">
+		<mkdir dir="${build.dir}/fastdfs" />
+		<!--编译shop目录下的类文件-->
+		<javac  srcdir="." destdir="${build.dir}/fastdfs" debug="true" includeantruntime="on">
+			<compilerarg line="-encoding UTF-8 " />
+			<classpath refid="buildpath" />
+			<include name="fastdfs/**" />
+		</javac>
+
+		<!--拷贝资源文件-->
+		<copy todir="${build.dir}/fastdfs">
+			<fileset dir="fastdfs">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+		<!--生成fastdfs.jar-->
+		<jar destfile="${tempdir}/lib/component-fastdfs.jar">
+			<fileset dir="${build.dir}/fastdfs">
+				<exclude name="com/enation/app/fastdfs/component/**" />
+			</fileset>
+		</jar>
+
+		<!--生成fastdfs核心组件jar-->
+		<jar destfile="${tempdir}/lib/component-fastdfs-core.jar">
+			<fileset dir="${build.dir}/fastdfs">
+				<include name="com/enation/app/shop/component/**" />
+			</fileset>
+		</jar>
+	</target>
+</project>

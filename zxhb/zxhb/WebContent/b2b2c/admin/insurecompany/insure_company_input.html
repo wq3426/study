@@ -1,0 +1,37 @@
+<style>
+	.input_text {
+		width: 210px;
+	}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="addForm" method="post" class="validate">
+			<table width="100%">
+				<tr>
+					<th style="width:200px">保险公司名称：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="insureCompany.company_name"/>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">保险公司LOGO：</th>
+					<td>
+						<input type="file" class="input_text" data-options="required:true"  name="data" id="insurecompany_logo"/>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:200px">保险公司电话：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="insureCompany.telephone"/>
+					</td>
+				</tr>
+				<tr>
+					<th>排序号：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="insureCompany.sort" value="0"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

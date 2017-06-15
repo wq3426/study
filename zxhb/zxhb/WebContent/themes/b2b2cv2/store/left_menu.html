@@ -1,0 +1,834 @@
+<script>
+    function load() {
+        location.href = "${ctx}/store/login.html";
+    }
+    <#if !member??>
+    load();
+    </#if>
+</script>
+
+<!--<script>-->
+    <!--function selectMenu(index) {-->
+        <!--$(".store_left>ul>li").removeClass("selected");-->
+        <!--$(".store_left>ul>li").eq(index).addClass("selected");-->
+    <!--}-->
+<!--</script>-->
+<style type="text/css">
+    .menu_list {
+        width: 268px;
+        margin: 0 auto;
+    }
+
+    .menu_head {
+        font-size: 14px;
+        color: #525252;
+        cursor: pointer;
+        border-left: 1px solid #e1e1e1;
+        border-right: 1px solid #e1e1e1;
+        border-bottom: 1px solid #e1e1e1;
+        border-top: 1px solid #F1F1F1;
+        position: relative;
+        margin: 0px;
+        font-weight: bold;
+        background: #f1f1f1 url(images/pro_left.png) center right no-repeat;
+    }
+
+    #firstpane > li > a.menu_head_1 {
+        height: 47px;
+        line-height: 47px;
+        font-size: 14px;
+        padding: 0px;
+        color: #525252;
+        cursor: pointer;
+        position: relative;
+        margin: 0px;
+        font-weight: bold;
+    }
+
+    .menu_list .current {
+        background: #f1f1f1 url(images/pro_down.png) center right no-repeat;
+    }
+    .menu_head a:hover{
+        background-color:#ffffff ;
+        border-left: 4px solid #FF4A00;
+        color: #FF4A00 !important;
+        text-align: left;
+        position: relative;
+        left: -4px;
+
+    }
+    .menu_body {
+        line-height: 38px;
+        border-left: 1px solid #e1e1e1;
+        border-right: 1px solid #e1e1e1;
+    }
+
+    .menu_body a {
+        display: block;
+        height: 38px;
+        line-height: 38px;
+        padding-left: 38px;
+        color: #777777;
+        text-decoration: none;
+        border-bottom: 1px solid #e1e1e1;
+
+    }
+    .menu_body span {
+        display: block;
+        padding-top: 4px;
+        height: 28px;
+        padding-left: 38px;
+        color: #aeaeae;
+        text-decoration: none;
+        border-bottom: 1px solid #e1e1e1;
+        font: 14px/24px "microsoft yahei";
+
+    }
+
+    .menu_body a:hover {
+        text-decoration: none;
+        color: #FF4A00;
+        border-left: 4px solid #ff4a00;
+        background-color: #FFFFFF;
+        margin-left: -1px;
+    }
+</style>
+<!--
+商品管理:store_goods/交易管理transaction/促销管理promotion/店铺管理store/客服管理server
+ -->
+ 
+<#assign checkB2b2cMemberTag=newTag("checkB2b2cMemberTag")>
+<#assign storeMember=checkB2b2cMemberTag()>
+
+<div class="store_left_menu">
+    <div class="sidebar" id="sidebar">
+        <#if menu=="store_index">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_store_index"></span>
+                <p>商家中心</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list">
+                    <li class="menu_head current selected" style="display:block" ><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <li class="menu_head"><a>保险保养</a></li>
+                    <li style="display:none" class="menu_body">
+                    	<#if storeMember.store_id?? && storeMember.store_id == 1>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=1&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	<#else>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=4&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	</#if>
+                        <a href="${ctx}/store/order/StoreOrder.html?order_type=2&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养订单</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/apply/insuranceSetting.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险设置</a>
+                        <a href="${ctx}/store/apply/time_sharing.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;分时保养</a>
+                        <a href="${ctx}/store/apply/maintenance_itemPriceList.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养项目价格表</a>
+                    </li>
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a>商家服务</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/apply/reApply2.html?menu=store_set">基本信息设置</a>
+                        <a href="${ctx}/store/capital/thisPeriod.html?menu=store_set">清分结算信息</a>
+                        <a href="${ctx}/store/message/message_unread.html?menu=store_set">消息中心</a>
+                        <a href="${ctx}/store/apply/modifyPassword.html?menu=store_set">密码服务</a>
+
+                    </li>
+
+                </ul>
+            </div>
+        </#if>
+        <#if menu=="store_goods">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_store_goods"></span>
+                <p>商品管理</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class=" menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class=" menu_head current selected"><a href="#">商品管理</a></li>
+                    <li style="display:block" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <li class="menu_head"><a>保险保养</a></li>
+                    <li style="display:none" class="menu_body">
+                        <#if storeMember.store_id?? && storeMember.store_id == 1>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=1&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	<#else>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=4&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	</#if>
+                        <a href="${ctx}/store/order/StoreOrder.html?order_type=2&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养订单</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/apply/insuranceSetting.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险设置</a>
+                        <a href="${ctx}/store/apply/time_sharing.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;分时保养</a>
+                        <a href="${ctx}/store/apply/maintenance_itemPriceList.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养项目价格表</a>
+                    </li>
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+
+                    <li class="menu_head"><a>商家服务</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/apply/reApply2.html?menu=store_set">基本信息设置</a>
+                        <a href="${ctx}/store/capital/thisPeriod.html?menu=store_set">清分结算信息</a>
+                        <a href="${ctx}/store/message/message_unread.html?menu=store_set">消息中心</a>
+                        <a href="${ctx}/store/apply/modifyPassword.html?menu=store_set">密码服务</a>
+                    </li>
+                </ul>
+            </div>
+        </#if>
+        <#if menu=="transaction">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_transaction"></span>
+                <p>订单管理</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class=" menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head selected"><a>订单管理</a></li>
+                    <li style="display:block" class="menu_body ">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <li class="menu_head"><a>保险保养</a></li>
+                    <li style="display:none" class="menu_body">
+                        <#if storeMember.store_id?? && storeMember.store_id == 1>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=1&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	<#else>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=4&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	</#if>
+                        <a href="${ctx}/store/order/StoreOrder.html?order_type=2&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养订单</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/apply/insuranceSetting.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险设置</a>
+                        <a href="${ctx}/store/apply/time_sharing.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;分时保养</a>
+                        <a href="${ctx}/store/apply/maintenance_itemPriceList.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养项目价格表</a>
+                    </li>
+
+                   <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a>商家服务</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/apply/reApply2.html?menu=store_set">基本信息设置</a>
+                        <a href="${ctx}/store/capital/thisPeriod.html?menu=store_set">清分结算信息</a>
+                        <a href="${ctx}/store/message/message_unread.html?menu=store_set">消息中心</a>
+                        <a href="${ctx}/store/apply/modifyPassword.html?menu=store_set">密码服务</a>
+                    </li>
+                </ul>
+            </div>
+        </#if>
+        <#if menu=="maintenance">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_server"></span>
+                <p>保险保养</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class=" menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head "><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body ">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <li class="menu_head selected"><a>保险保养</a></li>
+                    <li style="display:block" class="menu_body">
+                        <#if storeMember.store_id?? && storeMember.store_id == 1>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=1&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	<#else>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=4&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	</#if>
+                        <a href="${ctx}/store/order/StoreOrder.html?order_type=2&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养订单</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/apply/insuranceSetting.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险设置</a>
+                        <a href="${ctx}/store/apply/time_sharing.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;分时保养</a>
+                        <a href="${ctx}/store/apply/maintenance_itemPriceList.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养项目价格表</a>
+                    </li>
+
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a>商家服务</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/apply/reApply2.html?menu=store_set">基本信息设置</a>
+                        <a href="${ctx}/store/capital/thisPeriod.html?menu=store_set">清分结算信息</a>
+                        <a href="${ctx}/store/message/message_unread.html?menu=store_set">消息中心</a>
+                        <a href="${ctx}/store/apply/modifyPassword.html?menu=store_set">密码服务</a>
+                    </li>
+                </ul>
+            </div>
+        </#if>
+
+        <#if menu=="member">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_promotion"></span>
+                <p>会员管理</p>
+                </dt>
+            </dl>
+
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class="menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <li class="menu_head"><a>保险保养</a></li>
+                    <li style="display:none" class="menu_body">
+                        <#if storeMember.store_id?? && storeMember.store_id == 1>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=1&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	<#else>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=4&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	</#if>
+                        <a href="${ctx}/store/order/StoreOrder.html?order_type=2&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养订单</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/apply/insuranceSetting.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险设置</a>
+                        <a href="${ctx}/store/apply/time_sharing.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;分时保养</a>
+                        <a href="${ctx}/store/apply/maintenance_itemPriceList.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养项目价格表</a>
+                    </li>
+
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <li class="menu_head selected"><a>会员管理</a></li>
+                    <li style="display:block" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a>商家服务</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/apply/reApply2.html?menu=store_set">基本信息设置</a>
+                        <a href="${ctx}/store/capital/thisPeriod.html?menu=store_set">清分结算信息</a>
+                        <a href="${ctx}/store/message/message_unread.html?menu=store_set">消息中心</a>
+                        <a href="${ctx}/store/apply/modifyPassword.html?menu=store_set">密码服务</a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </#if>
+
+
+        <#if menu=="promotion">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_promotion"></span>
+                <p>营销管理</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class=" menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <li class="menu_head"><a>保险保养</a></li>
+                    <li style="display:none" class="menu_body">
+                        <#if storeMember.store_id?? && storeMember.store_id == 1>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=1&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	<#else>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=4&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	</#if>
+                        <a href="${ctx}/store/order/StoreOrder.html?order_type=2&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养订单</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/apply/insuranceSetting.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险设置</a>
+                        <a href="${ctx}/store/apply/time_sharing.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;分时保养</a>
+                        <a href="${ctx}/store/apply/maintenance_itemPriceList.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养项目价格表</a>
+                    </li>
+
+                    <li class="menu_head selected"><a href="javascript:">营销管理</a></li>
+                    <li style="display:block" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a>商家服务</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/apply/reApply2.html?menu=store_set">基本信息设置</a>
+                        <a href="${ctx}/store/capital/thisPeriod.html?menu=store_set">清分结算信息</a>
+                        <a href="${ctx}/store/message/message_unread.html?menu=store_set">消息中心</a>
+                        <a href="${ctx}/store/apply/modifyPassword.html?menu=store_set">密码服务</a>
+                    </li>
+                </ul>
+            </div>
+        </#if>
+        <#if menu=="store_set">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_store"></span>
+                <p>商家服务</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class=" menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <li class="menu_head"><a>保险保养</a></li>
+                    <li style="display:none" class="menu_body">
+                        <#if storeMember.store_id?? && storeMember.store_id == 1>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=1&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	<#else>
+                    	<a href="${ctx}/store/order/StoreOrder.html?order_type=4&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险订单</a>
+                    	</#if>
+                        <a href="${ctx}/store/order/StoreOrder.html?order_type=2&order_state=all&menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养订单</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/apply/insuranceSetting.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保险设置</a>
+                        <a href="${ctx}/store/apply/time_sharing.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;分时保养</a>
+                        <a href="${ctx}/store/apply/maintenance_itemPriceList.html?menu=maintenance">&nbsp;&nbsp;&nbsp;&nbsp;保养项目价格表</a>
+                    </li>
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head selected"><a>商家服务</a></li>
+                    <li style="display:block" class="menu_body">
+                        <a href="${ctx}/store/apply/reApply2.html?menu=store_set">基本信息设置</a>
+                        <a href="${ctx}/store/capital/thisPeriod.html?menu=store_set">清分结算信息</a>
+                        <a href="${ctx}/store/message/message_unread.html?menu=store_set">消息中心</a>
+                        <a href="${ctx}/store/apply/modifyPassword.html?menu=store_set">密码服务</a>
+
+                    </li>
+                </ul>
+            </div>
+        </#if>
+
+
+
+
+
+        <#if menu=="server">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_server"></span>
+                <p>客服管理</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class="selected menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <!-- <li><a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">优惠券管理</a></li> -->
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <!--<a href="${ctx}/store/server/server_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;服务信息管理</a>-->
+                        <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</span>-->
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <!--  <li><a target="_blank" href="${ctx}/home.html?show_c=1&store_id=${(storeMember.store_id)!0}&?menu=store">我的店铺</a></li> -->
+                    <!-- <li><a href="${ctx}/store/comment/StoreConsultList.html?replyStatus=0&menu=server">咨询管理</a></li> -->
+                    <li class="menu_head"><a href="${ctx}/store/apply/reApply2.html">商家设置</a></li>
+                </ul>
+            </div>
+        </#if>
+        <#if menu=="server">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_server"></span>
+                <p>客服管理</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class="selected menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <!-- <li><a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">优惠券管理</a></li> -->
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <!--<a href="${ctx}/store/server/server_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;服务信息管理</a>-->
+                        <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</span>-->
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <!--  <li><a target="_blank" href="${ctx}/home.html?show_c=1&store_id=${(storeMember.store_id)!0}&?menu=store">我的店铺</a></li> -->
+                    <!-- <li><a href="${ctx}/store/comment/StoreConsultList.html?replyStatus=0&menu=server">咨询管理</a></li> -->
+                    <li class="menu_head"><a href="${ctx}/store/apply/reApply2.html">商家设置</a></li>
+                </ul>
+            </div>
+        </#if>
+        <#if menu=="store_set11">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_server"></span>
+                <p>商家设置</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class="menu_head"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <!-- <li><a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">优惠券管理</a></li> -->
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</span>-->
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <!--  <li><a target="_blank" href="${ctx}/home.html?show_c=1&store_id=${(storeMember.store_id)!0}&?menu=store">我的店铺</a></li> -->
+                    <!-- <li><a href="${ctx}/store/comment/StoreConsultList.html?replyStatus=0&menu=server">咨询管理</a></li> -->
+                    <li class="menu_head current selected"><a href="${ctx}/store/apply/reApply2.html">商家设置</a></li>
+                    <li style="display:black" class="menu_body">
+
+                        <a href="${ctx}/store/apply/modifyPassword.html?">&nbsp;&nbsp;&nbsp;&nbsp;密码修改</a>
+                    </li>
+                </ul>
+            </div>
+        </#if>
+        <#if menu=="server">
+            <dl>
+                <dt id="sidebar_goods_manage">
+                    <span class="s_server"></span>
+                <p>客服管理</p>
+                </dt>
+            </dl>
+            <div class="store_left">
+                <ul id="firstpane" class="menu_list" style="position:absolute;left: -198px ">
+                    <li class="selected menu_head current"><a href="${ctx}/store/business_center.html?menu=store_index">商家中心</a></li>
+                    <li class="menu_head current"><a href="#">商品管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/goods/select_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;发布商品</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/goods/store_goods_list.html?market_enable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;出售中的商品</a>
+                        <a href="${ctx}/goods/store_goods_all.html?market_enable=0&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;仓库中的商品</a>
+                        <a href="${ctx}/goods/goods_cat.html?menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;店铺商品管理</a>
+                        <a href="${ctx}/goods/recycle_bin.html?disable=1&menu=store_goods">&nbsp;&nbsp;&nbsp;&nbsp;回收站</a>
+                    </li>
+                    <li class="menu_head"><a>订单管理</a>
+                    </li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/order/StoreOrder.html?order_state=all&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;所有订单</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_pay&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待支付</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=wait_ship&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;待服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=yet_service&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已服务</a>
+                        <a href="${ctx}/store/order/StoreOrder.html?keyword=&buyerName=&startTime=&endTime=&order_state=8&menu=transaction">&nbsp;&nbsp;&nbsp;&nbsp;已取消</a>
+                    </li>
+                    <!-- <li><a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">优惠券管理</a></li> -->
+                    <li class="menu_head"><a>会员管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/memberx/member_list.html?menu=member">&nbsp;&nbsp;&nbsp;&nbsp;签约用户</a>
+                        <a href="${ctx}/store/memberx/break_member_list.html?menu=member">
+                            &nbsp;&nbsp;&nbsp;&nbsp;解约用户</a>
+                    </li>
+                    <li class="menu_head"><a href="javascript:">营销管理</a></li>
+                    <li style="display:none" class="menu_body">
+                        <a href="${ctx}/store/adv/edit_adv.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;广告管理</a>
+                        <!--<a href="${ctx}/store/server/server_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;服务信息管理</a>-->
+                        <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</span>-->
+                        <a href="${ctx}/store/bonus/bonus_list.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;优惠券管理</a>
+                        <a href="${ctx}/store/memberx/insurance.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保险管理</a>
+                        <a href="${ctx}/store/memberx/maintain.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;保养管理</a>
+                        <a href="${ctx}/store/hot_commodity/hot_commodity.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;热门商品</a>
+                        <a href="${ctx}/store/information/information.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;短信服务</a>
+                        <a href="${ctx}/store/adv/purchaseHistory.html?menu=promotion">&nbsp;&nbsp;&nbsp;&nbsp;免费发放/购买记录</a>
+                    </li>
+                    <!--  <li><a target="_blank" href="${ctx}/home.html?show_c=1&store_id=${(storeMember.store_id)!0}&?menu=store">我的店铺</a></li> -->
+                    <!-- <li><a href="${ctx}/store/comment/StoreConsultList.html?replyStatus=0&menu=server">咨询管理</a></li> -->
+                    <li class="menu_head"><a href="${ctx}/store/apply/reApply2.html">商家设置</a></li>
+                </ul>
+            </div>
+        </#if>
+    </div>
+</div>
+
+<!--控制列表伸缩-->
+<script>
+    $(document).ready(function () {
+        $("#firstpane .menu_body:eq(9)").show();
+        $("#firstpane li.menu_head").click(function () {
+            $(this).addClass("current").next("li.menu_body").slideToggle(300).siblings("li.menu_body").slideUp("slow");
+            $(this).siblings().removeClass("current");
+        });
+        $("#secondpane .menu_body:eq(0)").show();
+        $("#secondpane li.menu_head").mouseover(function () {
+            $(this).addClass("current").next("li.menu_body").slideDown(500).siblings("li.menu_body").slideUp("slow");
+            $(this).siblings().removeClass("current");
+        });
+    });
+</script>
+<script>
+    $(function () {
+        //浮动导航  waypoints.js
+        $("#sidebar,#sotre_right_content").waypoint(function (event, direction) {
+            $(this).parent().toggleClass('sticky', direction === "down");
+            event.stopPropagation();
+        });
+        
+     	// 如果没有店铺名称 就说明他是未设置过店铺信息
+     	<#if myStoreDetail??>
+	    	if ("${myStoreDetail.store_name!''}" == ""){
+	    		$("#firstpane li.menu_head").unbind("click");
+	    	}else{
+	    		$("#firstpane li.menu_head").bind("click");
+	    	}
+	    	<#else>
+				$("#firstpane li.menu_head").unbind("click");
+    	</#if>
+    })
+</script>
+
+

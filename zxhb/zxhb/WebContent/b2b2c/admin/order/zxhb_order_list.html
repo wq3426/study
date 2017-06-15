@@ -1,0 +1,235 @@
+<#include '/admin/header.html' >  <#assign
+dateFormat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text{
+	width: 95%;
+}
+</style>
+<div id="edit_shopping" style="display: none; overflow:hidden"></div>
+<div id="loading"></div>
+<div class="main">
+	<form id="orderform">
+		<div class='buttonArea' style="height: auto">
+			 <span style="float: right;"> 
+			 	<span id="simpleSearch"> 
+				 	<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px" placeholder="请输入订单号,收货人" name="searchKeyWord">
+					<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchOrder()">搜索</a>
+				</span> 
+				<a href="javascript:void(0)" class="button" data-options="plain:true" id="aAdvanced">高级搜索</a> 
+			</span>
+		</div>
+
+		<div style="display: block;" class="searchAdvanced">
+			<input id="Advanced" name="Advanced" type="hidden" value="0" />
+			<table width="98%" border="0" cellspacing="0" cellpadding="8">
+			<tr>
+					<td width="70" align="right">订单号</td>
+					<td><input type="text" value="" id="order_sn" class="input_text"></td>
+					<td width="70" align="right">邀请人</td>
+					<td><input type="text" value="" id="referee" class="input_text"></td>
+					<td width="70" align="right">规格</td>
+					<td><input type="text" value="" id="spec_value" class="input_text"></td>
+					<td width="70" align="right">图案</td>
+					<td><input type="text" value="" id="ta_spec_value" class="input_text"></td>
+			</tr>
+			<tr>
+					<td width="70" align="right">联系人</td>
+					<td><input type="text" value="" id="username" class="input_text"></td>
+					<td width="70" align="right">电话</td>
+					<td><input type="text" value="" id="user_telephone" class="input_text"></td>
+					
+					<td width="70" align="right">下单时间</td>
+					<td><input class="easyui-datebox" style="width: 90px;height: 28px;"
+						id="start_time"/> <span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+						<input class="easyui-datebox" style="width: 90px;height: 28px;" id="end_time"
+						 /></td>
+					
+					<td colspan="7" align="center"><a id="searchAdvance"
+						class="button blueButton" onclick="searchOrder()"
+						href="javascript:;">开始搜索</a></td>
+			</tr>
+			</table>
+		</div>
+
+		<div class="clear height10"></div>
+
+		<div class="shadowBoxWhite tableDiv">
+			<table class="easyui-datagrid"
+				data-options="url:'zxhbOrder!listJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+				pagination="true" width="width" id="orderdata" sortName="order_id" sortOrder="desc">
+				<thead>
+					<tr>
+						<th data-options="field:'order_id',checkbox:true,width:100"></th>
+						<th data-options="field:'order_sn',width:50" >订单号</th>
+						<th data-options="field:'username',width:30" >联系人</th>
+						<th data-options="field:'user_telephone',width:30" >手机号</th>
+						<th data-options="field:'spec_value',width:30" >规格</th>
+						<th data-options="field:'ta_spec_value',width:30" >图案</th>
+						<th data-options="field:'referee',width:20" >邀请人</th>
+						<th data-options="field:'order_count',width:10" >数量</th>
+						<th data-options="field:'total_price',width:15" >总价</th>
+						<th data-options="field:'status',width:40" formatter="formatStatus">订单状态</th>
+						<th data-options="field:'address',width:40" >收货地址</th>
+						<th data-options="field:'shipping_name',width:40" >物流公司</th>
+						<th data-options="field:'shipping_no',width:40" >物流单号</th>
+						<th data-options="field:'create_time',width:30" formatter="formatDate">下单时间</th>
+						<th data-options="field:'action',width:40" formatter="formatAction">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+function searchOrder(){
+	var searchtype = $("#Advanced").val();
+	var keyword = $("#searchKeyword").val();
+	var order_sn = $("#order_sn").val();
+	var referee = $("#referee").val();
+	var spec_value = $("#spec_value").val();
+	var ta_spec_value = $("#ta_spec_value").val();
+	var user_telephone = $("#user_telephone").val();
+	var username = $("#username").val();
+	var start_time = $('#start_time').datebox('getValue');
+	var end_time = $('#end_time').datebox('getValue');  
+	if (end_time < start_time) {
+        alert("开始时间不得大于结束时间！");
+        return;
+    }
+	$("#orderdata").datagrid('load', {
+		 stype:searchtype,
+		 keyword:keyword,
+		 order_sn:order_sn,
+		 referee:referee,
+		 spec_value:spec_value,
+		 ta_spec_value:ta_spec_value,
+		 user_telephone:user_telephone,
+		 username:username,
+		 start_time:start_time,
+		 end_time:end_time,
+		 page:1
+    });
+}
+
+	$(function(){
+		$(".searchAdvanced").hide();
+		//高级查询按钮
+	    $("#aAdvanced").click(function () {
+	        if ($("#Advanced").val() == "0") {
+	            $("#Advanced").val(1);
+	            $("#simpleSearch").hide();
+	            //$("#aAdvanced").text("简单搜索")
+	            $("#aAdvanced").addClass("searchAdvancedS");
+	        } else {
+	            $("#Advanced").val(0);
+	            $("#simpleSearch").show();
+	            //$("#aAdvanced").text("高级搜索");
+	            $("#aAdvanced").removeClass("searchAdvancedS");
+	        }
+	        $(".searchAdvanced").slideToggle("slow");
+	    });
+	});
+	
+	 function formatAction(value,row,index){
+		 var val ="";
+		 if(row.status == 1 || row.status == 2 ){
+         	 val+="<a href='#' onclick='editShopping(\""+row.order_sn+"\")'>编辑物流</a><br/>";
+		 }
+		 val += "&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"newTab('查看订单详情','${ctx}/b2b2c/admin/zxhbOrder!specifics.do?order_sn="+row.order_sn+"')\">查看</a>"
+		 
+         return val;
+     }
+     
+     
+     function editShopping(order_sn){
+         $("#edit_shopping").show();
+         $('#edit_shopping').dialog({
+             title: '编辑物流',
+             width: 750,
+             top: 100,
+             closed: false,
+             cache: false,
+             href: '${ctx}/b2b2c/admin/zxhbOrder!editShoppingPage.do?order_sn='+order_sn,
+             modal: true,
+             buttons: [{					//创建按钮
+	　　			 text:'保存',
+	　　			 iconCls:'icon-ok',
+	　　			 handler:function(){
+	　　				 var savebtn = $(this);
+	　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+	　　				 if(!disabled){
+		　　				 saveShipping(savebtn);
+		　　			 }	
+	　　			}
+	　　		}]
+     	});
+     }
+	
+     function saveShipping(savebtn){
+     	var formflag= $("#shippingForm").form().form('validate');
+     	if(formflag){
+     		$.Loading.show("正在保存请稍后...");
+     		savebtn.linkbutton("disable");	
+     		var options = {
+     				url : "${ctx}/b2b2c/admin/zxhbOrder!saveShopping.do",
+     				type : "POST",
+     				dataType : "json",
+     				success : function(result) {
+     					if(result.result==1){
+     						$("#edit_shopping").dialog('close');
+     						$('#orderdata').datagrid('reload');
+     						$.Loading.success(result.message);
+     					}else{
+     						$.Loading.error(result.message);
+     					}
+     					savebtn.linkbutton("enable");
+     			 	},
+     			 	error : function(e) {
+     			 		$.Loading.error('出现错误，请重试');
+     			 		savebtn.linkbutton("enable");
+     				}
+     			};
+     		$('#shippingForm').ajaxSubmit(options);	
+     	}
+     }
+     
+	function formatDate(value,row,index){
+		if(value==null||value==0){
+			return "";
+		}
+		else{
+			return getFormatDateByLong(value/1000, "yyyy-MM-dd hh:mm");
+		}
+	}
+	
+	function formatStatus(value,row,index){
+		if(value==null){
+			return "";
+		}else{
+			if(value==0||value=="0"){
+				return "待支付";
+			}else if(value==9||value=="9"){
+				return "已预约";
+			}else if(value==1||value=="1"){
+				return "已支付,待发货";
+			}
+			else if(value==2||value=="2"){
+				return "配送中";
+			}
+			else if(value==3||value=="3"){
+				return "已送达";
+			}
+			else if(value==8||value=="8"){
+				return "已取消";
+			}
+			
+			else{
+				return "";
+			} 
+		}
+	}
+</script>
+
+<#include '/admin/footer.html' >
+
+

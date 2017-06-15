@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=1280">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content=""> 
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="box">
+        <a href="${ctx}/cardorder/index.html"><div class="logo w250 h70"></div></a>
+        <div class="nav ">
+            <ul class="fl tc">
+                <li class="fl ml160"><a href="${ctx}/cardorder/index.html">首页</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/selecting.html">立即购买</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/order_list.html">订单查询</a></li>
+                <li class="fl"><a href="${ctx}/cardorder/about_us.html">关于我们</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="box cb  minh450">
+    <div style="margin-right: 20%">
+        <div class="fr">
+            <img class='mt50 ml20' src='${ctx}/themes/b2b2cv2/cardorder/images/zhifu_bg.png' alt=''>
+        </div>
+        <div class="fr mt50 tc">
+            <p>微信安全支付</p>
+            <img class="mt10" src='${ctx}/wpaycode.servlet?order_sn=${order_sn}' alt=''>
+            <div class="w200 h60  tl bg_3a">
+                <img class="mt10" src='${ctx}/themes/b2b2cv2/cardorder/images/zhifu_bt_03.png' alt=''>
+                <div class="fr cfff m10">
+                    <p>请使用微信长按或扫描</p>
+                    <p>二维码完成支付</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<footer class="tc f14 mt30">
+    版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+</footer>
+
+<script type="text/javascript">
+	$(function(){
+		setInterval("ajaxstatus()", 5000);
+	});
+	
+	function ajaxstatus(){
+		$.ajax({
+			url : "${ctx}/api/b2b2c/storeApi!getOrderStatus.do?order_sn=${order_sn}",
+			type : "POST",
+			dataType : "json",
+			async : true,
+			success : function(data){
+				if(data.status == 1){
+					window.location = "${ctx}/cardorder/wish.html?order_sn=${order_sn}&receive_user="+data.receive_user
+							        + "&user_telephone="+data.user_telephone+"&status="+data.status;
+				}
+			},
+			error : function(){
+				alert("请求失败");
+			}
+		});
+	}
+</script>
+</body>
+</html>

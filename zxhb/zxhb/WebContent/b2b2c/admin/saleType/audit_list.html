@@ -1,0 +1,209 @@
+<#include '/admin/header.html' > 
+<style>
+.tableDiv table tr td {
+    text-align:center;
+}
+</style>
+<div class="main">
+	<div class="buttonArea">
+		<span style="float: right;"> 
+		 	<span id="simpleSearch"> 
+			 	<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;" placeholder="请输入店铺名称、营销类型" name="searchKeyWord">
+				<a href="javascript:void(0)" class="easyui-linkbutton" id="search" data-options="plain:true" onclick="searchOrder()">搜索</a>
+			</span> 
+			<a href="javascript:void(0)" class="button" data-options="plain:true" id="aAdvanced">高级搜索</a> 
+	    </span>
+	</div>
+	<div class="shadowBoxWhite tableDiv">
+		<form id="auditform">
+			<div style="display: none;" class="searchAdvanced">
+				<input id="Advanced" name="Advanced" type="hidden" value="0" />
+				<table width="98%" border="0" cellspacing="0" cellpadding="8">
+					<tr>
+						<td width="70" align="right">店铺名称</td>
+						<td><input type="text" value="" id="storename" class="input_text" style="width: 145px;"/>
+						</td>
+						<td width="70" align="right">类型名称</td>
+						<td>
+							<select id="typeId" class="inputSelect valid" style="width: 145px;">
+								<option value="">---所有---</option> 
+									<#list saleTypeList as saleType>
+										<option  value="${saleType.type_id}">${saleType.type_name}</option> 
+									</#list>
+							</select>
+						</td>
+						<td width="70" align="right">店铺等级：</td>
+						<td>
+							<select id="storeLevel" class="inputSelect valid" style="width: 145px;">
+								<option value="">---所有---</option> 
+								<#list storeLevelList as storeLevel>
+									<option value="${storeLevel.level_id}">${storeLevel.level_name}</option>
+								</#list>
+							</select>
+						</td>
+						<td width="70" align="right">审核状态：</td>
+						<td>
+							<select id="auditStatus" class="inputSelect valid" style="width: 145px;">
+								<option  value="">---所有---</option> 
+								<option  value="0">待审核</option> 
+								<option  value="1">审核已通过</option> 
+								<option  value="2">审核未通过</option> 
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td width="70" align="right"></td>
+						<td colspan="7" align="center">
+							<a id="searchAdvance" class="button blueButton" onclick="searchOrder()" href="javascript:;">开始搜索</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<table class="easyui-datagrid"
+				data-options="url:'${ctx}/b2b2c/admin/salefree!saleAuditListJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'" pagination="true" width="width" id="auditdata">
+				<thead>
+					<tr>
+						<th  data-options="field:'id',checkbox:true,width:100"></th>
+						<th  data-options="field:'store_id',hidden:true,width:100"></th>
+						<th  data-options="field:'sale_type_id',hidden:true,width:100"></th>
+				   	 	<th  data-options="field:'store_name',width:100">店铺名称</th>
+				   	 	<th  data-options="field:'disabled',width:100,
+				   	 		formatter: function(value,row,index){
+				   	 			if(row.disabled  == '0'){
+				   	 				return '待审核';
+				   	 			}
+				   	 			if(row.disabled  == '1'){
+				   	 				return '已审核';
+				   	 			}
+				   	 			if(row.disabled  == '2'){
+				   	 				return '已关闭';
+				   	 			}
+				   	 		}
+				   	 	">店铺状态</th>
+				   	 	<th  data-options="field:'level_name',width:100">店铺等级</th>
+				   	 	<th  data-options="field:'type_name',width:100">申请营销类型</th>
+				   	 	<th  data-options="field:'audit_num',width:100">申请条数/栏位数</th>
+				   	 	<th  data-options="field:'audit_status',width:100,
+				   	 		formatter: function(value,row,index){
+				   	 			if(row.audit_status  == '0'){
+				   	 				return '待审核';
+				   	 			}
+				   	 			if(row.audit_status  == '1'){
+				   	 				return '审核已通过';
+				   	 			}
+				   	 			if(row.audit_status  == '2'){
+				   	 				return '审核未通过';
+				   	 			}
+				   	 			if(row.audit_status  == '3'){
+				   	 				return '购买成功';
+				   	 			}
+				   	 		},
+							styler: function(value,row,index){
+								  	if(row.audit_status  == '0'){
+										return 'color:balck;';
+									}else{
+										return 'color:red;';
+									}
+								}
+				   	 	">申请状态</th>
+				   	 	<th  data-options="field:'action',width:100"  formatter="formatAction">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+		function formatAction (value,row,index){
+			if(row.audit_status == '0'){
+				var	val="<a href='javascript:void(0);' class='delete' onclick='onFail("+row.id+")' title='审核失败'></a>"+
+				 		"<a href='javascript:void(0);'class='edit' onclick='onPass("+row.store_id+","+row.id+","+row.sale_type_id+","+row.audit_num+")' title='审核通过'></a>";
+			}else{
+				var val="<a href='javascript:void(0);'>已经审核</a>";
+			}
+			return val;
+		}
+		$(function(){
+			$(".searchAdvanced").hide();
+			//高级查询按钮
+		    $("#aAdvanced").click(function () {
+		        if ($("#Advanced").val() == "0") {
+		            $("#Advanced").val(1);
+		            $("#simpleSearch").hide();
+		            //$("#aAdvanced").text("简单搜索")
+		            $("#aAdvanced").addClass("searchAdvancedS");
+		        } else {
+		            $("#Advanced").val(0);
+		            $("#simpleSearch").show();
+		            //$("#aAdvanced").text("高级搜索");
+		            $("#aAdvanced").removeClass("searchAdvancedS");
+		        }
+		        $(".searchAdvanced").slideToggle("slow");
+		    });
+		})
+		function searchOrder(){
+			var searchtype = $("#Advanced").val();
+			var keyword = $("#searchKeyword").val();
+			
+			var storename = $("#storename").val();
+			var typeId = $("#typeId").val();
+			var storeLevel = $("#storeLevel").val();
+			var auditStatus = $("#auditStatus").val();
+			
+			$("#auditdata").datagrid('load', {
+				 stype:searchtype,
+				 keyword:keyword,
+				 
+				 storeName:storename,
+				 typeId:typeId,
+				 storeLevel:storeLevel,
+				 auditStatus:auditStatus,
+				 page:1
+		    });
+		}
+		
+		function onFail(Id){
+			$.ajax({
+				   url:  "${ctx}/b2b2c/admin/salefree!audit_pass.do",
+				   type: "POST",
+				   data: {sign:0,id:Id},
+				   dataType : "json",	   
+				   success : function(result) {
+						if(result.result==1){
+							$('#auditdata').datagrid('reload');
+							$.Loading.success(result.message);
+						}else{
+							$('#auditdata').datagrid('reload');
+							$.Loading.error(result.message);
+						}
+				 	},
+				   error : function(e) {
+				 		$.Loading.error('出现错误，请重试');
+					}
+				});
+		}
+		
+		function onPass(storeId,Id,typeId,auditNum){
+			$.ajax({
+				   url:  "${ctx}/b2b2c/admin/salefree!audit_pass.do",
+				   type: "POST",
+				   data: {sign:1,storeId:storeId,id:Id,typeId:typeId,auditNum:auditNum},
+				   dataType : "json",	   
+				   success : function(result) {
+						if(result.result==1){
+							$('#auditdata').datagrid('reload');
+							$.Loading.success(result.message);
+						}else{
+							$('#auditdata').datagrid('reload');
+							$.Loading.error(result.message);
+						}
+				 	},
+				   error : function(e) {
+				 		$.Loading.error('出现错误，请重试');
+					}
+				});
+		}
+		
+</script>
+<#include '/admin/footer.html' >

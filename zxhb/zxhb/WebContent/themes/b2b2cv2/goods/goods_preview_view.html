@@ -1,0 +1,28 @@
+<style>
+.ui_content{margin:0;}
+.goods__preview_view_img img{
+	width: 300px;
+}
+</style>
+<div style="height:600px;width:400px;overflow: auto;">
+	<div>
+	 	<h1>商品详细</h1>
+		<a href="javascript:back()" class="fallback"></a>
+	</div>
+	<div>
+		<div>
+			<img width="100" height="100" src="${img_url!''}" />
+		</div>
+		<div>
+			<h1>${store_name!''}</h1>
+			<h1>${goods_name!''}</h1>
+			<strong>${goods_price!''}元</strong>
+			
+		</div>
+		
+		商品描述
+		<div class="goods_detail goods__preview_view_img" style=" width: 300px;margin: auto;">
+			${miaoshu!''}
+		</div>
+	</div>
+</div>

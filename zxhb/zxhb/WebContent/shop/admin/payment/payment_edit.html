@@ -1,0 +1,136 @@
+<#include '/admin/header.html' >
+
+<script type="text/javascript" charset="utf-8" src="${ctx}/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${ctx}/ueditor/ueditor.all.min.js"> </script>
+<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+<script type="text/javascript" charset="utf-8" src="${ctx}/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<style>
+.form-table th {
+	width: 150px;
+}
+</style>
+<div class="main">
+	<div class="shadowBoxWhite wf100 whiteBox">
+		<form id="editpayCfgForm" method="post" class="validate">
+			<input type="hidden" name="paymentId" value="${paymentId }" />
+			<table cellspacing="1" cellpadding="3" width="100%"
+				class="form-table" id="pluginTable">
+				<tr id="first">
+					<th>支付方式：</th>
+					<td><select name="type" id="pluginList" onchange="bian()">
+							<option value="">请选择要添加的支付方式</option> <#list pluginList as
+							plugin>
+							<option value="${plugin.id }"<#if
+								type==plugin.id > selected="selected" </#if> >${plugin.name }</option>
+							</#list>
+					</select></td>
+				</tr>
+				<tr id="name">
+					<th>支付方式名称：</th>
+					<td><input type="text" class="easyui-validatebox input_text"
+						name="name" value="${name}" id="payment_name"
+						data-options="required:true" dataType="string" isrequired="true" maxlength="20"/>
+					</td>
+				</tr>
+				<tr id="last">
+					<th>介绍：</th>
+					<td>
+						<script id="editor" name="biref" type="text/plain" style="height:200px;width: 99%;">${biref!''}</script>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+		<div class="buttonWrap">
+			<a href="javascript:;" id="saveBtn" class="easyui-linkbutton">保存</a>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var ue = UE.getEditor('editor');
+
+	$(function() {
+
+		$("#saveBtn").click(function() {
+			var savebtn = $(this);
+			var formflag= $("#editpayCfgForm").form('validate');
+			if(formflag) {
+				//pluginList
+				var type = $("#pluginList").val();
+				if(type == "") {
+					$.Loading.error("请选择支付方式！");	
+					
+					savebtn.linkbutton("enable");
+					return;
+				}
+			}
+			if(formflag){
+				var options = {
+					url : "payCfg!saveEdit.do?ajax=yes",
+					type : "POST",
+					dataType : "json",
+					success : function(result) {
+						if(result.result==1){
+							$.Loading.success(result.message);
+							$("#payCfginfo").dialog('close');
+							$('#paymentdata').datagrid('reload');
+						}else{
+							$.Loading.error(result.message);
+						}
+						editbtn.linkbutton("enable");
+				 	},
+				 	error : function(e) {
+						editbtn.linkbutton("enable");
+				 		$.Loading.error("出现错误 ，请重试");	
+					}
+				};
+				$('#editpayCfgForm').ajaxSubmit(options);
+			}else{
+				$.Loading.hide();
+				editbtn.linkbutton("enable");
+			}
+		})
+	})
+	$(function(){
+		loadHtml('${paymentId}','${type}','${name}');
+	});
+
+	function bian() {
+		var pluginid = $("#pluginList").val();
+		var name = $("#pluginList option:selected").text();
+		loadHtml("", pluginid, name);
+	}
+
+	function loadHtml(paymentid, pluginid, name) {
+		if (pluginid && pluginid != '') {
+			$.ajax({
+				url : "payCfg!getPluginHtml.do?ajax=yes&pluginId=" + pluginid
+						+ "&paymentId=" + paymentid,
+				success : function(html) {
+					cleanTr();
+					$("#pluginTable tr[id=name]").after(html);
+					$("#payment_name").val(name);
+				},
+				error : function() {
+					$.Loading.error("出错了");
+				}
+			});
+		}
+	}
+
+	function cleanTr() {
+		$("#pluginTable>tbody>tr").each(
+				function() {
+					if ($(this).attr("id") != "first"
+							&& $(this).attr("id") != "last"
+							&& $(this).attr("id") != "name") {
+						$(this).remove();
+					}
+				});
+	}
+</script>
+
+<#include '/admin/footer.html' >
+

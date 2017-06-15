@@ -1,0 +1,153 @@
+<style type="text/css">
+.ejectMassage table tbody tr td{border: 1px solid #ddd;text-align: center;line-height: 20px;}
+.ejectMassage table tbody tr td.tl{text-align: left;padding-left: 10px;}
+.addBonus .required{width:130px;display: inline-block; text-align: right;}
+.addBonus form div input{width: 230px;}
+.addBonus form div input.Wdate{width: 228px;height: 30px;border: 1px solid #ccc;padding-left: 10px;}
+.ui_buttons{display: block;}
+</style>
+<div  style="width:680px; font-size: 12px;" class="tal">
+    <div class="ejectMassageList" style="display:block;">
+        <div class="bdc_gray ejectMassage">
+            <table>
+                <thead class="bgc_gray">
+                    <tr>
+                        <th class="w50 tac">选择</th>
+                        <th class="w180 tac">优惠券名称</th>
+                        <th class="w60 tac">券额</th>
+                        <th class="w250 tac">使用描述</th>
+                        <th class="w110 tac">期限</th>
+                        <th class="w50 tac">发行量</th>
+                    </tr>
+                </thead>
+                <tbody id="bbsTab">
+                    <tr>
+                        <td class="tac h70 bl0"><input type="checkbox" name=""></td>
+                        <td>店庆保养优惠店庆保养优惠</td>
+                        <td>200</td>
+                        <td class="tl">在本店保养满800可用300元优惠券.</td>
+                        <td>截止至2016-12-12</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td class="tac h70 bl0"><input type="checkbox" name=""></td>
+                        <td>店庆保养优惠</td>
+                        <td>200</td>
+                        <td class="tl">在本店保养满800可用300元优惠券.</td>
+                        <td>截止至2016-12-12</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td class="tac h70 bl0"><input type="checkbox" name=""></td>
+                        <td>店庆保养优惠</td>
+                        <td>200</td>
+                        <td class="tl">在本店保养满800可用300元优惠券.</td>
+                        <td>截止至2016-12-12</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td class="tac h70 bl0"><input type="checkbox" name=""></td>
+                        <td>店庆保养优惠</td>
+                        <td>200</td>
+                        <td class="tl">在本店保养满800可用300元优惠券.</td>
+                        <td>截止至2016-12-12</td>
+                        <td>100</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt20"><a class="btn_massage" onclick="addMassage()">新增优惠券</a></div>
+    </div>
+    <div class="addBonus mt10" style="display:none;">
+        <form id="add_form" action="#" method="post" class="validate" >
+            <div>
+                <span class="required">优惠券名称：</span>
+                <input type="text" name="type_name" class="text" maxlength="12" placeholder="请输入12个以内汉字" autocomplete="off">
+            </div>
+            <div>
+                <span class="required">优惠券面额：</span>
+                <input type="text" name="type_money" id="type_money" isrequired="false" dataType="double"  class="text" autocomplete="off" onkeyup="value=value.replace(/[^\d.]/g,'')">
+            </div>
+            <div>
+                <span class="required">买家消费满：</span>
+                <input type="text"  name="min_goods_amount" id="min_goods_amount" isrequired="true" dataType="double" class="text" autocomplete="off" onkeyup="value=value.replace(/[^\d.]/g,'')"><i>元使用</i>
+            </div>
+            <div>
+                <span class="required">使用期限：</span>
+                <input class="Wdate" readonly="readonly"  type="text"  name="useTimeStart" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd 00:00:00'})" isrequired="true" >
+                <i>至</i>
+            </div>
+            <div>
+                <span class="required"></span>
+                <input class="Wdate" readonly="readonly"  type="text" name="useTimeEnd" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd 23:59:59'})" isrequired="true" >
+            </div>
+            <div>
+                <span class="required">发行量：</span>
+                <input type="text" value="" name="create_num" id="create_num" class="text w100 mr5" isrequired="true" dataType="int"  autocomplete="off"
+                       onkeyup="this.value=this.value.replace(/\D/g,'')"
+                       onafterpaste="this.value=this.value.replace(/\D/g,'')">
+            </div>
+            <div>
+                <span class="required">每人限领：</span>
+                <input type="text" value="1" name="limit_num" id="limit_num" readOnly="true" class="text w100 mr5" isrequired="true" dataType="int"  autocomplete="off"
+                       onkeyup="this.value=this.value.replace(/\D/g,'')">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+// 隔行变色
+$("#bbsTab tr:odd").addClass("bgc_f1");  
+// 点击新增页面关闭列表弹出新增短信
+    function addMassage(){
+        $(".ejectMassageList").css("display","none");
+        $(".addBonus").css("display","block");
+    }
+</script>
+
+<script>
+    $("#min_goods_amount").on("blur",function(){
+        var price = $("#type_money").val();
+        var rewards_limit =  $("#min_goods_amount").val();
+        price = price.replace(',',"");
+        rewards_limit = rewards_limit.replace(',',"");
+        if(parseFloat(price) > 0){
+            if(parseFloat(price) >= parseFloat(rewards_limit)){
+                alert("买家消费满减金额不得小于等于优惠券面额！");
+                return  $(this).val("");
+            }
+        }else{
+            if(parseFloat(price) > parseFloat(rewards_limit)){
+                alert("买家消费满减金额不得小于等于优惠券面额！");
+                return  $(this).val("");
+            }
+        }
+    });
+    $("#type_money").on("blur",function(){
+        var price = $("#type_money").val();
+        var rewards_limit =  $("#min_goods_amount").val();
+        price = price.replace(',',"");
+        rewards_limit = rewards_limit.replace(',',"");
+        if(parseFloat(price) > 0){
+            if(parseFloat(price) >= parseFloat(rewards_limit)){
+                alert("买家消费满减金额不得小于等于优惠券面额！");
+                return  $(this).val("");
+            }
+        }else{
+            if(parseFloat(price) > parseFloat(rewards_limit)){
+                alert("买家消费满减金额不得小于等于优惠券面额！");
+                return  $(this).val("");
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+

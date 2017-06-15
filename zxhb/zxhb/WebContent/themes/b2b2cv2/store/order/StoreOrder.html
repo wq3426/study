@@ -1,0 +1,725 @@
+<#include '/store/store_header.html' />
+<script src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<!-- 获取店铺订单标签 -->
+<#assign storeorderList=newTag("storeOrderListTag")/>
+<#assign orderList=storeorderList()/>
+<#assign orderstatus= "com.enation.app.shop.core.taglib.OrderStatusDirectiveModel"?new()>
+<!-- 获取订单类型标签 -->
+<#assign orderTypeTag = newTag("orderTypeTag")>
+<#assign orderType = orderTypeTag()>
+<!-- 获取订单状态标签 -->
+<#assign orderStautsTag = newTag("orderStautsTag")>
+<!-- 调用订单状态标签 -->
+<#assign orderState = orderStautsTag()>
+    <div class="store_center">
+        <#include '../left_menu.html' />
+        <div id="sotre_right_content" class="sotre_right_content">
+            <div class="path">
+                <span style="color:#999;">您的位置：</span>
+                <span>订单管理</span>
+                <span> > </span>订单列表
+            </div>
+            <input type="hidden" value="${order_state!''}" class="left_selected">
+
+            <div class="store_right_main">
+                <div class="tabmenu">
+                    <input type="hidden" id="order_state" value="${orderList.order_state!''}"/>
+                    <ul class="tab pngFix">
+                        <li
+                        <#if order_state?? && order_state=="all"> class="active"
+                            <#else> class="normal"
+                        </#if>
+                        ><a href="javascript:void(0);" order_state="all" name="order_state">所有订单</a></li>
+                        <li
+                        <#if order_state?? && order_state=="wait_pay"> class="active"
+                            <#else> class="normal"
+                        </#if>
+                        ><a href="javascript:void(0);" order_state="wait_pay" name="order_state">待支付</a></li>
+
+                        <!--<li <#if order_state?? && order_state=="wait_pay"> class="active" <#else> class="normal" </#if> ><a href="javascript:void(0);" order_state="wait_pay" name="order_state">等待收款</a></li>-->
+                        <li
+                        <#if order_state?? && order_state=="wait_ship"> class="active"
+                            <#else> class="normal"
+                        </#if>
+                        ><a href="javascript:void(0);" order_state="wait_ship" name="order_state">待服务</a></li>
+                        <!--<li <#if order_state?? && order_state=="wait_rog"> class="active" <#else> class="normal" </#if> ><a href="javascript:void(0);" order_state="wait_rog" name="order_state">等待收货</a></li>-->
+                        <li
+                        <#if order_state?? && order_state=="yet_service"> class="active"
+                            <#else> class="normal"
+                        </#if>
+                        ><a href="javascript:void(0);" order_state="yet_service" name="order_state">已服务</a></li>
+                        <li
+                        <#if order_state?? && order_state=="8"> class="active"
+                            <#else> class="normal"
+                        </#if>
+                        ><a href="javascript:void(0);" order_state="8" name="order_state">已取消</a></li>
+                    </ul>
+                </div>
+                <!-- 订单列表 -->
+                <div class="store_orderlist">
+                    <table class="search_form">
+                        <tbody>
+                        <tr>
+                            <th>订单编号：</th>
+                            <td><input type="text" class="text" name=keyword value="${orderList.keyword!''}"></td>
+                           	<th>买家：</th>
+                            <td><input type="text" class="text" name="buyerName"  value="${orderList.buyerName!''}"></td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单筛选：
+                            	<select name="order_type" id="order_type">
+                            		<option value="" >全部</option>
+                            		<#if storeMember.store_id?? && storeMember.store_id == 1>
+                            		<option value="3"  <#if orderList.order_type?? && orderList.order_type=='3'>selected="selected"</#if>>商品订单</option>
+			                    	<option value="1"  <#if orderList.order_type?? && orderList.order_type=='1'>selected="selected"</#if>>保险订单</option>
+			                    	<option value="2"  <#if orderList.order_type?? && orderList.order_type=='2'>selected="selected"</#if>>保养订单</option>
+			                    	<#else>
+			                    	<option value="0"  <#if orderList.order_type?? && orderList.order_type=='0'>selected="selected"</#if>>商品订单</option>
+			                    	<option value="4"  <#if orderList.order_type?? && orderList.order_type=='4'>selected="selected"</#if>>保险订单</option>
+			                    	<option value="2"  <#if orderList.order_type?? && orderList.order_type=='2'>selected="selected"</#if>>保养订单</option>
+                            		<option value="3"  <#if orderList.order_type?? && orderList.order_type=='3'>selected="selected"</#if>>中安订单</option>
+			                    	</#if>
+                            	</select>
+                            </td>
+                            <td class="storeorderlist">
+
+                                <span style="float: right">
+                                <label class="prl60"><input class="text hasDatepicker" type="text" placeholder="起始日期" name="startTime"
+                                              onClick="WdatePicker()" value="${orderList.startTime!''}"/><span
+                                        class="storeorder_time"></span></label>
+                                <i class="prl30">-</i><label class="prl30"><input class="text hasDatepicker" type="text" placeholder="截止日期" name="endTime"
+                                                      onClick="WdatePicker()" value="${orderList.endTime!''}"><span
+                                    class="storeorder_time"></span></label>
+                                     </span>
+                                 <span class="fr prl60 " style="line-height: 30px;">
+                            </span>
+                            </td>
+                            <!-- <td>
+                           		<lable><a href="javascript:void()" onclick="javascript:getYesterdayTime()">昨天</a></lable>&nbsp;&nbsp;
+                                <lable><a href="javascript:getTodayTime()">今天</a></lable>&nbsp;&nbsp;
+                                <lable><a href="javascript:getAweekTime()">一周</a></lable>
+                            </td> --> 
+                            <td class="fr"><input type="button" class="submit ml10" id="btnSearch" value="搜索"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- 订单列表详细 -->
+                    <table class="s_orderlist" cellpadding="0" cellspacing="0">
+                        <thead class="bl br">
+                        <tr class="s_orderlist_title">
+                            <th class="s_orderlist_th1">订单名称</th>
+                            <th class="s_orderlist_th2">总计金额</th>
+                            <th class="s_orderlist_th2">买家信息</th>
+                            <th class="s_orderlist_th2">订单状态</th>
+                            <th class="s_orderlist_th2">订单操作</th>
+                        </tr>
+                        </thead>
+                        <#if orderList.totalCount != 0 >
+                            <tbody>
+                            <#list orderList.storeOrder.result as order>
+                                <tr style="line-height:12px;height:12px;padding:0px;">
+                                    <td colspan="20" style="border:0px none;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="20" <#if  order.shipping_method == 1 >class="wlh"</#if>>
+                                        <span name="time">
+                                        <@dateformat time="${order.create_time?c}"
+											pattern="yyyy-MM-dd HH:mm:ss"/>
+                                        </span>
+                                        <span>订单号：${order.sn}</span>
+                                        <i class="fr">
+                                      	    <span class=""><#if order.logi_name??>物流公司：${order.logi_name!''}</#if></span>
+                                        	<span class="w220"><#if order.ship_no??>物流单号：${order.ship_no!''}</#if></span>
+                                        </i>
+                                    </th>
+                                </tr>
+                                <!--创建“订单货物列表”标签-->
+                                <#assign orderItemListTag = newTag("orderItemListTag")>
+                                <!--调用“订单货物列表”标签，并传递参数-->
+                                <#assign orderItemList = orderItemListTag("{'orderid':${order.order_id}}")>
+                                <#list orderItemList as item>
+                                <tr <#if  order.shipping_method == 1 >class="wl"</#if>>
+
+                                        	<td class="s_orderlist_th1 tl" >
+                                                <div class="s_item_list_img fl h60  m15 ">
+                                                <!--     <a target="_blank" href="${ctx}/goods-${item.goods_id}.html"> </a> -->
+                                                            <img height="60px"  width="60px"  src="${item.image!''}" style="cursor: pointer;" />
+                                                   
+                                                </div>
+                                                <div class="ml5 fl mt20 w200 mr30">
+                                                    <div class="s_item_list_name ">
+                                                        <a target="_blank" href="${ctx}/goods-${item.goods_id}.html"></a>
+                                                        <@substring   title="${item.name}" length="48" dot="..." />
+                                                        <!-- <p>型号： <span></span></p> -->
+                                                    </div>
+                                                </div>
+                                                <div class="fl " style="margin-top: 5%; text-align: center;">
+                                                    <div class=" w60" style="display: inline-block">
+                                                       <span>${item.price?string.currency}</span>
+                                                    </div>
+                                                    <div class=" w50" style="display: inline-block">x<span> ${item.num}</span></div>
+
+											</td>
+										 <#if (orderItemList?size>1) >
+										  	<#if item_index==0>
+	                                        <td style="width:100px" rowspan="${orderItemList?size}">
+	                                              	<strong>
+	                                              		${order.need_pay_money?string.currency}
+	                                              	<strong>
+	                                        </td>
+	                                        <td style="width:100px" rowspan="${orderItemList?size}">
+                                                <p name="name">
+                                                    ${order.ship_name!''}
+                                                </p>
+                                                <p name="title">
+                                                   ${order.ship_mobile!''}
+                                                </p>
+                                            </td>
+                                            <td  rowspan="${orderItemList?size}">  
+                                                <div class="pb5"> <p><@orderstatus status="${order.status}" type="order" order_type="${order.order_type}"/></p>
+                                                				<p><a href="javascript:void(0);" onclick="javascript:window.location='order_detail.html?ordersn=${order.sn}&menu=transaction'">查看订单</a></p>
+                                                				
+                                                </div>
+                                            </td>
+                                            <td style="width:100px"  rowspan="${orderItemList?size}">
+                                                <div>
+                                                	  <#if  order.status == orderState.ORDER_NOT_PAY  || order.status == orderState.ORDER_NOT_CONFIRM>
+                                                	  		<#if order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateInsureHistory1('${order.order_id}')">修改价格</a><br/>
+                                                	  		<#elseif order.order_type == orderType.REPAIR>
+                                                	  			<a href="javascript:void(0);" onclick="javascript:editOrderPrice('${order.sn}')" >修改价格</a><br/>
+                                                	  		<#else>
+                                                	  			<a href="javascript:void(0);" onclick="javascript:editOrderPrice('${order.sn}')" >修改价格</a><br/>
+                                                	  		</#if>
+                                                	  <#elseif order.status == orderState.ORDER_PAY_CONFIRM >
+                                                	  		<#if order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateInsureHistory2('${order.order_id}')">保单生成</a><br/>
+                                                	  		<#elseif order.order_type == orderType.REPAIR>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateRepairHistory('${order.order_id}', '${order.create_time}')">更新保养内容</a><br/>
+                                                	  		<#elseif order.order_type == orderType.ZA_GOODS>
+                                                	  			<#if order.shipping_method == 1><#--中安邮寄到用户地址-->
+                                                	  			<span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">上传物流信息</span>
+                                                	  			<#elseif order.shipping_method == 2><#--中安邮寄到4S店地址-->
+                                                	  			<span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">上传物流信息</span>
+                                                	  			</#if>
+                                        	  				<#elseif order.order_type == orderType.STORE_GOODS >
+                                        	  					<#if order.shipping_method == 1><#--经销商寄到用户地址-->
+                                        	  					<span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">上传物流信息</span>
+                                        	  					<#elseif order.shipping_method ==2><#--经销商到经销商-->
+                                                	  			<a href="javascript:void(0);" onclick="javascript:stockUpComplete('${order.order_id}')">确认备货</a><br/>
+                                                	  			</#if>
+                                                	  		</#if>
+                                                	  <#elseif order.status == orderState.ORDER_SHIP >
+                                                	  		<#if order.order_type == orderType.ZA_GOODS && order.shipping_method ==2> <#--中单商品到4S店需要4S店处理-->
+                                                	  		 <a href="javascript:void(0);" onclick="javascript:stockUpComplete('${order.order_id}')">确认备货</a><br/>
+                                                	  		</#if>
+                                                	  <#elseif order.status == orderState.ORDER_SERVECE>
+                                                	  		<#if order.order_type != orderType.ZA_INSURANCE && order.order_type != orderType.STORE_INSURANCE>
+                                                	  		<#if order.order_type == orderType.REPAIR>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:confirmService('${order.order_id}')">服务完成</a><br/>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateRepairHistory('${order.order_id}', '${order.create_time}')">更新保养内容</a><br/>
+                                                	  		<#else>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:confirmService('${order.order_id}')">服务完成</a><br/>
+                                                	  		</#if>
+                                                	  		</#if>
+                                                	  <#else>
+                                                	  </#if>
+                                                	  <#if (order.order_type == orderType.STORE_GOODS || order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE || order.order_type == orderType.ZA_GOODS) && order.shipping_method==1 && order.status gt orderState.ORDER_PAY_CONFIRM && order.status lt orderState.ORDER_COMPLETE>
+                                                	  	  <span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">编辑物流信息</span><br/>
+                                                	  <#elseif order.order_type == orderType.ZA_GOODS && order.shipping_method==2 && order.status gt orderState.ORDER_PAY_CONFIRM && order.status lt orderState.ORDER_SERVECE>
+                                                	   	  <span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">编辑物流信息</span><br/>
+                                                	  </#if>
+                                                	  <#if order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:viewInsureHistory('${order.order_id}')">查看保险内容</a><br/>
+                                                	  <#elseif order.order_type == orderType.REPAIR>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:viewRepairHistory('${order.order_id}', '${order.create_time}')">查看保养内容</a><br/>
+                                                	  </#if>
+                                                 </div>
+                                              
+                                            </td>
+	                                      	</#if>
+	                                     <#else>
+	                                         <td style="width:100px" >
+	                                              	<strong>
+	                                              		${order.need_pay_money?string.currency}
+	                                              	<strong>
+	                                        </td>
+	                                         <td style="width:100px" rowspan="${orderItemList?size}">
+                                                <p name="name">
+                                                    ${order.ship_name!''}
+                                                </p>
+                                                <p name="title">
+                                                   ${order.ship_mobile!''}
+                                                </p>
+                                            </td>
+                                            <td >  
+                                                <div class="pb5"> <p><@orderstatus status="${order.status}" type="order" order_type="${order.order_type}"/></p>
+                                                				<p><a href="javascript:void(0);" onclick="javascript:window.location='order_detail.html?ordersn=${order.sn}&menu=transaction'">查看订单</a></p>
+                                                </div>
+                                            </td>
+                                            <td style="width:100px" >
+                                                <div>
+                                                	  <#if  order.status == orderState.ORDER_NOT_PAY  || order.status == orderState.ORDER_NOT_CONFIRM>
+                                                	  		<#if order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateInsureHistory1('${order.order_id}')">修改价格</a><br/>
+                                                	  		<#elseif order.order_type == orderType.REPAIR>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:editOrderPrice('${order.sn}')" >修改价格</a><br/>
+                                                	  		<#else>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:editOrderPrice('${order.sn}')" >修改价格</a><br/>
+                                                	  		</#if>
+                                                	  <#elseif order.status == orderState.ORDER_PAY_CONFIRM >
+                                                	  		<#if order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateInsureHistory2('${order.order_id}')">保单生成</a><br/>
+                                                	  		<#elseif order.order_type == orderType.REPAIR>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateRepairHistory('${order.order_id}', '${order.create_time}')">更新保养内容</a><br/>
+                                                	  		<#elseif order.order_type == orderType.ZA_GOODS>
+                                                	  			<#if order.shipping_method == 1><#--中安邮寄到用户地址-->
+                                                	  			<span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">上传物流信息</span>
+                                                	  			<#elseif order.shipping_method == 2><#--中安邮寄到4S店地址-->
+                                                	  			<span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">上传物流信息</span>
+                                                	  			</#if>
+                                        	  				<#elseif order.order_type == orderType.STORE_GOODS >
+                                        	  					<#if order.shipping_method == 1><#--经销商寄到用户地址-->
+                                        	  					<span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">上传物流信息</span>
+                                        	  					<#elseif order.shipping_method ==2><#--经销商到经销商-->
+                                                	  			<a href="javascript:void(0);" onclick="javascript:stockUpComplete('${order.order_id}')">确认备货</a><br/>
+                                                	  			</#if>
+                                                	  		</#if>
+                                                	  <#elseif order.status == orderState.ORDER_SHIP ><#--中单商品到4S店需要4S店处理-->
+                                                	  		<#if order.order_type == orderType.ZA_GOODS && order.shipping_method ==2>
+                                                	  		 <a href="javascript:void(0);" onclick="javascript:stockUpComplete('${order.order_id}')">确认备货</a><br/>
+                                                	  		</#if>
+                                                	  <#elseif order.status == orderState.ORDER_SERVECE>
+                                                	  		<#if order.order_type != orderType.ZA_INSURANCE && order.order_type != orderType.STORE_INSURANCE>
+                                                	  		<#if order.order_type == orderType.REPAIR>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:confirmService('${order.order_id}')">服务完成</a><br/>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:updateRepairHistory('${order.order_id}', '${order.create_time}')">更新保养内容</a><br/>
+                                                	  		<#else>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:confirmService('${order.order_id}')">服务完成</a><br/>
+                                                	  		</#if>
+                                                	  		</#if>
+                                                	  <#else>
+                                                	  </#if>
+                                                	  <#if (order.order_type == orderType.STORE_GOODS || order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE || order.order_type == orderType.ZA_GOODS ) && order.shipping_method == 1 && order.status gt orderState.ORDER_PAY_CONFIRM && order.status lt orderState.ORDER_COMPLETE>
+                                                	  		<span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">编辑物流信息</span><br/>
+                                                	  <#elseif order.order_type == orderType.ZA_GOODS && order.shipping_method == 2 && order.status gt orderState.ORDER_PAY_CONFIRM && order.status lt orderState.ORDER_SERVECE>
+                                                	   	    <span class="cp" onclick="logistics('${order.logi_id!''}','${order.ship_no!''}','${order.order_id}')">编辑物流信息</span><br/>
+                                                	  </#if>
+                                                	  <#if order.order_type == orderType.ZA_INSURANCE || order.order_type == orderType.STORE_INSURANCE>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:viewInsureHistory('${order.order_id}')">查看保险内容</a><br/>
+                                                	  <#elseif order.order_type == orderType.REPAIR>
+                                                	  		<a href="javascript:void(0);" onclick="javascript:viewRepairHistory('${order.order_id}', '${order.create_time}')">查看保养内容</a><br/>
+                                                	  </#if>
+                                                 </div>
+                                            </td>
+                                          </#if>
+                                </tr>
+                            	</#list>
+                            </#list>
+                            <tr>
+                            </tr>
+                            </tbody>
+                    </table>
+                    <@pager pageno="${orderList.page!'1'}" pagesize="${orderList.pageSize}"
+                    totalcount="${orderList.totalCount}" />
+                    <#else>
+                        </table>
+                        <p class="no_blank">暂无符合条件的数据记录</p>
+                    </#if>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="repair_create_time"/>
+
+    <!--增加物流信息-->
+    <script>
+        var dialog;
+
+        function logistics(logi_id,ship_no,order_id) {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "编辑物流信息";
+            map["html"] = "addLogistics.html?logi_id="+logi_id+"&ship_no="+ship_no;
+            map["url"] = "${ctx}/api/store/storeOrder!saveLogistics.do?order_id="+order_id;
+            map["form"] = "#logistics_form";
+            openDialog(map);
+        }
+    </script>
+
+    <!--加载弹出页面-->
+    <script>
+        var dialog;
+
+        //更新保险订单记录-保养币和价格
+        function updateInsureHistory1(order_id) {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保险服务订单记录更新";
+            map["html"] = "Renewal_insurance1.html?order_id="+order_id;
+            map["form"] = "#insure_form";
+            map["url"] = "${ctx}/api/store/storeOrder!saveInsureInfo.do?order_id="+order_id;
+            openDialog(map, 1);
+        }
+        
+        //更新保险订单记录-保单号
+        function updateInsureHistory2(order_id) {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保险服务订单记录更新";
+            map["html"] = "Renewal_insurance2.html?order_id="+order_id;
+            map["form"] = "#insure_form";
+            map["url"] = "${ctx}/api/store/storeOrder!saveInsureInfo.do?order_id="+order_id;
+            openDialog(map, 2);
+        }
+
+        //更新保养订单记录
+        function updateRepairHistory(order_id, create_time) {
+        	$("#repair_create_time").val(create_time);
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保养服务订单记录更新";
+            map["html"] = "Renewal_maintain.html?order_id="+order_id;
+            map["form"] = "#repair_form";
+            map["url"] = "${ctx}/api/store/storeOrder!saveRepairInfo.do?order_id="+order_id;
+            openDialog(map, 3);
+        }
+        
+        //查看保险订单记录
+        function viewInsureHistory(order_id) {
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保险服务订单记录查看";
+            map["html"] = "Renewal_insurance.html?order_id="+order_id;
+            map["form"] = "#view_form";
+            openDialog(map, 4);
+        }
+        
+        //查看保养订单记录
+        function viewRepairHistory(order_id, create_time) {
+        	$("#repair_create_time").val(create_time);
+            var map = {}; // 相当于Map map = new HashMap();
+            map["title"] = "保养服务订单记录查看";
+            map["html"] = "view_maintain.html?order_id="+order_id;
+            openDialog(map, 5);
+        }
+
+        function openDialog(map, type) {
+            dialog = $.dialog({
+                title : map["title"],
+                lock : true,
+                min : false,
+                max : false,
+                width:600
+            });
+
+            $.ajax({
+                url : map["html"],
+                cache : false,
+                success : function(html) {
+                    dialog.content(html);
+                    dialog.button([ {
+                        name : '保存',
+                        callback : function() {
+                            formSubmit(dialog, map, type);
+
+                            this.button({
+                                        name: '保存',
+                                        disabled: false
+                                    })
+                                    .lock();
+                            return false;
+                        }
+                    }, {
+                        name : '取消'
+                    } ]);
+                },
+                error : function() {
+                    $.alert("出现错误,请重试！");
+                }
+            });
+        }
+
+        function formSubmit(dialog, map, type) {
+        	if(type == 1){//更新保养币、订单价格
+        		var repair_coin = $("#repair_coin").val();
+        	    var insure_need_pay_money = $("#insure_need_pay_money").val();
+
+        	    if(repair_coin == "" || !/[0-9]/.test(repair_coin)){
+        			alert("请输入要赠送的保养币");
+        			return;
+        		}
+        	    
+        	    if(insure_need_pay_money == "" || insure_need_pay_money < 0){
+        	    	alert("请输入保险订单金额");
+        	    	return;
+        	    }
+        	}
+        	
+        	if(type == 2){//更新保单号
+        		var policy_no = $("#policy_no").val().trim();
+            	if(policy_no == "" || !/^[0-9a-zA-Z]+$/.test(policy_no)){
+            		alert("请填写正确的保单号");
+            		return;
+            	}
+        	}
+        	
+        	if(type == 3){//更新保养记录
+        		var flag = false;
+        		var repair_create_time = $("#repair_create_time").val()*1000;
+        		var repair_time = $("#repair_time").val();
+        		var repair_time_longvalue = new Date(repair_time).getTime();
+        		if(repair_create_time > repair_time_longvalue){
+        			alert("服务时间不能早于订单生成时间，请重新输入");
+        			return;
+        		}
+        		$("#repair_service").find("input").each(function(){
+        			var id = $(this).attr("id");
+        			var discount = $(this).val();
+                	if(discount == ""){
+                		if(id == "repair_mile"){
+                			alert("请输入'保养里程'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "repair_price"){
+                			alert("请输入'保养价格'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "repair_source"){
+                			alert("请输入'保养地点'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "service_timelength"){
+                			alert("请输入'服务工时'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "engineer"){
+                			alert("请输入'技师名称'");
+                			flag = true;
+                			return false;
+                		}
+                		if(id == "repair_time"){
+                			alert("请输入'服务时间'");
+                			flag = true;
+                			return false;
+                		}
+                	}
+        		});
+        		if(flag) return;
+        	}
+        	
+            var options = {
+                url : map["url"],
+                type : "POST",
+                dataType : 'json',
+                success : function(result) {
+                    if(result.result==1){
+                        dialog.title('保存成功，2秒后关闭此窗口。').time(3);
+                        dialog.reload();
+                    }else{
+                        dialog.title('保存失败，'+result.message);
+                        $("input[type='button']").each(function(){
+                            $(this).removeAttr("disabled");
+                        });
+                    }
+                },
+                error : function(e) {
+                    alert("出现错误，请重试");
+                }
+            };
+            $(map["form"]).ajaxSubmit(options);
+            return false;
+        }
+        
+    </script>
+	<script type="text/javascript" src="${ctx}/statics/js/utils/dateformat.js"></script>
+    <script type="text/javascript">
+  		 document.onkeydown=function(event){
+    	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+    	      if(e && e.keyCode==13){ // enter 键
+    	    	  search();
+    	      }
+    	 };
+        $("#btnSearch").click(function () {
+            search();
+        });
+        $("a[name='order_state']").click(function () {
+            $("#order_state").val($(this).attr("order_state"));
+            search();
+        });
+        function search() {
+            var keyword = $("input[name='keyword']").val();
+            var buyerName = $("input[name='buyerName']").val();
+            var startTime = $("input[name='startTime']").val();
+            var endTime = $("input[name='endTime']").val();
+            var timeType = $("select[name='timeType']").val();
+			var order_type = $("select[name='order_type']").val();
+            if (endTime < startTime) {
+                alert("开始时间不得大于结束时间！");
+                return;
+            }
+            var order_state = $("#order_state").val();
+            location.href = "StoreOrder.html?keyword=" + keyword + "&buyerName=" + buyerName + "&startTime=" + startTime + "&endTime=" + endTime + "&order_state=" + order_state + "&menu=transaction" + "&timeType=" + timeType + "&order_type=" + order_type;
+
+        }
+
+        // 确认收款
+        function confirmReceipt(orderId) {
+
+            var options = {
+                url: ctx + "/api/shop/order!confirmReceipt.do?order_id=" + orderId,
+                dataType: "json",
+                success: function (result) {
+                    if (result.result == 1) {
+                        $.alert("收款成功");
+                        window.location.reload();
+                    } else {
+                        $.alert("确认收款失败，请稍候再试。");
+                    }
+                },
+                error: function () {
+                    $.alert("系统出错，请稍候再试。");
+                }
+            }
+            $.ajax(options);
+        }
+
+//        $(function () {
+//            var leftselect = $(".left_selected").val();
+//            if (leftselect == "wait_ship") {
+//                selectMenu(1);
+//            } else {
+//                selectMenu(0);
+//            }
+//        })
+        
+        //获取 昨天今天 一周时间
+        function getTodayTime(){
+        	var nowTime = new Date();
+            $("input[name='startTime']").val(nowTime.Format("yyyy-MM-dd"));
+        	$("input[name='endTime']").val(nowTime.Format("yyyy-MM-dd"));
+        }
+        
+        function getYesterdayTime(){
+        	var endTime = new Date();
+         	var nowTime = new Date(endTime.getTime() - 1 * 24 * 3600 * 1000);//昨天时间
+            $("input[name='startTime']").val(nowTime.Format("yyyy-MM-dd"));
+        	$("input[name='endTime']").val(endTime.Format("yyyy-MM-dd"));
+        }
+        
+        function getAweekTime(){
+        	var endTime = new Date();
+         	var nowTime = new Date(endTime.getTime() - 7 * 24 * 3600 * 1000);//一周时间
+            $("input[name='startTime']").val(nowTime.Format("yyyy-MM-dd"));
+        	$("input[name='endTime']").val(entTime.Format("yyyy-MM-dd"));
+        }
+        
+        function stockUpComplete(orderId){
+			$.ajax({
+				url:"${ctx}/api/store/storeOrder!stockUpComplete.do?orderId="+orderId,
+				dataType:"json",		
+				success:function(data) {
+					alert(data.message);
+					if(data.result==1){
+						location.reload();
+					}
+				},
+				error : function(e) {
+					alert("出现错误 ，请重试");
+				}
+			});
+		}
+        
+        function confirmService(orderId){
+        	$.ajax({
+				url:"${ctx}/api/store/storeOrder!confirmService.do?orderId="+orderId,
+				dataType:"json",		
+				success:function(data) {
+					alert(data.message);
+					if(data.result==1){
+						location.reload();
+					}
+				},
+				error : function(e) {
+					alert("出现错误 ，请重试");
+				}
+			});
+        }
+        
+  		function confirmOrder(orderId){
+			if(window.confirm("确认吗")){
+				$.ajax({
+			    	type:"POST",
+			    	url:url="${ctx}/api/store/storeOrder!confirm.do?orderId="+orderId+"&backstage=1",
+			        dataType: "json",
+			        success: function(data){
+			        		alert(data.message);
+						if(data.result==1){
+							location.reload();
+						}
+			        },error:function(e){
+						alert("出现错误请重试");        	
+			        }
+			    });
+			}
+		}
+  		function finishOrder(orderId){
+				$.ajax({
+			    	type:"POST",
+			    	url:url="${ctx}/api/store/storeOrder!finishOrder.do?orderId="+orderId,
+			        dataType: "json",
+			        success: function(data){
+			        		alert(data.message);
+						if(data.result==1){
+							location.reload();
+						}
+			        },error:function(e){
+						alert("出现错误请重试");        	
+			        }
+			    });
+		}
+  		
+  		
+		function editOrderPrice(orderSn){
+				dialog = $.dialog({
+					title : "调整价格",
+					lock : true,
+					min : false,
+					max : false
+				});
+				$.ajax({
+					url : "orderPriceInfo.html?ordersn="+orderSn,
+					success : function(html) {
+						dialog.content(html);
+						dialog.button([ {
+							name : '修改',
+							callback : function() {
+								editPrice(orderSn);
+								return false;
+							}
+						}]);
+					},
+					error : function() {
+						$.alert("出现错误，请重试");
+					},
+					cache : false
+				});	
+        }
+        function editPrice(orderSn){
+			var options = {
+					url : "${ctx}/api/store/storeOrder!savePrice.do",
+					type : "POST",
+					dataType : 'json',
+					success : function(data) {
+						alert(data.message);
+						if(data.result==1){
+						    var keyword = $("input[name='keyword']").val(orderSn);
+						    search();
+						}
+					},
+					error : function(e) {
+						alert("出现错误 ，请重试");
+					}
+				};
+			$("#orderPriceForm").ajaxSubmit(options);
+	}
+        
+    </script>
+    <#include '/common/footer.html'/>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<project name="jareop" basedir="../">
+	<!--编译eop-->
+	<target name="jar_eop">
+		<delete dir="${build.dir}/eop" />
+		<mkdir dir="${build.dir}/eop" />
+		<!--编译src/eop目录下的类文件-->
+		<javac srcdir="." destdir="${build.dir}/eop" debug="true" includeantruntime="on">
+			<compilerarg line="-encoding UTF-8 " />
+			<classpath refid="buildpath" />
+			<include name="eop/**" />
+			<include name="base/**" />
+			<exclude name="eop/freemarker/**" />
+		</javac>
+
+		<!--拷贝资源文件-->
+		<copy todir="${build.dir}/eop">
+			<fileset dir="eop">
+				<exclude name="**/*.java" />
+				<exclude name="freemarker/**" />
+			</fileset>
+			<fileset dir="base">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+		<!--生成eop.jar-->
+		<jar destfile="${tempdir}/lib/component-eop.jar">
+			<fileset dir="${build.dir}/eop">
+				<exclude name="com/enation/app/base/component/**" />
+			</fileset>
+		</jar>
+
+		<!--生成base核心组件jar-->
+		<jar destfile="${tempdir}/lib/component-base-core.jar">
+			<fileset dir="${build.dir}/eop">
+				<include name="com/enation/app/base/component/**" />
+			</fileset>
+		</jar>
+	</target>
+</project>

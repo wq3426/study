@@ -1,0 +1,76 @@
+<style>
+	.input_text {
+		width: 180px;
+	}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel">
+		<form id="addForm" method="post" class="validate">
+			<input type="hidden" name="carmodelRepairItem.carmodel_id" id="carmodel_id">
+			<table width="100%">
+				<tr>
+					<th>汽车品牌：</th>
+					<td>
+						<select class="input_text" id="car_brand" onchange="getType(this.value)">
+							<option value="0">----请选择品牌----</option>
+							<#list carbrandList as brand>
+							<option value="${brand.brand_id}">${brand.name}</option> 
+							</#list>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>类型：</th>
+					<td>
+						<select class="input_text" id="car_type" onchange="getSeries(this.value)">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>车系：</th>
+					<td colspan="3">
+						<select class="input_text" id="car_series" onchange="getNk(this.value)">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>汽车年款：</th>
+					<td colspan="3">
+						<select class="input_text" id="car_nk" onchange="getSalesName(this.value)">
+						</select>年
+					</td>
+				</tr>
+				<tr>
+					<th>车型名称：</th>
+					<td colspan="3">
+						<select class="input_text" id="car_salesName" onchange="getCarmodel(this.value)">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>保养项目名称：</th>
+					<td colspan="3">
+						<select class="input_text" name="carmodelRepairItem.repair_item_id" id="car_repairItem">
+							<option value="0">----请选择保养项目----</option>
+							<#list carmodelRepairItemList as item>
+							<option value="${item.id}">${item.itemname}</option>
+							</#list>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>保养间隔里程：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodelRepairItem.repair_interval" id="car_repairinterval"/>公里
+					</td>
+				</tr>
+				<tr>
+					<th>保养间隔时间：</th>
+					<td>
+						<input class="easyui-validatebox input_text" type="text" data-options="required:true" name="carmodelRepairItem.repair_interval_time" id="car_repairintervaltime"/>个月
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

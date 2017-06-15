@@ -1,0 +1,61 @@
+<#include '/admin/header.html' >
+<style>
+.input_text{
+	width: 95%;
+}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="memberform">
+		<div id="tb" style="height: auto">
+			<span style="float: right;"> 
+				<span id="simpleSearch">
+					<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;"
+					placeholder="请输入积分规则，积分值" name="searchKeyWord"> 
+					<a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true" onclick="searchIntegral()">搜索</a>
+				</span>
+			</span>
+		</div>
+		
+		<div class="clear height10"></div>
+		<div class="shadowBoxWhite tableDiv">
+		<input id="Advanced" name="Advanced" type="hidden" value="0" />
+		<table class="easyui-datagrid"
+			data-options="url:'integralDetail!integerlistJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" id="integraldata" sortName="integral_ruleId" sortOrder="desc" >
+			<thead>
+				<tr>
+					<th data-options="field:'id',checkbox:true"></th>
+					<th data-options="field:'member_name',width:200,align:'center'">用户名</th>
+					<th data-options="field:'integral_date',width:200,align:'center'">积分时间</th>
+					<th data-options="field:'integral_state',width:200,align:'center',
+							formatter: function(value,row,index){
+									if(row.integral_state == '0'){
+										return '增加积分';
+									}else{
+										return '消费积分';
+									}
+								}">积分状态</th>
+					<th data-options="field:'integral_rulecontent',width:200,align:'center'">积分内容</th>
+					<th data-options="field:'integral_value',width:200,align:'center'">积分值</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	function searchIntegral() {
+
+		var searchtype = $("#Advanced").val();
+		var keyword = $("#searchKeyword").val();
+		
+		$("#integraldata").datagrid('load', {
+			stype : searchtype,
+			keyword : keyword,
+
+			page : 1
+		});
+	}
+</script>
+<#include '/admin/footer.html' >

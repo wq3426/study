@@ -1,0 +1,89 @@
+<#include '/store/store_header.html' />
+
+<!-- 消息中心-->
+<#assign pushMsgTag=newTag("pushMsgTag") />
+<#assign pushMsgList=pushMsgTag()>
+
+<style>
+    .list_head{margin-top: 20px}
+</style>
+<div class="store_center">
+    <#include '../left_menu.html' />
+    <div id="sotre_right_content" class="sotre_right_content">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>></span>
+            <a href="#">消息中心 </a>
+            <span>></span>
+            <a href="#">未查看</a>
+        </div>
+        <div style="margin: 20px;">
+            <div style="font-size: 16px">未查看消息共 <span class="red">${pushMsgList.totalCount}</span> 条</div>
+            <ul id="massage" class="mt10">
+            	<#if pushMsgList  ?? >
+					<#list pushMsgList.list as list>
+						<li  style="width:100%;" class="list_head current marketing"><i></i>
+							<#if pushMsgList.PINGTAI_MSG == list.push_id>
+								<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;${list.title!''}&nbsp;&nbsp;
+							<#elseif pushMsgList.SYSTEM_MSG == list.push_id>
+								<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;您有一条未读的系统消息&nbsp;&nbsp;
+							<#elseif pushMsgList.ORDER_MSG == list.push_id>
+								<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;您有一笔未处理的订单&nbsp;&nbsp;
+							<#elseif pushMsgList.CARERROR_CODE == list.push_id>
+								<b class="ml10">${list.push_type!''}:</b> ${list.create_time!''}&nbsp;您的顾客车辆检测出严重故障&nbsp;&nbsp;
+							</#if>
+							<span  class="red scalability${list.id}" onclick="checkDetail(${list.id},${list.push_id},'${list.create_time}');">查看详情&gt;&gt;</span>
+						</li>
+					</#list>
+				</#if>
+            </ul>
+         </div>
+    </div>
+</div>
+<!--控制列表伸缩-->
+<script>
+    function checkDetail(id,pushId,createTime){
+    	 var text=$(".scalability"+id).html();
+         if(text==="查看详情&gt;&gt;"){
+             $(".scalability"+id).html("关闭详情&gt;&gt;");
+	    	 if(pushId != "" && (${pushMsgList.PINGTAI_MSG} == pushId
+	    			|| ${pushMsgList.SYSTEM_MSG} == pushId)){
+	    		 	queryPushMsgById(id,createTime);
+	    	} 
+         }else if(text==="关闭详情&gt;&gt;"){
+             $("#"+id).remove();
+             $(".scalability"+id).html("查看详情&gt;&gt;");
+         }
+  }
+    //根据id查询消息详情
+	function queryPushMsgById(id,createTime){
+			$.ajax({
+				url : "${ctx}/core/admin/pushMsg!queryPushMsgById.do?id="+id,
+				cache : false,
+				dataType: "json",
+				success : function(data) {
+					if(data.result==1){
+					var obj = data.data;
+						$(".scalability"+id).parent().append(
+			    				"<li style='display:block' class='list_body bdc_gray mt20 lh25' id='"+id+"'>"+
+			                    "<div class='pb20 mt20 tac'>"+
+						            "<b>"+obj.title+"</b>"+
+							        "<p>发布人:盈驾平台运营平台 <span>发布时间:"+createTime+"</span></p>"+
+							        "<div class='bdc_sd' style='width: 96%;margin-left: 2%;'></div>"+
+						        "</div>"+obj.msg+
+						        "<div class='tar mr60 mt20'>"+
+						            "<b>盈驾运营平台</b>"+
+						            "<p>"+createTime+"</p>"+
+						        "</div>"+
+					    		"</li>"); 
+					}else{
+						$.alert(data.message);
+					}
+				},
+				error : function() {
+					$.alert("出现错误，请重试");
+				}
+			});
+		}
+</script>
+<#include '/common/footer.html' />

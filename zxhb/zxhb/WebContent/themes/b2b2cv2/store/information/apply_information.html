@@ -1,0 +1,23 @@
+<style>
+    .purchase_bonus input{margin-right: 20px;}
+</style>
+<#assign saleFreeTag=newTag("saleFreeTag")>
+    <#assign saleFreeList=saleFreeTag("{'sale_type':1,'isFree':0}")/>
+    <div class="dialog_content" style="margin: 0px; padding: 0px; ">
+        <div class="purchase_bonus">
+            <form id="add_free_form" action="#" method="post" id="aa">
+                <input type="hidden" name="typeId" value="1"></input>
+                <ul>
+                    <#if saleFreeList??>
+                        <ul>
+                            <#list saleFreeList as sfl>
+                                <li><input type="radio" name="auditId" value="${sfl.id}">${sfl.use_num}条/免费,仅限本月使用</input></li>
+                            </#list>
+                        </ul>
+                        <#else>
+                            <p class="no_blank">暂无符合条件的数据记录</p>
+                    </#if>
+                </ul>
+            </form>
+        </div>
+    </div>

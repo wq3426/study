@@ -1,0 +1,53 @@
+<#include '/admin/header.html' > 
+
+<div class="main" style="background-color: white;">
+	<form id="editForm">
+		<table  width="98%" border="0" cellspacing="0" cellpadding="8">
+			<tr>
+				<th>店铺等级</th>
+				<td>
+					${store_level_name!''}
+				</td>
+			</tr>
+			<tr>
+				<th>订单类型：</th>
+				<td>
+					${order_type_name!''}
+				</td>
+			</tr>
+			<tr>
+				<th>4S保有客户服务费率：</th>
+				<td><input class="easyui-numberspinner" value="${storeRate.original_service_rate!0}" data-options="increment:1" style="width:120px;"
+					 name="original_service_rate" id="original_service_rate"
+					data-options="required:true"   maxlength="2" />%
+				</td>
+			</tr>
+			<!-- <tr>
+				<th>导流客户服务费率：</th>
+				<td><input class="easyui-numberspinner" value="${storeRate.flow_service_rate!0}" data-options="increment:1" style="width:120px;"
+					id="flow_service_rate"  name="flow_service_rate"
+					data-options="required:true"   maxlength="2"/>%
+				</td>
+			</tr> -->
+			<tr>
+				<th>4S保有客户手续费率：</th>
+				<td><input class="easyui-numberspinner" value="${storeRate.original_handling_rate!0}" data-options="increment:1" style="width:120px;"
+					 name="original_handling_rate" id="original_handling_rate"
+					data-options="required:true"   maxlength="2" />%
+				</td>
+			</tr>
+		<!-- 	<tr>
+				<th>导流客户手续费率：</th>
+				<td><input class="easyui-numberspinner" value="${storeRate.flow_handling_rate!0}" data-options="increment:1" style="width:120px;"
+					id="flow_handling_rate"  name="flow_handling_rate"
+					data-options="required:true"   maxlength="2"/>%
+				</td>
+			</tr> -->
+		</table>
+		<input type="hidden" name="rate_id" value="${storeRate.rate_id!''}">
+	</form>
+</div>
+<script>
+</script>
+
+<#include '/admin/footer.html' >

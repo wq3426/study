@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content=" width=1280,user-scalable=no;">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <style>
+        body{font-size: 12px!important; }
+        .toPay{margin: 0.02rem;}
+        body * { max-height: 999999px; }
+        input,input:focus,input:active{user-select: text;}
+    </style>
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=document.documentElement.clientWidth+"px";
+    </script>
+</head>
+
+<body>
+
+<#assign zxOrderInfoTag=newTag("zxOrderInfoTag")/>
+<#assign orderInfo=zxOrderInfoTag("'mobile':'${mobile!''}', 'order_id':'${order_id!''}'")/>
+<div class="ff40 llhh90 tc bgfb ppt5 "><span class="goBack mml5" onclick="javascript:history.back(-1)"></span>订单支付</div>
+<div class="">
+    <form action="${ctx}/api/b2b2c/storeApi!payOrder.do" id="payOrder" method="POST" target="_blank">
+        <input type="hidden" name="out_trade_no" value="${orderInfo.order_info.order_sn}"/>
+        <input type="hidden" name="subject" value="${orderInfo.order_info.goods_name}"/>
+        <!-- <input type="hidden" name="total_fee" value="${orderInfo.order_info.total_price}"/> -->
+        <input type="hidden" name="total_fee" value="0.01"/>
+        <input type="hidden" name="body" value="${orderInfo.order_info.intro}"/>
+        <input type="hidden" name="access_type" value="2">
+    </form>
+    
+    <input type="hidden" id="pay_type" value="2">
+
+    <div class="ff28 llhh90">
+        <div class="mml5">收货人信息</div>
+        <div class="bb3"></div>
+        <div class="mml5">姓名：${orderInfo.order_info.receive_user!''}</div>
+        <div class="bb3"></div>
+        <div class="mml5">电话：${orderInfo.order_info.user_telephone!''}</div>
+        <div class="bb3"></div>
+        <div class="mml5 ">地址：${orderInfo.order_info.address!''}</div>
+        <div class="bb3"></div>
+        <div style="border: 0.02rem solid #f9f9f9;"></div>
+        <div class="mml5 ">选择支付方式</div>
+        <div class="bb3"></div>
+        <div class=" mml5 method">
+            <span class="jb_yellow_app" id="2">微&nbsp;&nbsp;信</span>
+            <span class="bdc0_app mml2" id="1">支付宝</span>
+        </div>
+        <div class="bb3 mmt2"></div>
+
+    </div>
+    <div style="border: 0.02rem solid #f9f9f9;"></div>
+    <div class="ff28 mml5 mmt2 c666 ">
+
+        <div class="mmt2 of ww100">
+            <div class="app_list_img fl ">
+                <img src="${orderInfo.order_info.ta_spec_image!''}" alt="">
+            </div>
+            <div class=" fl mml2 ww70 ff24 llhh35">
+                <div class="ww100">
+                    <p class=" app_list_title fl">${orderInfo.order_info.goods_name!''}</p>
+                    <p class="fl tr ww20 ff28">x${orderInfo.order_info.order_count!''}</p>
+                </div>
+                <p class=" app_list_text ">${orderInfo.order_info.intro!''}</p>
+                <p>规格：${orderInfo.order_info.gg_spec_value!''}</p>
+                <div class="ww100 of">
+                    <p class="ww80 fl">图案：${orderInfo.order_info.ta_spec_value!''}</p>
+                    <span class="ww20 lf dip tr ff28">&yen;${orderInfo.order_info.total_price!''}</span>
+                </div>
+            </div>
+        </div>
+        <div class="bb3 mmt2"></div>
+        <div class="tr mmt2 ff28 llhh40">
+            <p><span>商品金额：<span class="dip ww10 tl">&yen;${orderInfo.order_info.total_price!''}</span></span></p>
+            <p><span>运费：<span class="dip ww10 tl">&yen;0</span></span></p>
+            <p><span class="cred">应付金额：<span
+                    class="dip ww10 tl">&yen;${orderInfo.order_info.total_price!''}</span></span></p>
+            <span class=" toPay ff28" onclick="toPay()">立即支付</span>
+        </div>
+
+    </div>
+
+    <div class="mmt2 tl" style="width: 100%;background-color: #f9f9f9;border-top: 2px solid #dddddd;">
+        <p class="mmt1  ff24 llhh35" style="color: #b28850 ;background-color: #fcf8e2;border: 0.001rem solid #fbeed4;padding: 0.02rem 0.03rem ;">快递通知：春节期间暂不发货，2月6日后正常发货，谢谢理解！</p>
+        <div class="cb c999 mmt3 ff24 llhh35" style="padding: 0rem 0.03rem">
+            <p>温馨提示：</p>
+            <p>请确认您购买信息，提交后将不能更改；</p>
+            <p>本纪念卡一经售出除质量外概不退换；</p>
+            <p>本纪念卡可在加入全国交通一卡通城市的公交、地铁等公共交通上进行使用，目前仅限在发卡地区进行充值。</p>
+        </div>
+    </div>
+    <div class="ff20" style="margin-top: 0.02rem;text-align: center;">
+        版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+    </div>
+</div>
+
+<script>
+    $(".method span").click(function () {
+    	$("#pay_type").val($(this).attr("id"));
+        $(this).removeClass("bdc0_app").addClass("jb_yellow_app").siblings().removeClass("jb_yellow_app").addClass("bdc0_app");
+    });
+    
+    function toPay() {
+    	var pay_type = $("#pay_type").val();
+
+    	if(pay_type == 1){
+    		$("#payOrder").submit();
+    	}
+    	if(pay_type == 2){
+    		window.location.href = "${ctx}/cardorder/weChat_payment_app.html?order_sn=${orderInfo.order_info.order_sn}";
+    	}
+    }
+</script>
+</body>
+</html>

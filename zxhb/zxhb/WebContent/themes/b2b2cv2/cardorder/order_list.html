@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>
+    <meta name="viewport" content="width=1280">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中信海博</title>
+    <link rel="shortcut icon" href="${ctx}/themes/b2b2cv2/cardorder/images/favicon.ico" type="image/x-icon" />
+
+    <meta name="keywords" content="西藏中信海博电子科技有限公司">
+    <meta name="description"
+          content="">
+    <!--[if IE]>
+    <script type="text/javascript" src="/areas/portal/content/js/html5.js"></script>
+    <style>
+        article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/themes/b2b2cv2/cardorder/css/main.css">
+    <script src="${ctx}/themes/b2b2cv2/cardorder/js/jquery.min.js"></script>
+    <style>
+        .mt20{margin-top: 20px!important;}
+        .mt30{margin-top: 30px!important;}
+        .order_list table thead tr th{text-align: center;background-color:#f7f7f7;  color: #666666;font-size: 14px;font-weight: 400;}
+        .order_list table tbody tr th{font-weight: 400; }
+        .order_list table tbody tr td{border-bottom: 1px solid #e7e7e7; position: relative;  }
+        .order_list table tbody tr td span{ margin-top: 10px; display: inline-block ;cursor: pointer;position: absolute; top: 0px; }
+         .info{width: 100px;height: 36px;line-height: 36px;background-color: #f15353;color: #ffffff;border-radius: 5px;display: inline-block;margin-top: 20px!important;margin-left: 20px!important;}
+         .info2{width: 80px;height: 36px;line-height: 36px;background-color: #c4a152;color: #ffffff;border-radius: 5px;display: inline-block}
+        .info:hover{background-color:#c4a152;}
+        .info2:hover{background-color:#a9873a;}
+        .triangle{background: url("${ctx}/themes/b2b2cv2/cardorder/images/sanjiao_07.png")no-repeat 100% 100%;width: 13px;height: 7px;position: absolute;top: -7px;left: 75px;}
+        .personal{width: 200px;border: 1px solid #e7e7e7;background-color: #f7f7f7;position: absolute;top: 100%;left:-70px;text-align: left;padding: 10px; z-index: 99}
+        .ogistics{width: 200px;border: 1px solid #e7e7e7;background-color: #f7f7f7;position: absolute;top: 100%;left:-54px;text-align: left;padding: 10px; z-index: 99}
+        .portrait{display: inline-block;background: url("${ctx}/themes/b2b2cv2/cardorder/images/touxiang_03.png")no-repeat 100% 100%;width: 20px;height: 20px;margin-right: 8px;position: absolute;left: -20px;}
+        /*.compellation{position: absolute;margin-top:30px; left: 35%;}*/
+        .materials{position: absolute;margin-top:70px;margin-left: 20px;top: 0px;}
+
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="box">
+        <a href="${ctx}/cardorder/index.html"><div class="logo w250 h70"></div></a>
+        <div class="nav ">
+            <ul class="fl tc">
+                <li class="fl ml160"><a href="${ctx}/cardorder/index.html">首页</a></li>
+                <li class="fl "><a href="${ctx}/cardorder/selecting.html">立即购买</a></li>
+                <li class="fl selected"><a href="${ctx}/cardorder/order_list.html">订单查询</a></li>
+                <!--<li class="fl "><a href="${ctx}/cardorder/payment.html">立即支付</a></li>-->
+                <li class="fl"><a href="${ctx}/cardorder/about_us.html">关于我们</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="box cb ">
+    <div class="mt30 order_list">
+        <div class="tc"><input type="text"  style="height: 35px"  placeholder="&nbsp;请输入手机号进行查询！" id="mobile" class="w300 lh35 bdda bdr5 h35 f14 pl10"><span class="info2  ml10" id="inquiries">立即查询</span></div>
+        <table class="ww100 mt20">
+            <thead>
+            <tr>
+                <th colspan="" class="w700 lh40">订单详情</th>
+                <th class="w150 tl">收货人</th>
+                <th class="w80 tl">数量</th>
+                <th class="w150">操作</th>
+            </tr>
+            </thead>
+        </table>
+        <div id="orderListDiv">
+        </div>
+    </div>
+    
+    <input type="hidden" id="user_telephone" value="${user_telephone!''}"/>
+    <input type="hidden" id="status" value="${status!''}"/>
+    
+    
+    <div class="h300 tc" id="initDiv">
+        <img class="mt50" src="${ctx}/themes/b2b2cv2/cardorder/images/order_list2.png" alt="">
+        <!--<img class="mt50" src="${ctx}/themes/b2b2cv2/cardorder/images/order_list1.png" alt="">-->
+    </div>
+    <div class=" cb pt15 c999">
+        <!--<p>温馨提示：<br>-->
+            <!--请确认您预约信息，提交后将不能更改；<br>-->
+            <!--预约不代表购买成功，请在开放购买时访问购买。数量有限，先到先得!-->
+        <!--</p>-->
+    </div>
+</div>
+<footer class="tc f14 mt30">
+    版权所有&copy;2016 西藏中信海博电子科技有限公司 京ICP备10051071号-1
+</footer>
+<script>
+    $(document).ready(function () {
+//        显示隐藏物流信息
+        $(".materials").click(function (){
+            console.log("dddddd");
+            $(this).next().removeClass("din").addClass("dip");
+        }).mouseout(function (){
+            $(this).next().removeClass("dip").addClass("din");
+        });
+
+//        显示隐藏个人信息
+        $(".compellation").mouseover(function (){
+            $(this).next().removeClass("din").addClass("dip");
+        }).mouseout(function (){
+            $(this).next().removeClass("dip").addClass("din");
+        });
+        
+    });
+    
+    var mobile = $("#user_telephone").val();
+    if(mobile != ""){
+    	$("#mobile").val(mobile);
+    	getOrderList(mobile);
+    }
+
+	//查询按钮验证
+    $("#inquiries").click(function () {
+        var mobile = $("#mobile").val();
+        if (mobile == "") {
+            alert('请输入您预约时填写的手机号码');
+            return false;
+        }
+        if (!/^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/.test(mobile)) {
+            alert('手机号码格式不正确');
+            return false;
+        }
+
+        getOrderList(mobile);
+    });
+    
+    function getOrderList(mobile){
+    	$.ajax({
+            url: "${ctx}/api/b2b2c/storeApi!getCardOrderList.do?ajax=yes",
+            type: "POST",
+            data: "mobile=" + mobile,
+            async: false,
+            dataType: "json",
+            success: function(data) {
+            	if(data.result == 0){
+            		$("#orderListDiv").addClass("din");
+            		$("#initDiv").removeClass("din");
+            		$("#initDiv").empty();
+            		$("#initDiv").append("<img class='mt50' src='${ctx}/themes/b2b2cv2/cardorder/images/order_list1.png' alt=''>");
+            		alert(data.message);
+            	}else if(data.result == 1){
+            		$("#initDiv").addClass("din");
+            		$("#orderListDiv").removeClass("din");
+            		$("#orderListDiv").empty();
+            		var total_content = "";
+            		$.each(data.data, function(i, item){
+            			var content = "";
+                        content += "<table>";
+            			content += "<tbody>";
+            			content += "<tr><th class='p10 ' colspan='6'></th></tr>";
+            			content += "<tr>";
+            			content += "<th colspan='5' class='border lh30 bgf7 bde7 lh30'><span class='pl20 pr20'>订单日期："+ item.order_date +"</span><span>订单号："+ item.order_sn +"</span>";
+            			content += "</th>";
+            			content += "</tr>";
+            			content += "<tr>";
+            			content += "<td class='bl w430'>";
+            			content += "<div class='bde7 m10 '  style='width: 120px;display:inline-block; position: absolute;top: 0px;'>";
+            			content += "<div class=' m10'>";
+            			content += "<img style='width:100px' src="+ item.ta_spec_image +"  alt=''>";
+            			content += "</div>";
+            			content += "</div>";
+            			content += "<div class='w250 m10 ' style='width: 250px;display:inline-block;margin-left: 150px; '>";
+            			content += "<p><b>"+item.goods_name+"</b></p>";
+            			content += "<p style='height:40px; overflow:hidden'>"+item.intro+"</p>";
+                        content += "<div class='c2e dip ' onclick='particulars(this)'>查看更多&gt;&gt;</div>";
+            			content += "</div>";
+            			content += "</td>";
+            			content += "<td class='w250 tl pr'>";
+            			content += "<span style='left: 0'><p>规格："+item.gg_spec_value+"</p><p>图案："+item.ta_spec_value+"</p><p> 价格："+item.unit_price+"元</p></span>";
+            			content += "</td>";
+            			content += "<td class='w150  pr'>";
+            			content += "<span class='mt30'><i class='portrait '></i>";
+            			content += "<div class='compellation' onclick='compellation(this)'>"+item.receive_user+"";
+            			content += "<div class='personal din' >";
+            			content += "<i class='triangle'></i>";
+            			content += "<p>"+item.receive_user+"</p>";
+            			content += "<p>"+item.address+"</p>";
+            			content += "<p>"+item.user_telephone+"</p>";
+            			content += "</div>";
+            			content += "</div>";
+            			content += "</span></td>";
+            			content += "<td class='w80 tl'><span class='mt30'>"+item.order_count+"</span></td>";
+            			content += "<td class='w150  br pr'>";
+            			if(item.status == 0){
+            				content += "<span class=' info' onclick='toPayOrder("+item.order_id+")'>去支付</span>";
+            			}else if(item.status == 1){
+            				content += "<span class=' info'>已支付,待发货</span>";
+            			}else if(item.status == 2){
+            				content += "<span class=' info'>配送中</span>";
+            			}else if(item.status == 3){
+            				content += "<span class=' info'>已送达,未签收</span>";
+            			}else if(item.status == 4){
+            				content += "<span class=' info'>已签收</span>";
+            			}else if(item.status == 8){
+            				content += "<span class=' info'>已取消</span>";
+            			}
+            			if(item.status > 0){
+            				content += "<div class=' mt15 materials' id='"+item.order_sn+"' onclick='materials(this)'>查看物流";
+            				content += "<div class='ogistics din' >";
+                			content += "<i class='triangle'></i>";
+                			content += "<p>单号："+item.shipping_no+"</p>";
+                			content += "<p id='trans_detail_"+item.order_sn+"'></p>";
+                			content += "</div>";
+                			content += "</div>";
+            			}
+            			content += "</td>";
+            			content += "</tr>";
+            			content += "</tbody>";
+            			content += "</table>";
+
+            			total_content += content;
+            		});
+            		$("#orderListDiv").append(total_content);
+            	}
+            },
+            error : function(){
+            	alert("请求出错");
+            }
+        });
+    }
+</script>
+<script>
+    function particulars(o) {
+        var thisTxt = $(o).html();
+        if (thisTxt == "查看更多&gt;&gt;") {
+            $(o).prev().height("100%");
+            $(o).html("&lt;&lt;关闭详情")
+        }
+        if (thisTxt == "&lt;&lt;关闭详情") {
+            $(o).prev().height("40px");
+            $(o).html("查看更多&gt;&gt;")
+        }
+    }
+    function compellation(o) {
+        $(o).children().removeClass("din").addClass("dip");
+    }
+
+    function materials(o) {
+    	var order_sn = $(o).attr("id");
+    	$.ajax({
+    		url : "${ctx}/api/b2b2c/storeApi!getTransInfo.do?order_sn="+order_sn,
+    		type : "POST",
+    		dataType : "json",
+    		async : true,
+    		success : function(data){
+    			if(data.result == 1){
+    				$("#trans_detail_"+order_sn).html("<p>"+data.data.AcceptTime+"</p><p>"+data.data.AcceptStation+"</p>");
+    			}else{
+    				$("#trans_detail_"+order_sn).html("<p>"+data.message+"</p>");
+    			}
+    		},
+    		error : function(){
+    			alert("异步请求出错");
+    		}
+    	});
+    	
+        $(o).children().removeClass("din").addClass("dip");
+    }
+
+    $(document).ready(function () {
+        $(function () {
+            $(document).bind("click", function (e) {
+                var target = $(e.target);
+                if (target.closest(".compellation").length == 0) {
+                    $(".compellation").children().removeClass("dip").addClass("din");
+                }
+                if (target.closest(".materials").length == 0) {
+                    $(".materials").children().removeClass("dip").addClass("din");
+                }
+            })
+        })
+    });
+    
+    function toPayOrder(order_id){
+    	var mobile = $("#mobile").val();
+    	window.location = "${ctx}/cardorder/payment.html?mobile="+mobile+"&order_id="+order_id;
+    }
+</script>
+</body>
+</html>

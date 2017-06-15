@@ -1,0 +1,390 @@
+<style>
+.input_text, .lvPrice, .ipt{
+    border: 1px solid #D7D7D7;
+    border-radius: 3PX;
+    /* height: 14PX; */
+    padding: 7px 0 7px 5px;
+    line-height: 14PX;
+    font-size: 12px;
+    display: inline-block;
+    width: 300px;
+}
+</style>
+<div class="easyui-panel" style="border-style:none;" >
+	<div style="padding: 10px 40px 10px 30px;text-align:right;">
+		<form id="freeform">
+					<input type="hidden" name="saleFree.id" value="${saleFree.id}" />
+					<div style="margin-top:10px"></div>
+						<div style="margin-top:10px">
+						类型名称：
+							<select  style="width: 305px;" class="input_text" name="saleFree.type_id" value="${saleFree.type_id}">
+										<#list saleTypeList as saleType>
+											 <#if saleType.type_id == saleFree.type_id >
+											    <option  value="${saleFree.type_id}" selected="selected">${saleType.type_name}</option> 
+											  <#else>
+											    <option  value="${saleType.type_id}">${saleType.type_name}</option> 
+											  </#if>
+										</#list>
+										
+							</select>
+						</div>
+						<div style="margin-top:10px">
+						店铺等级：
+							<select  style="width: 305px;" class="input_text" name="saleFree.level_id" value="${saleFree.level_id}">
+									<#list storeLevelList as storeLevel>
+										 <#if storeLevel.level_id == saleFree.level_id >
+										    <option value="${storeLevel.level_id}" selected="selected">${storeLevel.level_name}</option>
+										  <#else>
+										    <option value="${storeLevel.level_id}">${storeLevel.level_name}</option>
+										  </#if>
+									</#list>
+							</select>
+						</div>
+						<div style="margin-top:10px">
+						是否为初始化模板：
+							<select  style="width: 305px;" class="input_text" name="saleFree.isInitia" value="${saleFree.isInitia}">
+									<#if saleFree.isInitia == '0'>
+										<option  value="0" selected="selected">是</option> 
+										<option  value="1">否</option> 
+									<#else>
+										<option  value="0">是</option> 
+										<option  value="1" selected="selected">否</option> 
+									</#if>
+							</select>
+						</div>
+						<div style="margin-top:10px">
+						是否收费：
+							<select  style="width: 305px;" class="input_text" name="saleFree.isFree" value="${saleFree.isFree}"  onchange="changeIsFree(this.value)">
+									<#if saleFree.isFree == '0'>
+										<option  value="0" selected="selected">否</option> 
+										<option  value="1">是</option> 
+									<#else>
+										<option  value="0">否</option> 
+										<option  value="1" selected="selected">是</option> 
+									</#if>
+							</select>
+						</div>
+						<#if saleFree.isFree == '0'>
+								<div style="margin-top:10px" id="useNum">
+								条数/栏位：
+									<input type="text" class="input_text" name="saleFree.use_num" value="${saleFree.use_num}" autocomplete="off"/>
+								</div>
+															<div style='margin-top:10px'>
+								期限：
+									<select  style='width: 305px;' class='input_text' name='saleFree.limit_date' value="${saleFree.limit_date}">
+											<#if saleFree.limit_date == '0'>
+												<option  value='0' selected="selected">无</option>
+												<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '1'>
+												<option  value='0'>无</option>
+												<option  value='1' selected="selected">一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '2'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '3'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3' selected="selected">三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '4'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4' selected="selected">四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '5'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5' selected="selected">五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '6'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6' selected="selected">六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '7'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7' selected="selected">七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '8'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8' selected="selected">八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '9'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9' selected="selected">九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '10'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10' selected="selected">十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '11'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11' selected="selected">十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '12'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12' selected="selected">十二个月</option>
+												
+											</#if>
+									</select>
+								</div>
+						<#else>
+							<div style="margin-top:10px" id="useNum">
+								条数/栏位：
+									<input type="text" class="input_text" name="saleFree.use_num" value="${saleFree.use_num}" autocomplete="off"/>
+							</div>
+							<div style='margin-top:10px'>
+								期限：
+									<select  style='width: 305px;' class='input_text' name='saleFree.limit_date' value="${saleFree.limit_date}">
+											<#if saleFree.limit_date == '0'>
+												<option  value='0' selected="selected">无</option>
+												<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '1'>
+												<option  value='0'>无</option>
+												<option  value='1' selected="selected">一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '2'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '3'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3' selected="selected">三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '4'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4' selected="selected">四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '5'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5' selected="selected">五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '6'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6' selected="selected">六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '7'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7' selected="selected">七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '8'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8' selected="selected">八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '9'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9' selected="selected">九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '10'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10' selected="selected">十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '11'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11' selected="selected">十一个月</option><option  value='12'>十二个月</option>
+											<#elseif saleFree.limit_date == '12'>
+												<option  value='0'>无</option>
+												<option  value='1'>一个月</option><option  value='2' selected="selected">二个月</option><option  value='3'>三个月</option>
+												<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>
+												<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>
+												<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12' selected="selected">十二个月</option>
+												
+											</#if>
+									</select>
+								</div>
+								<div style='margin-top:10px'>
+								价格：
+									<input type='text' class='input_text decimal' name='saleFree.price' dataType='double' value="${saleFree.price}" isrequired='true' autocomplete='off'/>
+								</div>
+						</#if>
+		</form>
+	</div>
+</div>
+<script>
+	function checkField(value){
+		if(value == 1){
+			$("#isFree").nextAll().empty();
+			$("#isFree").after("<div style='margin-top:10px'>"+
+								"条数/栏位:"+
+									"<input type='text' class='input_text' name='saleFree.use_num' autocomplete='off'/>"+
+								"</div>"+
+								"<div style='margin-top:10px'>"+
+								"期限："+
+									"<select  style='width: 305px;' class='input_text' name='saleFree.limit_date'>"+
+											"<option  value='0'>无</option>"+ 
+											"<option  value='1'>一个月</option>"+ 
+											"<option  value='2'>二个月</option>"+
+											"<option  value='3'>三个月</option>"+ 
+											"<option  value='4'>四个月</option>"+
+											"<option  value='5'>五个月</option>"+ 
+											"<option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option>"+ 
+											"<option  value='8'>八个月</option>"+
+											"<option  value='9'>九个月</option>"+ 
+											"<option  value='10'>十个月</option>"+
+											"<option  value='11'>十一个月</option>"+ 
+											"<option  value='12'>十二个月</option>"+
+									"</select>"+
+								"</div>"+
+								"<div style='margin-top:10px'>"+
+								"价格："+
+									"<input type='text' class='input_text decimal' name='saleFree.price' dataType='double'  isrequired='true' autocomplete='off'/>"+
+								"</div>");
+		}else{
+			$("#isFree").nextAll().empty();
+			$("#isFree").after("<div style='margin-top:10px'>"+
+								"免费条数/栏位:"+
+									"<input type='text' class='input_text' name='saleFree.use_num' autocomplete='off'/>"+
+								"</div>");
+		}
+	}
+	
+	function changeIsFree(value){
+		if(value == 1){
+			$("#useNum").nextAll().empty();
+			$("#useNum").after("<div style='margin-top:10px'>"+
+								"期限："+
+									"<select  style='width: 305px;' class='input_text' name='saleFree.limit_date' value='${saleFree.limit_date}'>"+
+										"<#if saleFree.limit_date == '0'>"+
+											"<option  value='0' selected='selected'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '1'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1' selected='selected'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '2'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2' selected='selected'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '3'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3' selected='selected'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '4'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4' selected='selected'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '5'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5' selected='selected'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '6'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6' selected='selected'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '7'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7' selected='selected'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '8'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8' selected='selected'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '9'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2' >二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9' selected='selected'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '10'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2' >二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10' selected='selected'>十个月</option><option  value='11'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '11'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11' selected='selected'>十一个月</option><option  value='12'>十二个月</option>"+
+										"<#elseif saleFree.limit_date == '12'>"+
+											"<option  value='0'>无</option>"+
+											"<option  value='1'>一个月</option><option  value='2'>二个月</option><option  value='3'>三个月</option>"+
+											"<option  value='4'>四个月</option><option  value='5'>五个月</option><option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option><option  value='8'>八个月</option><option  value='9'>九个月</option>"+
+											"<option  value='10'>十个月</option><option  value='11'>十一个月</option><option  value='12' selected='selected'>十二个月</option>"+
+										"</#if>"+
+									"</select>"+
+								"</div>"+
+								"<div style='margin-top:10px'>"+
+								"价格："+
+									"<input type='text' class='input_text decimal' name='saleFree.price' value='${saleFree.price}' dataType='double'  isrequired='true' autocomplete='off'/>"+
+								"</div>");
+		}else{
+			$("#useNum").nextAll().remove();
+		}
+	}
+	
+</script>

@@ -1,0 +1,173 @@
+<#include '/admin/header.html' > 
+<style>
+.tableDiv table tr td {
+    text-align:center;
+}
+</style>
+<div class="main">
+	<!-- <div class="buttonArea">
+		<a href="javascript:void(0)" class="button blueBlue"
+			data-options="iconCls:'icon-add',plain:true" onclick="append()">添加</a>
+		<a href="javascript:void(0)" class="button"
+			data-options="iconCls:'icon-remove',plain:true" onclick="del()">删除</a>
+	</div> -->
+	<div class="shadowBoxWhite tableDiv">
+		<form id="saleTypeform">
+			<table class="easyui-datagrid"
+				data-options="url:'${ctx}/b2b2c/admin/saletype!saleTypeJson.do',fitColumns:'true',singleSelect:'true'"
+				pagination="true" id="saleTypedata" >
+				<thead>
+					<tr>
+				   	 	<th  data-options="field:'type_id',width:100">Id</th>
+				   	 	<th  data-options="field:'type_name',width:100">类型名称</th>
+				   	 	<!-- <th  data-options="field:'action',width:100"  formatter="formatAction">操作</th> -->
+					</tr>
+				</thead>
+			</table>
+		</form>
+		<div id="saleTypeinfo" style="display: none;"></div>
+	</div>
+</div>
+<script type="text/javascript">
+/* function formatAction(value,row,index){
+	var val="<a href='#' class='edit' title='编辑营销类型' onclick='edit("+row.type_id+")'></a>";
+	return val;
+}
+function append(){
+	    $("#saleTypeinfo").show();
+	　　	$('#saleTypeinfo').dialog({
+	　　		title: '添加营销类型',			//对话框的标题
+	　　		width: 500,
+	　　		closed: false,
+	　　		cache: false,
+	　　		href: '${ctx}/b2b2c/admin/saletype!add.do', 	 //对话框所引用的html页面
+	　　		modal: true,
+	　　		buttons: [{					//创建按钮
+	　　			 text:'保存',
+	　　			 iconCls:'icon-ok',
+	　　			 handler:function(result){
+	　　				 var savebtn = $(this);
+	　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+	　　				 if(!disabled){
+		　　				 addSaleTypeForm(savebtn);
+		　　			 }	
+	　　			}
+	　　		}]
+	　　	});
+}
+function edit(typeId){
+	    $("#saleTypeinfo").show();
+	　　	$('#saleTypeinfo').dialog({
+	　　		title: '修改营销类型',			//对话框的标题
+	　　		width: 500,
+	　　		closed: false,
+	　　		cache: false,
+	　　		href: '${ctx}/b2b2c/admin/saletype!edit.do?type_id='+typeId, 	 //对话框所引用的html页面
+	　　		modal: true,
+	　　		buttons: [{					//创建按钮
+	　　			 text:'保存',
+	　　			 iconCls:'icon-ok',
+	　　			 handler:function(){
+	　　				 var savebtn = $(this);
+	　　				 var disabled=savebtn.hasClass("l-btn-disabled");
+	　　				 if(!disabled){
+		　　				 editSaleTypeForm(savebtn);
+		　　			 }	
+	　　			}
+	　　		}]
+	　　	});
+}
+function addSaleTypeForm(savebtn){
+	var formflag= $("#saleTypeform").form().form('validate');
+	if(formflag){
+		$.Loading.show("正在保存请稍后...");
+		savebtn.linkbutton("disable");	
+		var options = {
+				url : "${ctx}/b2b2c/admin/saletype!addSaleType.do",
+				type : "POST",
+				dataType : "json",
+				success : function(result) {
+					if(result.result==1){
+						$("#saleTypeinfo").dialog('close');
+						$('#saleTypedata').datagrid('reload');
+						$.Loading.success(result.message);
+					}else{
+						$("#saleTypeinfo").dialog('close');
+						$('#saleTypedata').datagrid('reload');
+						$.Loading.error(result.message);
+					}
+					savebtn.linkbutton("enable");
+			 	},
+			 	error : function(e) {
+			 		$.Loading.error('出现错误，请重试');
+			 		savebtn.linkbutton("enable");
+				}
+			};
+		$('#typeform').ajaxSubmit(options);	
+	}
+	
+}
+function editSaleTypeForm(savebtn){
+	var formflag= $("#saleTypeform").form().form('validate');
+	if(formflag){
+		$.Loading.show("正在保存请稍后...");
+		savebtn.linkbutton("disable");	
+		var options = {
+				url : "${ctx}/b2b2c/admin/saletype!editSaleType.do",
+				type : "POST",
+				dataType : "json",
+				success : function(result) {
+					if(result.result==1){
+						$("#saleTypeinfo").dialog('close');
+						$('#saleTypedata').datagrid('reload');
+						$.Loading.success(result.message);
+					}else{
+						$("#saleTypeinfo").dialog('close');
+						$('#saleTypedata').datagrid('reload');
+						$.Loading.error(result.message);
+					}
+					savebtn.linkbutton("enable");
+			 	},
+			 	error : function(e) {
+			 		$.Loading.error('出现错误，请重试');
+			 		savebtn.linkbutton("enable");
+				}
+			};
+		$('#typeform').ajaxSubmit(options);	
+	}
+}
+function del(){
+	var rows = $('#saleTypedata').datagrid("getSelections"); 
+	if(rows.length<1){
+		$.Loading.error('请选择要删除的营销类型');
+		return;
+	}
+	if(!confirm("确认要删除营销类型吗？")){	
+		return ;
+	}
+	 var options = {
+		url : "${ctx}/b2b2c/admin/saletype!delSaleType.do",
+		type : "POST",
+		dataType : 'json',
+		success : function(result) {
+			if(result.result==1){
+				var rows = $('#saleTypedata').datagrid("getSelections"); 
+				for(var i =0;i<rows.length;i++){      
+					var index = $('#saleTypedata').datagrid('getRowIndex',rows[i]); 
+					$('#saleTypedata').datagrid('deleteRow',index);      
+				}
+			}
+			if(result.result==0){ 
+				$.Loading.error(result.message);
+			}
+		},
+		error : function(e) {
+			$.Loading.error("出现错误 ，请重试");
+		}
+	};
+	$('#saleTypeform').ajaxSubmit(options);	
+} */
+</script>
+
+
+<#include '/admin/footer.html' >

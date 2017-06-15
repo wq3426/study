@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project name="core" default="build" basedir="../">
+	<property name="war_temp" location="d:/temp"/>
+	<target name="init">
+		<delete dir="${war_temp}"></delete>
+		<mkdir dir="${war_temp}"/>
+	</target>
+	<target name="copy" depends="init">
+		 <copy todir="${war_temp}/WEB-INF/classes/">
+			<fileset dir="build/classess/">
+				<exclude name="**\\config\\**"/>
+				<exclude name="eop.properties"/>
+				<exclude name="**\\freemarker\\**"/>
+				
+			</fileset>
+		  </copy>		
+		 <copy todir="${war_temp}/adminthemes">
+		      <fileset dir="WebContent/adminthemes"/> 
+		 </copy>		
+		 <copy todir="${war_temp}/core">
+		      <fileset dir="WebContent/core"/> 
+		 </copy>
+		 <copy todir="${war_temp}/shop">
+		      <fileset dir="WebContent/shop"/> 
+		 </copy>
+		 <copy todir="${war_temp}/fastdfs">
+			  <fileset dir="WebContent/fastdfs"/> 
+		 </copy> 
+		 <copy todir="${war_temp}/cms">
+		      <fileset dir="WebContent/cms"/> 
+		 </copy>			 			 		
+	</target>	 
+
+	
+	<!--构建war-->
+	<target name="build" depends="copy" >
+		<zip basedir="${war_temp}" destfile="d:/eop.rar"></zip>
+	</target>
+	
+</project>

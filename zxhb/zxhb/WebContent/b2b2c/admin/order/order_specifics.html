@@ -1,0 +1,229 @@
+<#include '/admin/header.html' >
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<div id="order_detail">
+    <!--流程图-->
+    <div class="flow">
+        	<#if orderMap.order.order_type == 1 || orderMap.order.order_type == 4>
+						<div class="status1${orderMap.order.status} no_insurance_arrive_order">s</div>
+			<#elseif orderMap.order.order_type == 2>
+						<div class="repair${orderMap.order.status} no_arrive_order_repair">s</div>
+			<#elseif (orderMap.order.order_type == 0 || orderMap.order.order_type == 3) && orderMap.order.shipping_method ==1 >
+						<div class="shipping${orderMap.order.status} shipping_order">s</div>
+			<#elseif orderMap.order.order_type == 3 && orderMap.order.shipping_method==2>
+						<div class="zato4s${orderMap.order.status} zato4s_order">s</div>
+			<#else>
+						<div class="status${orderMap.order.status} no_arrive_order">s</div>
+			</#if>
+    </div>
+    <div  class="detail_list ">
+        <table>
+            <thead>
+                <tr>
+                    <td class="w500 br0">商品名称</td>
+                    <td class="w120 br0 bl0">单价(元)</td>
+                    <td class="w120 br0 bl0">数量</td>
+                    <td class="w120 br0 bl0">订单总计</td>
+                    <td class="w120  bl0">状态</td>
+                </tr>
+            </thead>
+            <tbody>
+            	<#list orderMap.orderItemList as item>
+                <tr>
+                    <td class="w500"><img class="border_84 fl" src="${item.image!''}" alt="">
+                        <div class="fl tal">
+                            <div class="tal mt20">${item.name!''}</div>
+                        </div>
+                    </td>
+                    <td class="w120">${item.price?string.currency}</td>
+                    <td class="w120">${item.num!'0'}</td>
+                    <#if (orderMap.orderItemList?size>1)>
+						<#if item_index==0>
+	                    <td class="w120" rowspan = "${orderMap.orderItemList?size}">${orderMap.order.need_pay_money?string.currency}</td>
+	                    <td class="w120" rowspan = "${orderMap.orderItemList?size}">${orderMap.orderStatusText!''}</td>
+	                    </#if>
+	                <#else>	    
+	                <td class="w120" rowspan = "${orderMap.orderItemList?size}">${orderMap.order.need_pay_money?string.currency}</td>
+	                    <td class="w120" rowspan = "${orderMap.orderItemList?size}">${orderMap.orderStatusText!''}</td>
+                    </#if>
+                </tr>
+                </#list>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="br0">
+                        <div class="tar">安全奖励抵扣：</div>
+                        <div class="tar">店铺优惠券：</div>
+                         <#if orderMap.order.order_type == 2><div class="tar">保养币抵扣：</div></#if>
+                        <div class="tar"><b>实付款：</b></div>
+                    </td>
+                    <td class="tal bl0">
+                        <div><b>-&nbsp;&nbsp;</b><span>${orderMap.order.gain?string.currency}</span></div>
+                        <div><b>-&nbsp;</b><span>
+                        <#if orderMap.bonus??>
+								${orderMap.bonus.bonus_money?string.currency}
+						<#else>
+								${0?string.currency}
+						</#if>
+						 </span></div>
+                        <#if orderMap.order.order_type == 2>
+					    <div><b>-&nbsp;</b><span>${orderMap.order.repair_coin?string.currency}</span></div>
+						</#if>
+                       
+                        <div><b class="c_red">
+                        <span>
+						<#if orderMap.order.status==9 || orderMap.order.status==0 || orderMap.order.status==8>
+										${orderMap.order.need_pay_money?string.currency}
+										<#else>
+		 								${orderMap.order.paymoney?string.currency}
+						</#if>
+						</span>
+						</b></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="order_detail ">
+        <div class="order_intro">
+            <h1>订单信息</h1>
+            <div>
+                <dl><dt>车主姓名:</dt><dd>${orderMap.order.ship_name!''}</dd></dl>
+                <dl><dt>联系电话:</dt>
+                <dd>
+                	<#if orderMap.order.ship_mobile?exists && orderMap.order.ship_mobile != ''> 
+                		${orderMap.order.ship_mobile!''}
+					<#else> 
+						<#if orderMap.order.ship_tel?exists && orderMap.order.ship_tel!= ''>
+							 ${orderMap.order.ship_tel!''} 
+						</#if> 
+					</#if>
+                </dd></dl>
+                <#if orderMap.order.order_type == 2>
+						<dl>
+							<dt>预约时间:</dt>
+							<dd>${orderMap.repairOrderDetail.order_date!''} ${orderMap.repairOrderDetail.starttime!''}-${orderMap.repairOrderDetail.endtime!''}</dd>
+						</dl>
+				</#if>
+                <dl><dt>订单编号:</dt><dd>${orderMap.order.sn!''}</dd></dl>
+                <dl><dt>付款方式:</dt><dd>${orderMap.order.payment_name!''}</dd></dl>
+                <dl><dt>下单时间:</dt><dd><@dateformat time="${orderMap.order.create_time?c}"
+								pattern="yyyy-MM-dd HH:mm:ss"/></dd></dl>
+                </dd></dl>
+                <dl><dt>服务时间:</dt>
+                <dd>
+	                <#if orderMap.order.order_type == 1 || orderMap.order.order_type == 4>
+						<@dateformat time="${orderMap.order.create_time?c}"
+						pattern="yyyy-MM-dd HH:mm:ss"/>
+					<#elseif  orderMap.order.service_time?? && orderMap.order.service_time!=0>
+						<@dateformat time="${orderMap.order.service_time?c}"
+						pattern="yyyy-MM-dd HH:mm:ss"/>
+					<#else> 
+					--
+					</#if>
+                </dd>
+                </dl>
+                <dl>
+							<dt>完成时间:</dt>
+							<dd>
+							<#if orderMap.order.complete_time??  && orderMap.order.complete_time!=0 >
+							<@dateformat time="${orderMap.order.complete_time?c}"
+								pattern="yyyy-MM-dd HH:mm:ss"/>
+							<#else> 
+							--
+							</#if>
+							</dd>
+							</dl>
+                <#if orderMap.order.shipping_method == 1>
+                <dl><dt>物流公司:</dt>
+                <dd>
+                	${orderMap.order.logi_name!'暂无'}
+                </dd>
+                </dl>
+                <dl>
+					<dt>物流单号:</dt>
+					<dd>${orderMap.order.ship_no!'暂无'}</dd>
+				</dl>
+				<dl>
+				<dt class="tar">收货人：</dt>
+					<dd name="">${orderMap.order.ship_name!''},&nbsp;&nbsp;${orderMap.order.ship_mobile!''}</dd>
+				</dl>
+				<dl>
+				<dt>地址：</dt>
+				<dd>${orderMap.order.shipping_area!''}</dd>
+				</dl>
+                </#if>
+            </div>
+        </div>
+
+        <div class="intro_staus  ">
+            <h2>订单状态:${orderMap.orderStatusText!''}</h2>
+            <div style="border-right: 1px solid #e7e7e7;width: 630px;height: 250px;">
+                <#if orderMap.order.order_type==1 || orderMap.order.order_type==4>
+                    <!--汽车保险-->
+                    <div>
+                        <dl>
+                            <dt>1.车牌号码:</dt>
+                            <dd>${orderMap.insureOrderDetail.carplate!''}</dd>
+                        </dl>
+                        <dl>
+                            <dt>2.车架号:</dt>
+                            <dd>${orderMap.insureOrderDetail.carvin!''}</dd>
+                        </dl>
+                        <dl>
+                            <dt>3.发动机号:</dt>
+                            <dd>${orderMap.insureOrderDetail.carengineno!''}</dd>
+                        </dl>
+                        <dl>
+                            <dt>4.车辆信息:</dt>
+                            <dd>
+                                ${orderMap.insureOrderDetail.brand!''}${orderMap.insureOrderDetail.series!''}-${orderMap.insureOrderDetail.nk!''}款${orderMap.insureOrderDetail.discharge!''}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>5.保险内容:</dt>
+                            <div class="fl">
+                                <#list orderMap.insureOrderDetail.insure_content as itemname>
+                                    <div>${itemname!''}</div>
+                                </#list>
+                                <div>合计支付:${orderMap.order.paymoney?string.currency}</div>
+                            </div>
+                        </dl>
+                    </div>
+                    <#elseif orderMap.order.order_type==2>
+                        <!--汽车保养-->
+                        <div>
+                            <dl>
+                                <dt>1.车辆信息:</dt>
+                                <dd>
+                                    ${orderMap.repairOrderDetail.brand!''}${orderMap.repairOrderDetail.series!''}-${orderMap.repairOrderDetail.nk!''}款${orderMap.repairOrderDetail.discharge!''}
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>2.保养时间:</dt>
+                                <dd>${orderMap.repairOrderDetail.order_date!''}
+                                    ${orderMap.repairOrderDetail.starttime!''}-${orderMap.repairOrderDetail.endtime!''}
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>3.保养项目:</dt>
+                                <table class="fl">
+                                    <tbody>
+                                    <#list orderMap.repairOrderDetail.orderRepairItems as repairItem>
+                                        <tr>
+                                            <td>${repairItem.itemname!''}</td>
+                                            <td class="pl10"> ${repairItem.item_price!''}</td>
+                                        </tr>
+                                    </#list>
+                                    <tr>
+                                        <td>合计支付:${orderMap.order.paymoney?string.currency}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </dl>
+                        </div>
+                </#if>
+            </div>
+        </div>
+    </div>
+</div>
+<#include '/admin/footer.html' >

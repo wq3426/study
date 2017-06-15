@@ -1,0 +1,95 @@
+<#include '/store/store_header.html' />
+<script  src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<div class="store_center">
+	<#include '../left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color:#999;">您的位置：</span>
+			<span>></span>
+			<a href="#">营销管理 </a><span>></span>广告列表
+		</div>
+		<div class="store_right_main">
+			<div class="tabmenu">
+				<ul class="tab pngFix">
+					<li class="active commont_list">
+						<a hre="#">广告列表</a>
+					</li>
+
+				</ul>
+				<div class="store_commont_search">
+					<a title="新增广告"  class="ncu_btn3" href="/store/adv/edit_adv.html?menu=promotion" >新增广告 </a>
+				</div>
+			</div>
+		</div>
+		<div class="bonuslist s_commont_list">
+			<#assign storeAdvListTag=newTag("storeAdvListTag")> 
+			<#assign advList=storeAdvListTag("{'store_id':${storeMember.store_id!'0'}}")/>
+			<table class="list_table">
+				<thead>
+					<tr>
+						<th>图片</th>
+						<th class="w120">链接</th>
+						<th class="w60">点击量</th>
+						<th class="w60">状态</th>
+						<th class="w60">操作</th>
+					</tr>
+				</thead>
+				<#if (advList?size > 0) >
+				<tbody>
+					<#list advList as adv>
+						<tr>
+							<td><img alt="" src="${adv.atturl!''}"  width="150px;"></td>
+							<td>${adv.url}</td>
+							<td>${adv.clickcount}</td>
+							<td>
+								<#if adv.disabled = "false">
+								已启用
+								<#else>
+								已禁用
+								</#if>
+							</td>
+							<td><input type="button" class="start-adv-btn" adv_id="${adv.aid}"  value="启用" /></td>
+						</tr>
+					</#list>
+					
+				</tbody>
+			</table>
+			<#else>	
+		  		</table>
+		  		<p class="no_blank">暂无符合条件的数据记录</p>
+		  	</#if>
+		</div>
+	</div>	
+</div>
+
+
+<script>
+$(function(){
+	selectMenu(3);
+	
+	$(".start-adv-btn").click(function(){
+		var advId = $(this).attr("adv_id");
+		
+		var options = {
+			url : ctx + "/api/shop/adv!startAdv.do?store_id=${storeMember.store_id!'0'}&adv_id=" + advId,
+			type : "post",
+			dataType: "json",
+			success : function(result) {
+				if(result.result == 1) {
+					alert("启用成功");
+					location.reload();
+				} else {
+					alert("启用失败");
+				}
+			},
+			error : function(){
+				alert("系统异常，请稍候重试!");
+			}
+		}
+		
+		$.ajax(options);
+	});
+	
+})
+</script>
+<#include '/common/footer.html' />

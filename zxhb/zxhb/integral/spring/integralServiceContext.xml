@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd" default-autowire="byName" default-lazy-init="false">
+
+ 	<!-- 积分规则 -->
+	<bean id="integralRuleManager" class="com.enation.app.sign.service.impl.IntegralRuleManager" parent="baseSupport"></bean>
+	<!-- 用户签到-->
+	<bean id="memberSignManager" class="com.enation.app.sign.service.impl.MemberSignManager" parent="baseSupport"></bean>
+	<!-- 用户积分-->
+	<bean id="memberIntegralManager" class="com.enation.app.sign.service.impl.MemberIntegralManager" parent="baseSupport"></bean>
+	<!-- 用户积分明细-->
+	<bean id="integralDetailManager" class="com.enation.app.sign.service.impl.IntegralDetailManager" parent="baseSupport"></bean>
+</beans>

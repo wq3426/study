@@ -1,0 +1,96 @@
+<#include '/admin/header.html' >
+
+
+<div class="member_car_detail" style="margin: 20px;">
+	<#if memberCarInfoList??> 
+		<#list memberCarInfoList as mcil>
+			<form id="${mcil.carplate!''}">
+				<div class="car_one"><h3 class="fw900 pl20 pt10">车辆信息</h3>
+					<table>
+						<tr>
+							<th>车牌号码:</th>
+							<td>${mcil.carplate!''}</td>
+							<th>品牌:</th>
+							<td>
+								${mcil.brand!''}
+							</td>
+						</tr>
+						<tr>
+							<th>车系:</th>
+							<td>
+								${mcil.series!''}
+							</td>
+							<th>年款:</th>
+							<td>
+								${mcil.nk!''}
+							</td>
+						</tr>
+						<tr>
+							<th>发动机号:</th>
+							<td>${mcil.carengineno!''}</td>
+							<th>车架号:</th>
+							<td>${mcil.carvin!''}</td>
+						</tr>
+						<tr>
+							<th>核定载客人数:</th>
+							<td>${mcil.seats!''}</td>
+							<th>使用性质:</th>
+							<td>${mcil.type_name!''}</td>
+						</tr>
+						<tr>
+							<th>新车购置价:</th><td>${mcil.price!''}</td>
+							<th>油耗类型:</th><td>${mcil.caroiltype!''}</td>
+						</tr>
+						<tr>
+							<th>排量:</th><td>${mcil.discharge!''}</td>
+							<th>年平均行驶里程:</th><td>${mcil.caravgyearmile!''}</td>
+						</tr>
+						<tr>
+							<th>注册时间:</th><td>${mcil.create_time!''}</td>
+							<th>使用区域:</th><td>${mcil.cardriveregion!''}</td>
+						</tr>
+						<tr></tr>
+						<tr>
+							<td class="online_b"></td>
+							<td  class="online_b"></td>
+							<td colspan="11" class="online_b">
+								<a href="javascript:void(0);" onclick="newTab('车辆信息修改','${ctx}/shop/admin/member!showCarInfoEdit.do?carplate=${mcil.carplate!''}')" 
+								class="button " data-options="plain:true">修改</a>
+							</td>
+						</tr>
+					</table>					
+					<div class="car_one"><h3 class="fw900 pl20 pt10">钱包信息</h3>
+					<div>
+						<table>
+							<tr>
+								<th>奖励余额:</th><td>￥&nbsp;&nbsp;${mcil.totalgain!''} </td>  
+								<td>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<a href="javascript:void(0);" onclick="newTab('奖励金额明细','${ctx}/shop/admin/member!showCarIncomeDetail.do?carplate=${mcil.carplate!''}')" 
+										class="button " data-options="plain:true">查看详情</a>
+								<td>
+							</tr>
+							<tr>
+								<th class="pb20">优惠券:</th><td class="pb20">${mcil.bonusCount!''}&nbsp;&nbsp;张 </td>
+								<td>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<a href="javascript:void(0);" onclick="newTab('优惠券明细','${ctx}/shop/admin/member!showCarBonusDetail.do?carplate=${mcil.carplate!''}')" 
+										class="button " data-options="plain:true">查看详情</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="online_b pt20 bg_ed"></div>
+				</div>
+			</form>			 
+		</#list> 
+	</#if>
+	
+</div>
+
+<script>
+
+
+</script>
+
+<#include '/admin/footer.html' >

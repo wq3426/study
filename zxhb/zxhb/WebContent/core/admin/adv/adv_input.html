@@ -1,0 +1,45 @@
+<style>
+.input_text {
+	width: 200px;
+}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+	
+		<form id="addForm" method="post" class="validate">
+				<input type="hidden" name="mstartdate" value="2015-01-01"/>
+		<input type="hidden" name="menddate" value="2015-01-01"/>
+			<table width="100%">
+				<tr>
+					<th>广告名称：</th>
+					<td><input class="easyui-validatebox input_text" type="text"
+						id="advname" name="adv.aname" data-options="required:true"></input>
+					</td>
+					<th>广告位置：</th>
+					<td><select class="easyui-validatebox" name="adv.acid">
+							<#list adColumnList as adc>
+							<option value="${adc.acid }">${adc.cname }</option> </#list>
+					</select></td>
+				</tr>
+				<tr>
+					<th>广告链接：</th>
+					<td  colspan="3"><input class="input_text" type="text" name="adv.url" style="width:550px"></input>
+					</td>
+				</tr>
+				<tr>
+					<th>上传广告文件：</th>
+					<td colspan="3"><input class="easyui-validatebox" type="file"
+						name="pic"></input></td>
+				</tr>
+				<tr>
+				 
+					<th>是否开启：</th>
+					<td  colspan="3">
+					<input class="easyui-validatebox input_text" type="radio" style="width: 10px;" name="adv.isclose" value="0" checked />
+						开启&nbsp;&nbsp; <input type="radio" name="adv.isclose" value="1" />
+						关闭</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

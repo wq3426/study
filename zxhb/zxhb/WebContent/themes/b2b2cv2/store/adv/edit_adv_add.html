@@ -1,0 +1,190 @@
+<#include '/store/store_header.html' />
+<style>
+    .tar {
+        text-align: right;
+    }
+    #hot-goods-form tr th, #hot-goods-form tr td {
+        border: 1px solid #C0C0C0;
+        text-align: center;
+    }
+
+    #hot-goods-form tr th input, #hot-goods-form tr td input {
+        width: 98%;
+    }
+</style>
+
+<div class="store_center">
+    <#include '../left_menu.html'/>
+    <div class="sotre_right_content" id="sotre_right_content">
+        <div class="path">
+            <span style="color:#999;">您的位置：</span>
+            <span>></span>
+            <a href="#">营销管理 </a><span>></span>广告管理<span>></span>广告发布<span>></span>新增
+        </div>
+        <div class="store_right_main">
+            <div class="tabmenu">
+                <ul class="tab pngFix">
+                    <li class=" commont_list" style="line-height: 50px;">
+                        <a class="active" href="${ctx}/store/adv/edit_adv.html?menu=promotion">广告发布</a>&nbsp;&nbsp;用于对设置本店专属广告栏
+                    </li>
+                    <li class="fr">
+                        <span class="cp btn_2" id="save-adv-btn">确认</span>
+                        <span class="cp btn_3" id="cancel-adv-btn">取消</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="store_right_main">
+            <div>
+                <form id="adv-form">
+                        <table>
+                           <!--  <input type="hidden" name="adv.aname" value="商家广告:${myStoreDetail.store_name!''}"/> -->
+                            <input type="hidden" name="adv.acid" value="1"/>
+                            <input type="hidden" name="adv.isclose" value="0"/>
+                            <input type="hidden" name="adv.linkGoods_id" id="linkGoods_id"/>
+                            <input type="hidden" name="adv.store_id" value="${storeMember.store_id!'0'}"/>
+                            <tr class="mt10 mb15">
+                                <td class="tar">商品名称：</td>
+                                <td>
+                                    <input  class="editA" onclick="open_server_iframe(0) " id="aname"  name="adv.aname">
+                                </td>
+                            </tr>
+                            <tr class="mt10">
+                                <td class="tar">广告图片：</td>
+                                <td class="pt10">
+                                    <img src="/mall/themes/b2b2cv2/images/default_goods_image_tiny.gif" name="img1"
+                                         width="150" id="img1" height="100">
+                                </td>
+                            </tr>
+                            <tr class="mt10">
+                                <td></td>
+                                <td>
+                                    <input class="mt10 w200" type="file" name="pic" onchange="preview(this)"/>
+                                    <p>建议图片上传大小为720x320</p>
+                                    <p>支持格式jpg,jpeg,png,gif，请保证图片清晰且文件大小不超过400KB</p>
+                                </td>
+                            </tr>
+                            <tr class="mt10">
+                                <td></td>
+                                <td style="text-align: right"><p>在APP中显示位置如右图</p></td>
+                            </tr>
+                        </table>
+                </form>
+            </div>
+            <div class="store_right_main_list">
+                <div class="store_right_main_list_head">服务<i></i></div>
+                <ul class="store_right_main_list_body">
+                    <li class="h100 srmlb_0" style="width: 228px;height: 100px;text-align: center;">
+                        <img class="srmlb_1" src="/mall/themes/b2b2cv2/images/4.2_1.jpg" alt="" style="width: 100%;height: 100%;vertical-align: middle;"/>
+                     </li>
+                    <li class="srmlb_2"></li>
+                    <li class="srmlb_3"></li>
+                    <li class="srmlb_4"></li>
+                    <li class="srmlb_5"></li>
+                    <li class="srmlb_6"></li>
+                    <li class="srmlb_7"></li>
+                </ul>
+                <ul class="store_right_main_list_bottom"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+        var dialog;
+
+        function open_server_iframe(linkGoodsId) {
+            var map = {}; // 相当于Map map = new HashMap();
+                map["title"] = "出售中的商品列表";
+                map["html"] = "${ctx}/goods/server_goods_insert_list.html?linkGoodsId="+linkGoodsId;
+                map["form"] = "#storeGoodsForm";
+                openDialog(map);
+        }
+
+        function openDialog(map) {
+            dialog = $.dialog({
+                title : map["title"],
+                lock : true,
+                min : false,
+                max : false,
+                width:960
+            });
+
+            $.ajax({
+                url : map["html"],
+                cache : false,
+                success : function(html) {
+                    dialog.content(html);
+                    dialog.button([{
+                        name : '保存',
+                        callback : function() {
+                        	 var goodsIdAndName=$('input:radio[name="goods_id"]:checked').val();
+                             if(goodsIdAndName==null){
+                                 alert("请选择一件商品!");
+                                 return false;
+                             }
+                            formSubmit(dialog,goodsIdAndName);
+                            this.button({
+                                        name: '保存',
+                                        disabled: false
+                                    })
+                                    .lock();
+                        }
+                    }, {
+                        name : '取消'
+                    } ]);
+                },
+                error : function() {
+                    $.alert("出现错误,请重试！");
+                }
+            });
+        }
+
+         function formSubmit(dialog,goodsIdAndName) {
+        	var goods = goodsIdAndName.split(",");//以逗号作为分隔字符串
+        	$("#linkGoods_id").val($.trim(goods[0]));
+            $("#aname").val($.trim(goods[1]));
+        }
+
+    </script>
+    <script>
+        $(function () {
+            $("#save-adv-btn").click(function () {
+                var options = {
+                    url: "${ctx}/api/shop/adv!add.do",
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.result == 1) {
+                            alert(data.message);
+                            location.href = "${ctx}/store/adv/edit_adv.html?menu=promotion";
+                        } else {
+                            alert("系统异常:" + data.message);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(XMLHttpRequest);
+                        alert(textStatus);
+                        alert(errorThrown);
+                        alert("系统异常，请稍候重试！");
+                    }
+                }
+                $("#adv-form").ajaxSubmit(options);
+            });
+            $("#cancel-adv-btn").click(function () {
+                location.href = "${ctx}/store/adv/edit_adv.html?menu=promotion";
+            });
+        });
+        function preview(file) {
+            if (file.files && file.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    $("#img1").attr("src", evt.target.result);
+                    $(".srmlb_1").attr("src", evt.target.result);
+                }
+                reader.readAsDataURL(file.files[0]);
+            }
+        }
+    </script>
+    <#include '/common/footer.html' />
+
+

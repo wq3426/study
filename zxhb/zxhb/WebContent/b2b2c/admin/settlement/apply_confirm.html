@@ -1,0 +1,90 @@
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text {
+	width: 200px;
+}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<div style="padding: 10px 0 10px 20px">
+			<form id="applyForm" method="post" class="validate">
+				<table>
+				<tr>
+					<td>申请单位：</td>
+					<td>${applyDetail.store_name!''}</td>
+				</tr>
+				<tr>
+					<td>提现金额：</td>
+					<td>${applyDetail.trade_money?string.currency}</td>
+				</tr>
+				<tr>
+					<td>账户余额：</td>
+					<td>${applyDetail.before_balance?string.currency}</td>
+				</tr>
+				<#if applyDetail.pay_type=="">
+					<tr>
+						<td>开户银行：</td>
+						<td>${applyDetail.bank_account_name!''}</td>
+					</tr>
+					<tr>
+						<td>银行卡号：</td>
+						<td>${applyDetail.bank_account_number!''}</td>
+					</tr>
+					<#elseif applyDetail.pay_type=="bank">
+					<tr>
+						<td>开户银行：</td>
+						<td>${applyDetail.bank_account_name!''}</td>
+					</tr>
+					<tr>
+						<td>银行卡号：</td>
+						<td>${applyDetail.bank_account_number!''}</td>
+					</tr>
+					<#elseif applyDetail.pay_type=="weichat">
+					<tr>
+						<td>支付方式：</td>
+						<td><b>微信</b></td>
+					</tr>
+					<tr>
+						<td>微信账号：</td>
+						<td>${applyDetail.weichat_account!''}</td>
+					</tr>
+					<#elseif applyDetail.pay_type=="alipay">
+					<tr>
+						<td>支付方式：</td>
+						<td><b>支付宝</b></td>
+					</tr>
+					<tr>
+						<td>支付宝账号：</td>
+						<td>${applyDetail.alipay_account!''}</td>
+					</tr>
+				</#if>
+				<tr>
+					<td>备注：</td>
+					<td>${applyDetail.apply_remarks!''}</td>
+				</tr>
+				<tr>	
+						<td>上传汇款证明：</td>
+						<td >
+			        		<input type="hidden" name="receipt_file" id="receipt_file" value="${applyDetail.receipt_file!''}"/>
+			        		 <span
+								class="specImage"> <a href="javascript:;"
+									class="sysbtn upload" onclick="openImgDlg(getImgPath);">上传图片</a> <span id="fileUploadMsg2"> </span>
+							<div style="width:100px; height:100px;">
+							<img id="img1" src="<#if applyDetail.receipt_file??&&applyDetail.receipt_file!=''>${applyDetail.receipt_file!''}<#else>${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif</#if>" style="width:100px; height:100px;"> 
+							</div>
+						</td>
+				</tr>
+				<tr>
+				<td>手续费：</td>
+						<td><input class="input_text easyui-validatebox" type="text"  id="bank_handling_charge" name="bank_handling_charge"
+							name="zip" value="" data-options="required:true"></input>
+					</td>
+							
+				</tr>
+				</table>
+				<input type="hidden" name="sn" value="${applyDetail.sn!''}">
+			</form>
+		</div>
+	</div>
+</div> 

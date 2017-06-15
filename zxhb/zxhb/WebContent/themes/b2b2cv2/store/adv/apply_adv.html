@@ -1,0 +1,74 @@
+<style type="text/css">
+    .ui_content{margin:10px!important; text-align: left!important;}
+    *{margin:0px;  padding:0px;  }
+    #tab{  margin:10px;  }
+    #tab ul{  list-style:none;  height:36px;  border-bottom:2px solid #ff4a00;display:block;  }
+    #tab ul li{  float:left;  display:inline-block;  padding:0px 15px;  height:34px;  line-height:34px;  margin-right:5px;   cursor:pointer;  }
+    #tab div{  width:450px;  padding:5px;}
+    #tab ul li.on{  border-bottom: 2px solid #ff4a00;    background-color: #ff4a00;  color: #ffffff;  }
+    #tab dl dt span{padding-left: 10px;}
+    .hide{  display:none;  }
+  </style>
+<#assign saleFreeTag=newTag("saleFreeTag")>
+<#assign saleFreeList=saleFreeTag("{'sale_type':2,'isFree':0}")/>
+<#assign saleFreeForFieldTag=newTag("saleFreeForFieldTag")>
+<#assign saleFreeForFieldList=saleFreeForFieldTag("{'sale_type':3,'isFree':0}")/>
+<div id="tab">
+    <ul>
+        <li  id="changeForLan" class="on" onclick="changeForLan()">广告栏位</li>
+        <li  id="changeForNum" onclick="changeForNum()">发布次数</li>
+    </ul>
+    <div id="div">
+        <form id="add_free_form" action="#" method="post">
+        	<input type="hidden" name="typeId" value="3"></input>
+			<#if (saleFreeForFieldList?size > 0)>
+				<dl>
+					<#list saleFreeForFieldList as sfl>
+						<dt><input type="radio"  name="auditId" value="${sfl.id}">${sfl.use_num}个栏位/免费,仅限本月使用</dt>
+					</#list>
+				</dl>
+			<#else>	
+		  		<p>暂无符合条件的数据记录</p>
+		  	</#if>
+		</form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	function changeForNum(){
+		$("#changeForLan").attr("class","");
+		$("#changeForNum").attr("class","on");
+		$("#div").empty();
+		$("#div").append("<form id='add_free_form' action='#' method='post'>"+
+						     	  "<input type='hidden' name='typeId' value='2'></input>"+
+									<#if (saleFreeList?size > 0)>
+										"<dl>"+
+											<#list saleFreeList as sfl>
+												"<dt><input type='radio' name='auditId' value='"+${sfl.id}+"'>"+${sfl.use_num}+"次/免费,仅限本月使用</dt>"+
+											</#list>
+										"</dl>"+
+									<#else>	
+								  		"<p>暂无符合条件的数据记录</p>"+
+								  	</#if>
+								"</form>");
+	}
+
+	function changeForLan(){
+		$("#changeForNum").attr("class","");
+		$("#changeForLan").attr("class","on");
+		$("#div").empty();
+		$("#div").append("<form id='add_free_form' action='#' method='post'>"+
+						     	  "<input type='hidden' name='typeId' value='3'></input>"+
+									<#if (saleFreeForFieldList?size > 0)>
+										"<dl>"+
+											<#list saleFreeForFieldList as sfl>
+												"<dt><input type='radio' name='auditId' value='"+${sfl.id}+"'>"+${sfl.use_num}+"个栏位/免费,仅限本月使用</dt>"+
+											</#list>
+										"</dl>"+
+									<#else>	
+								  		"<p>暂无符合条件的数据记录</p>"+
+								  	</#if>
+								"</form>");
+	}
+  </script>

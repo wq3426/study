@@ -1,0 +1,518 @@
+<#include '/store/store_header.html' />
+<#assign storeBonusListTag=newTag("storeBonusListTag")> 
+<#assign storeBonusList=storeBonusListTag()/>
+<#assign storeCostTag=newTag("storeCostTag")>
+<#assign storeCost=storeCostTag("'sale_type':6")!''/>
+<#assign storeCostForBuyTag=newTag("storeCostForBuyTag")>
+<#assign storeCostForBuy=storeCostForBuyTag("'saleType':6")!''/>
+<script  src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .odd {background-color: #f7f7f7!important;}
+	.search_store_commont {
+		padding: 0px 0px 0px 20px;}
+	.clear_1{
+		padding: 3px 15px;
+		background-color: #F1F1F1;
+		border: 1px solid #A5A5A5;
+	}
+	.bdr2{
+		border-right: 1px solid #dddddd;
+	}
+
+	.bdl{
+		border-left: 1px solid #dddddd;
+	}
+	.submit {
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+		color: #333;
+		cursor: pointer;
+		display: block;
+		float: left;
+		font: 12px/28px "microsoft yahei";
+		height: 30px;
+		padding: 0;
+		text-align: center;
+		width: 64px;
+		position: relative;
+		top: -2px;
+		margin-left:8px;
+	}
+</style>
+<div class="store_center">
+	<#include '../left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color:#999;">您的位置：</span>
+			<span>营销管理</span>
+			<span> > </span>优惠券管理
+		</div>
+		<div class="store_right_main">
+			<div class="tabmenu">
+				<ul class="tab pngFix">
+					<li class="active commont_list">
+						<a  href="${ctx}/store/bonus/bonus_list.html?menu=promotion">优惠券管理</a>
+					</li>
+					<li class="mt10 mr20">
+
+					</li>
+				</ul>
+				<div class="store_commont_search">
+					<!-- <a title="免费申请" class="ncu_btn3" href="javascript:void(0)" onclick="purchase(0)" style="margin-right: 90px;" >免费申请</a>  -->
+					<a title="新增优惠券" class="ncu_btn3" href="javascript:void(0)" onclick="saveOrUpdate()">新增优惠券 </a>
+				</div>
+			</div>
+			<div class="mt10 pb5">
+				<#if storeCost.storeCost??>
+						<input type="hidden" name="surpNumForFree" class="text" value="${storeCost.storeCost.surp_num}">
+						<span style="float: left;"  class="mr60">&nbsp;&nbsp;本月已经使用免费发放数量:<b class="f16 color_r">${storeCost.storeCost.used_num}</b>,剩余免费发放数量:<b class="f16 color_r">${storeCost.storeCost.surp_num}</b><!-- <span onclick="purchase(0)" class="color_r fr pl10 cp">免费申请</span> --></span>
+					<#else>
+						<input type="hidden" name="surpNumForFree" class="text" value="0">
+						<span style="float: left;">&nbsp;&nbsp;本月已经使用免费发放数量:<b class="f16 color_r">0</b>,剩余免费发放数量:<b class="f16 color_r">0</b><!-- <span onclick="purchase(0)" class="color_r fr pl10 cp">免费申请</span> --></span>
+				</#if>
+				<#if storeCostForBuy.storeCost??>
+						<input type="hidden" name="surpNumForBuy" class="text" value="${storeCostForBuy.storeCost.surp_num}">
+						<span style="float: left;"  class="pl20">&nbsp;&nbsp;已经使用购买发放数量:<b class="f16 color_r">${storeCostForBuy.storeCost.used_num}</b>,剩余发放数量:<b class="f16 color_r">${storeCostForBuy.storeCost.surp_num}</b><span onclick="purchase(1)" class="color_r fr pl10 cp">点击购买</span> </span>
+					<#else>
+						<input type="hidden" name="surpNumForBuy" class="text" value="0">
+						<span style="float: left;"  class="pl20">&nbsp;&nbsp;已经购买发放数量:<b class="f16 color_r">0</b>,剩余发放数量:<b class="f16 color_r">0</b><span onclick="purchase(1)" class="color_r fr pl10 cp">点击购买</span></span>
+				</#if>
+			</div>
+		</div>
+		<form target="_self">
+			<table class="search-form fr mb10">
+				<tbody>
+				<tr>
+					<th>状态：</th>
+					<td> 
+						<select name="status" class="select mr20" onchange="searchBonus();">
+							<option value=""  <#if status??> <#if status==""> selected="selected" </#if> </#if> >全部</option>
+							<option value="0" <#if status??> <#if status=="0"> selected="selected" </#if> </#if> >未发布</option>
+							<option value="1" <#if status??> <#if status=="1"> selected="selected" </#if> </#if> >已发布</option>
+							<option value="2" <#if status??> <#if status=="2"> selected="selected" </#if> </#if> >已冻结</option>
+							<option value="3" <#if status??> <#if status=="3"> selected="selected" </#if> </#if> >已过期</option>
+						</select>
+					</td>
+					<th>优惠券名称：</th>
+					<td class="w150">
+						<input type="text"  name="typeName"  class="text" value="${storeBonusList.typeName!''}">
+					</td>
+					<td class="w90 tc ">
+						<input type="button" value="搜索" class="submit" id="btnSearch">
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</form>
+		<!-- 优惠券列表 -->
+
+		<div class="bonuslist s_commont_list mt20">
+			<table class="list_table">
+				<thead>
+					<tr>
+						<th class="w240 bdl">优惠券名称</th>
+						<th class="w60">券额</th>
+						<th class="w240">使用描述</th>
+						<th class="w200">使用期限</th>
+						<th class="w60">发行量</th>
+						<th class="w60">已领取</th>
+						<th class="w100">创建时间</th>
+						<th class="w60">状态</th>
+						<th class="w100 bdr2">操作</th>
+					</tr>
+				</thead>
+				<#if storeBonusList.totalCount != 0 >
+				<tbody class="body_1">
+					<#list storeBonusList.bonusList.result as sbl>
+						<tr>
+							<td>${sbl.type_name}</td>
+							<td><span class="color_b">${sbl.type_money}元</span></td>
+							<td><span class="color_b">消费满${sbl.min_goods_amount}元减${sbl.type_money}元</span></td>
+							<!--<td class="goods-time"><@dateformat time="${(sbl.use_start_date)?c}"pattern="yyyy-MM-dd"/>~<@dateformat time="${(sbl.use_end_date)?c}"pattern="yyyy-MM-dd"/></td>-->
+							<td class="goods-time"><p>使用日期从:<@dateformat time="${(sbl.use_start_date/1000)?c}"pattern="yyyy-MM-dd"/></p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;截止至:<@dateformat time="${(sbl.use_end_date/1000)?c}"pattern="yyyy-MM-dd"/></p></td>
+							<td>${sbl.create_num}</td>
+							<td>${sbl.use_num}</td>
+							<td><@dateformat time="${(sbl.create_date)?c}"pattern="yyyy-MM-dd HH:mm:ss"/></td>
+							<td><#if sbl.status==0>未发布<#elseif sbl.status==1>已发布<#elseif sbl.status==2>已冻结<#elseif sbl.status==3>已过期<#else></#if></td>
+							<td class="storegoodslist_tools">
+							 	<#if sbl.status == 0>
+							 		<a onclick="saveOrUpdate(${sbl.type_id},${sbl.status})" href="javascript:void(0)" class="tool3">编辑</a>
+							 		<a onclick="changeStatus(${sbl.type_id},${sbl.status})" href="javascript:void(0)" class="tool3" >发布</a>
+							 	<#elseif sbl.status==1>
+							 		<a onclick="changeStatus(${sbl.type_id},${sbl.status})" href="javascript:void(0)" class="tool3">冻结</a>
+							 	</#if>
+							</td>
+						</tr>
+					</#list>
+				</tbody>
+			</table>
+			<@pager pageno="${storeBonusList.page!'1'}" pagesize="${storeBonusList.pageSize}" totalcount="${storeBonusList.totalCount}" />
+			<#else>	
+		  		</table>
+		  		<p class="no_blank">暂无符合条件的数据记录</p>
+		  	</#if>
+		</div>
+	</div>	
+</div>
+<script type="text/javascript">
+	$(function(){
+	 document.onkeydown=function(event){
+	  	var e = event || window.event || arguments.callee.caller.arguments[0];
+	      if(e && e.keyCode==13){ // enter 键
+	    	  searchBonus();
+	     	  return false;
+	      }
+	 };
+	$("#btnSearch").click(function () {
+		searchBonus();
+     });
+	$(".clean").click(function(){
+		var options = {
+			url : "${ctx}/api/b2b2c/promotion!deleteBonus.do",
+			type : "POST",
+			dataType : 'json',
+			success : function(data) {
+				alert(data.message);
+				location.reload();
+			},
+			error : function(e) {
+				alert("出现错误 ，请重试");
+			}
+		};
+		$("#storeGoodsForm").ajaxSubmit(options);
+	});
+})
+	function searchBonus(){
+		var status=$("select[name='status']").val();
+		var typeName=$("input[name='typeName']").val();
+		location.href="bonus_list.html?typeName="+typeName+"&status="+status+"&menu=promotion";
+	}
+</script>
+
+	<!--购买优惠券/申请优惠券-->
+	<script>
+		var dialog;
+
+		function purchase(isfree) {
+			var map = {}; // 相当于Map map = new HashMap();
+			if (isfree == 1) {
+				map["title"] = "购买优惠券";
+				map["html"] = "purchase_bonus.html";
+				map["url"] = "${ctx}/api/b2b2c/saleaudit!add_buyBonus.do";
+				map["form"] = "#add_buy_form";
+				openDialogForBuy(map);
+			} else {
+				map["title"] = "申请优惠劵";
+				map["html"] = "apply_bonus.html";
+				map["url"] = "${ctx}/api/b2b2c/saleaudit!apply_freeBonus.do";
+				map["form"] = "#add_free_form";
+				openDialogForFree(map);
+			}
+		}
+		//购买页面
+		function openDialogForBuy(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:500
+			});
+
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '购买',
+						callback : function() {
+							var id=$('input:radio[name="saleFreeId"]:checked').val();
+							if(typeof(id) == "undefined"){
+								$.alert("请选择购买信息");
+								return false;
+							}
+							formSubmitForBuy(dialog, map);
+							this.button({
+										name: '购买',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function() {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+		
+		function formSubmitForBuy(dialog, map) {
+			var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) { 
+					 	if(result.result==1){ 
+							dialog.title('购买成功，3秒后关闭此窗口。').time(5); 
+							dialog.reload();
+						}else{
+							dialog.title('购买失败，'+result.message);
+							dialog.reload();
+						} 
+					},
+					error:function(XmlHttpRequest, textStatus, errorThrown) {
+						alert(XmlHttpRequest);
+						alert(textStatus);
+						alert(errorThrown);
+						alert("出现错误，请重试");
+						}
+				};
+				$(map["form"]).ajaxSubmit(options);
+				return false;
+		}
+		
+		//免费申请
+		function openDialogForFree(map) {
+			dialog = $.dialog({
+				title : map["title"],
+				lock : true,
+				min : false,
+				max : false,
+				width:500
+			});
+
+			$.ajax({
+				url : map["html"],
+				cache : false,
+				success : function(html) {
+					dialog.content(html);
+					dialog.button([ {
+						name : '申请',
+						callback : function() {
+							var val=$('input:radio[name="auditId"]:checked').val();
+							if(typeof(val) == "undefined"){
+								$.alert("请选择申请条数");
+								return false;
+							}
+							formSubmitForFree(dialog, map);
+							this.button({
+										name: '申请',
+										disabled: true
+									})
+									.lock();
+							return false;
+						}
+					}, {
+						name : '取消'
+					} ]);
+				},
+				error : function(e) {
+					$.alert("出现错误,请重试！");
+				}
+			});
+		}
+		
+		function formSubmitForFree(dialog, map) {
+			var options = {
+					url : map["url"],
+					type : "POST",
+					dataType : 'json',
+					success : function(result) { 
+					 	if(result.result==1){ 
+							dialog.title('申请成功，3秒后关闭此窗口。').time(5); 
+							dialog.reload();
+						}else{
+							dialog.title('申请失败，'+result.message);
+							$("input[type='button']").each(function(){ 
+								$(this).removeAttr("disabled");
+							});
+						} 
+					},
+					error:function(XmlHttpRequest, textStatus, errorThrown) {
+						alert(XmlHttpRequest);
+						alert(textStatus);
+						alert(errorThrown);
+						alert("出现错误，请重试");
+						}
+				};
+				$(map["form"]).ajaxSubmit(options);
+				return false;
+		}
+	</script>
+<!--新增优惠券/修改-->
+<script>
+	var dialog;
+
+	function saveOrUpdate(bonusid,status) {
+		var map = {}; // 相当于Map map = new HashMap();
+		if (!bonusid) {
+			map["title"] = "添加优惠券";
+			map["html"] = "bonus_add.html";
+			map["url"] = "${ctx}/api/b2b2c/promotion!add_fullSubtract.do";
+			map["form"] = "#add_form";
+		} else {
+			map["title"] = "修改优惠劵";
+			map["html"] = "bonus_edit.html?bonusid=" + bonusid;
+			map["url"] = "${ctx}/api/b2b2c/promotion!edit_fullSubtract.do";
+			map["form"] = "#edit_form";
+		}
+		openDialog(map);
+	}
+
+	function openDialog(map) {
+		dialog = $.dialog({
+			title : map["title"],
+			lock : true,
+			min : false,
+			max : false,
+			width:560
+		});
+
+		$.ajax({
+			url : map["html"],
+			cache : false,
+			success : function(html) {
+				dialog.content(html);
+				dialog.button([ {
+					name : '保存',
+					callback : function() { 
+						
+						if($("#useTimeStart").val() > $("#useTimeEnd").val()){
+							$.alert("起始日期不能大于截至日期");
+							$("#useTimeStart").val("");
+							return false;
+						}
+						
+						if($("#limit_num").val()=='0'){
+							$.alert("每人限领数量需要大于 1");
+							return false;
+						}
+						if($("#create_num").val()=='0'){
+							$.alert("发行量需要大于 1");
+							return false;
+						}
+						
+				        if(!$(map["form"]).validate()){
+							return false;
+						}
+				        if(!$(map["form"]).checkall()){
+							return false;
+						}
+				       
+						formSubmit(dialog, map);
+						
+						this.button({  
+			                name: '保存',
+			                disabled: true
+			            })
+			            .lock();
+			            return false;
+					}
+				}, {
+					name : '取消'
+				} ]);
+			},
+			error : function() {
+				$.alert("出现错误,请重试！");
+			}
+		});
+	}
+
+	function formSubmit(dialog, map) {
+		var options = {
+			url : map["url"],
+			type : "POST",
+			dataType : 'json',
+			success : function(result) { 
+				if(result.result==1){ 
+					dialog.title('保存成功，2秒后关闭此窗口。').time(3); 
+					dialog.reload();
+				}else{
+					dialog.title('保存失败，'+result.message);
+					$("input[type='button']").each(function(){ 
+						$(this).removeAttr("disabled");
+					});
+				}
+			},
+			error : function(e) {
+				alert("出现错误，请重试");
+			}
+		};
+		$(map["form"]).ajaxSubmit(options);
+		return false;
+	}
+	//发布
+	function changeStatus(typeid,status){
+		if(status == 0){
+			var surpNumForFree = $("input[name='surpNumForFree']").val();
+			var surpNumForBuy =  $("input[name='surpNumForBuy']").val();
+			if(surpNumForFree == 0 &&　surpNumForBuy　== 0){
+				alert("您本月免费发放优惠券数量已经使用完，如需发放请点击【购买】");
+				return;
+			}else if(confirm("确定发布这条优惠券吗？")){
+				comitChangeStatus(typeid,status)
+			} 
+		}else if(status == 1){
+			if(confirm("确定这条冻结优惠券吗？")){
+				comitChangeStatus(typeid,status)
+			}
+		}else{
+			return;
+		}
+	}
+	
+	function comitChangeStatus(typeid,status){
+		$.ajax({
+			url : "${ctx}/api/b2b2c/promotion!changeStatus.do?type_id="+typeid+"&status="+status,
+			cache : false,
+			dataType: "json",
+			success : function(data) {
+				if(data.result==1){
+					alert(data.message);
+					location.reload();
+				}else{
+					alert(data.message);
+				}
+			},
+			error : function() {
+				alert("出现错误，请重试");
+			}
+		});
+	}
+	
+	
+	/* 删除优惠劵 
+	function delBonus(typeid){
+		
+		if(confirm("确定删除此优惠劵吗？")){
+		
+		}else{
+			return false;	
+		}
+		$.ajax({
+			url : "${ctx}/api/b2b2c/promotion!deleteBonus.do?type_id="+typeid,
+			cache : false,
+			dataType: "json",
+			success : function(data) {
+				if(data.result==1){
+					$.alert(data.message);
+					location.reload();
+				}else{
+					$.alert(data.message);
+				}
+			},
+			error : function() {
+				$.alert("出现错误，请重试");
+			}
+		});
+	}
+	*/
+</script>
+<script>
+	$(".body_1 tr:odd").addClass("odd");
+</script>
+<#include '/common/footer.html' />

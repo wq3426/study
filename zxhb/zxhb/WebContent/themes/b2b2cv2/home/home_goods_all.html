@@ -1,0 +1,77 @@
+<#assign storeSearchGoodsListTag=newTag("storeSearchGoodsListTag")>
+<#assign goodsList=storeSearchGoodsListTag("{'storeid':${store_id!0},'keyword':'${keyword!''}','start_price':'${start_price!''}','end_price':'${end_price!''}','stc_id':${stc_id!0},'key':${key!0},'order':'${order!''}','num':16}")>
+<div class="store_goods_search">
+	<form name="search_form" method="get" id="search_form">
+		<input type="hidden" value="show_store" name="act"> 
+		<input type="hidden" value="goods_all" name="op"> 
+		<input type="hidden" value="2" name="id"> 
+		<input type="hidden" value="${key!0}" name="key"> 
+		<input type="hidden" value="${order!'desc'}" name="order">
+		<div class="goodslist_bar">
+			<ul class="ncs_array">
+				<li class="">
+					<a onclick="set_form(1)" href="javascript:void(0)" class="sort_num1" rel="1">新品</a>
+				</li>
+				<li class=""><a onclick="set_form(2)" href="javascript:void(0)" class="sort_num2" rel="2">价格</a>
+				</li>
+				<li class=""><a onclick="set_form(3)" href="javascript:void(0)" class="sort_num3" rel="3">销量</a>
+				</li>
+				<li class=""><a onclick="set_form(4)" href="javascript:void(0)" class="sort_num4" rel="4">收藏</a>
+				</li>
+				<li class=""><a onclick="set_form(5)" href="javascript:void(0)" class="sort_num5" rel="5">人气</a>
+				</li>
+			</ul>
+			<div class="price_search">
+				<em>¥</em>&nbsp;
+					<input type="text" value="" name="start_price" class="w30"><i>-</i>
+					<input type="text" value="" name="end_price" class="w30">
+					<a href="javascript:void(0);" onclick="on_search();">搜索</a>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="store_goods_list">
+	<ul class="store_goods_all">
+		<#list goodsList.storegoods.result as gl>
+			<li>
+				<a href="goods-${gl.goods_id}.html" class="goodslist_img">
+					<@image src="${gl.thumbnail!''}"  alt="${gl.name}" title="${gl.name}" style="display: inline;" />
+				</a>
+				<h2><a target="_blank" href="goods-${gl.goods_id}.html"><@substring	title="${gl.name}" length="80" dot="..." /></a></h2>
+				<h3>
+					<span>RMB：</span><b>¥${gl.price!0.00}</b><del>¥${gl.mktprice!0.00}</del></a>
+				</h3>
+			</li>
+		</#list>
+	</ul>
+	 <@pager pageno="${goodsList.page!'1'}" pagesize="${goodsList.pageSize}" totalcount="${goodsList.totalCount}" />
+</div>
+
+<script>
+function set_form(set){
+	if($('input[name="key"]').val() == set){
+		if($('input[name="order"]').val() == 'asc'){
+			$('input[name="order"]').val('desc');
+		}else{
+			$('input[name="order"]').val('asc');
+		}
+	}else{
+		$('input[name="order"]').val('desc');
+	}
+	$('input[name="key"]').val(set);
+	
+	window.location.href = "home.html?show_c=4&store_id=${store_id!0}&keyword=${keyword!''}&start_price=${start_price!''}&end_price=${end_price!''}&key="+set+"&order="+$('input[name="order"]').val();
+}
+
+function on_search(){
+	var start_price = $("input[name='start_price']").val();
+	var end_price = $("input[name='end_price']").val();
+	
+	window.location.href = "home.html?show_c=4&store_id=${store_id!0}&keyword=${keyword!''}&start_price="+start_price+"&end_price="+end_price+"&key=${key!0}&order=${order!''}";
+}
+$(function(){
+	var sort_order = $('input[name="key"]').val();
+	$(".sort_num"+sort_order).addClass("selected");
+})
+</script>
+

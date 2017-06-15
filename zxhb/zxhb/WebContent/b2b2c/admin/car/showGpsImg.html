@@ -1,0 +1,39 @@
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<style>
+.input_text {
+	width: 200px;
+}
+.dialog-content td {padding-bottom:0px;}
+.dialog-content th{padding: 0px;}
+/*第一个弹出框*/
+table{border-collapse: collapse;/* 边框合并属性  */}
+.ejectOne table tr th,.ejectOne table tr td{width: 180px; text-align: center;border:1px solid #ccc;line-height: 30px;}
+.ejectOne table thead{background-color: #e6e6e6;}
+/*第二个弹出框*/
+.ejectTow table tr th,.ejectTow table tr td{width: 237px; text-align: center;border:1px solid #ccc;line-height: 30px;}
+.ejectTow table tr th{background-color: #e6e6e6;}
+.ejectTow table tr td img{width: 710px;height: 430px;}
+/*第三个弹出框*/
+.ejectThree table tr th,.ejectThree table tr td{width: 101px; text-align: center;border:1px solid #ccc;line-height: 30px;}
+.ejectThree table tr td span{margin-left: 10px;}
+.ejectThree table tr th{background-color: #e6e6e6;}
+</style>
+<div class="main" style="background-color: white;">
+	<div class="easyui-panel" style="border-style: none;">
+		<div style="padding: 10px 20px 10px 10px;">
+			<form id="" method="post" class="ejectTow" >
+				<table>
+					<tbody>
+						<tr>
+							<td colspan="3">
+								<img src="${gps_imgurl!'/mall/themes/b2b2cv2/images/no_upload.jpg'}" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			
+		</div>
+	</div>
+</div> 

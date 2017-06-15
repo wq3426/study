@@ -1,0 +1,130 @@
+/*新增局部样式*/
+table { border-collapse:collapse;background-color:#fff;  }
+.fw900{font-weight: 900;}
+.w120{width: 120px;}
+
+.w500{width: 500px;}
+
+.mt20{margin-top: 20px;}
+.mr10{margin-right: 10px;}
+.p10{padding: 10px;}
+.pt10{padding-top: 10px;}
+.pt20{padding-top: 20px;}
+.pl20{padding-left: 20px;}
+.pb20{padding-bottom: 20px;}
+.fl{float: left;}
+.fr{float: right;}
+.tal{text-align: left;}
+.tar{text-align: right;}
+.tac{text-align: center;}
+.none{display: none!important;}
+.text{width: 150px;height: 28px;border:1px solid #e8e8e8;border-radius: 3px; }
+.c_red{color: red;}
+.br0{border-right: 0px!important;}
+.bl0{border-left: 0px!important;}
+.border_84{border: 1px solid #848484;}
+.border_l84 { border-left: 1px solid #848484;  }
+.border_t84 { border-top: 1px solid #848484;  }
+.bg_ed{background-color:#ebebeb;}
+/*虚线分割*/
+.online_t {  border-top: 1px dotted #d8d8d8; }
+.online_b {  border-bottom: 1px dotted #d8d8d8; }
+/*订单详情*/
+#order_detail {  margin-left: 30px; }
+#order_detail .flow{ font-size: 0;  margin-top: 30px;  position: relative;  z-index: 1;  width: 995px; height: 70px; background-color: #fff;}
+/*流程图*/
+.flow .no_arrive_order {  width: 906px;  height: 71px;  overflow: hidden;  background: url(../images/liucheng1.jpg) no-repeat left center;  }
+.flow .status0 {  background-position: 1px -14px;  }
+.flow .status9 {  background-position: 1px -14px;  }
+.flow .status2 {  background-position: 1px -89px;  }
+.flow .status5 {  background-position: 1px -153px;  }
+.flow .status6 {  background-position: 1px -234px;  }
+.flow .status7 {  background-position: 1px -299px;  }
+.flow .status8 {  background-position: 1px -379px;  }
+.flow .status-2 {  background-position: 1px -455px;  }
+
+.flow .arrive_order {  width: 906px;  height: 71px;  overflow: hidden;  background: url(../images/liucheng2.jpg) no-repeat left center;  }
+.flow .statusway0 {  background-position: 1px -15px;  }
+.flow .statusway9 {  background-position: 1px -15px;  }
+.flow .statusway5 {  background-position: 1px -89px;  }
+.flow .statusway6 {  background-position: 1px -154px;  }
+.flow .statusway7 {  background-position: 1px -299px;  }
+.flow .statusway8 {  background-position: 1px -355px;  }
+.flow .statusway-2 {  background-position: 1px -455px;  }
+
+.flow .no_insurance_arrive_order {  width: 906px;  height: 71px;  overflow: hidden;  background: url(../images/liuchengtu3.jpg) no-repeat left center;  }
+.flow .status10 {  background-position: 1px -14px;  }
+.flow .status19 {  background-position: 1px -14px;  }
+.flow .status12 {  background-position: 1px -89px;  }
+.flow .status15 {  background-position: 1px -153px;  }
+.flow .status16 {  background-position: 1px -234px;  }
+.flow .status17 {  background-position: 1px -299px;  }
+.flow .status18 {  background-position: 1px -379px;  }
+/*新增流程图--王强*/
+.flow .no_arrive_order_repair {  width: 906px;  height: 71px;  overflow: hidden;  background: url(../images/liucheng4.jpg) no-repeat left center;}
+.flow .repair0 {  background-position: 1px -14px;  }
+.flow .repair9 {  background-position: 1px -14px;  }
+.flow .repair2 {  background-position: 1px -89px;  }
+.flow .repair5 {  background-position: 1px -153px;  }
+.flow .repair6 {  background-position: 1px -234px;  }
+.flow .repair7 {  background-position: 1px -299px;  }
+.flow .repair8 {  background-position: 1px -379px;  }
+.flow .repair-2 {  background-position: 1px -455px;  }
+/*新增中安发货4S店流程图*/
+.flow .zato4s_order {  width: 906px;  height: 71px;  overflow: hidden;  background: url(../images/liucheng5.jpg) no-repeat left center;  }
+.flow .zato4s0 {  background-position: 1px -14px;  }
+.flow .zato4s2 {  background-position: 1px -95px;  }
+.flow .zato4s3 {  background-position: 1px -161px;  }
+.flow .zato4s5 {  background-position: 1px -230px;  }
+.flow .zato4s6 {  background-position: 1px -298px;  }
+.flow .zato4s7 {  background-position: 1px -374px;  }
+.flow .zato4s8 {  background-position: 1px -448px;  }
+.flow .zato4s-1 {  background-position: 1px -523px;  }
+/*新增发货流程图*/
+.flow .shipping_order {  width: 906px;  height: 71px;  overflow: hidden;  background: url(../images/liucheng6.jpg) no-repeat left center;  }
+.flow .shipping0 { background-position: 1px -14px;  }
+.flow .shipping2 {  background-position: 1px -80px;  }
+.flow .shipping3 {  background-position: 1px -152px;  }
+.flow .shipping7 {  background-position: 1px -215px;  }
+.flow .shipping8 {  background-position: 1px -294px;  }
+.flow .shipping-1 {  background-position: 1px -371px;  }
+
+
+.detail_list {text-align: center;width: 1000px; margin-top: 1px;}
+.detail_list table tr td{border: 1px solid #848484;}
+.detail_list table tbody tr td img{margin: 15px; width: 70px; height: 60px;}
+.detail_list table tfoot{background-color: #ffffff;}
+
+.order_detail {  border: 1px solid #848484;border-top: 0px; position: relative;  z-index: 2; width: 994px;background-color: #fbfbfb;}
+.order_detail .order_intro {  background-color: #fbfbfb; display: inline-block;  letter-spacing: normal;  vertical-align: top;  width: 358px;  word-spacing: normal;  }
+.order_detail .order_intro h1{font-weight: bolder;  font-size: 14px; color: #666666;height: 35px;line-height: 35px;margin-left: 15px;}
+.order_detail .order_intro dl,.order_detail .intro_staus dl {line-height: 24px;margin-left: 10px;}
+.order_detail .order_intro dl dt,.order_detail .intro_staus dl dt {float: left;margin-right: 10px;}
+.order_detail .intro_staus {  background-color: #fbfbfb;  display: inline-block;  font-size: 12px;  letter-spacing: normal;   vertical-align: top;  width: 630px;  word-spacing: normal;border-left: 1px solid #868686;padding-bottom: 30px;}
+.order_detail .intro_staus h2{margin: 10px;}
+
+/*admin 会员信息*/
+#member_detail,.member_car_detail{background: #fff;margin: 20px;}
+#member_detail div ul li{line-height:30px; }
+#member_detail div ul li b{margin-right: 10px; display: inline-block;width: 60px;text-align: right;}
+#member_detail div ul li.view{width: 250px;}
+
+/*车辆信息*/
+.member_car_detail table tr{height: 40px;}
+.member_car_detail table tr th{width: 100px; text-align: right;padding-right: 10px;font-weight: 900;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

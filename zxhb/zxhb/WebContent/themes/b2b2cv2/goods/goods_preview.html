@@ -1,0 +1,56 @@
+<!-- 店铺其他信息标签 test -->
+<#assign myStoreDetailOtherTag=newTag("myStoreDetailOtherTag")>
+<#assign myStoreDetailOther=myStoreDetailOtherTag()>
+<input type="hidden" id="store-name-hide" value="${myStoreDetail.store_name!''}" />
+<dl>
+	<dt>预览：</dt>
+	<dd>
+		<input type="button" id="preview-btn" value="预览" style="padding: 5px 15px" />
+	</dd>
+</dl>
+<script>
+$(function(){
+	$("#preview-btn").click(function(){
+		var intro = $("#intro").text();
+		var storeName = $("#store-name-hide").val();
+		var goodsName = $("#goods-name-txt").val();
+		var goodsPrice = $("#price").val();
+		var imgUrl = $("#img-div-1 img").attr("src");
+		var editor = UE.getEditor("editor");
+		var intro = $("#intro").html();
+		try{
+			if(UE.getEditor("editor").getContent()){
+				html =	UE.getEditor("editor").getContent();
+			}
+		}catch (e) {
+			if(intro){
+				html = intro;
+			}
+		}
+		if(storeName == "" || goodsName == "" || goodsPrice == "" || imgUrl == "") {
+			alert("请填写完整的商品信息");
+			return;
+		}
+
+
+		var dialog = $.dialog({
+			title : "预览",
+			lock : true,
+			height:"600px",
+			width:"400px"
+		});
+		$.ajax({
+			url : "goods_preview_view.html",
+			type:"post",
+			data : {"store_name":storeName,"goods_name":goodsName,"goods_price":goodsPrice,"img_url" : imgUrl,"miaoshu" : html},
+			success : function(html) {
+				dialog.content(html);
+			},
+			error : function() {
+				$.alert("出现错误，请重试");
+			},
+			cache : false
+		});
+	});
+})
+</script>

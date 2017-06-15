@@ -1,0 +1,23 @@
+<div class="easyui-panel" style="border-style:none;" >
+	<div style="padding: 10px 0 10px 60px">
+		<form id="editTagForm" method="post" class="validate" >
+		<input type="hidden" name="tag.tag_id" value="${tag.tag_id }"/>
+			<table>
+				<tr>
+					<td>标签名称</td>
+					<td><input class="easyui-validatebox input_text" type="text" name="tag.tag_name" id="name" maxlength="60" data-options="required:true"  dataType="string"   value="${tag.tag_name}" isrequired="true"/>
+					</td>
+				</tr>
+				<tr>
+					<td>品牌标签</td>
+					<td> 是：<input type="radio"  name="tag.type" <#if tag.type == 1>checked="checked"</#if>   value="1" />
+					&nbsp;否 
+					<input type="radio"  name="tag.type"  value="0" <#if tag.type == 0>checked="checked"</#if>  /> 
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+	
+

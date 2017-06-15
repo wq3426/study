@@ -1,0 +1,91 @@
+<#include '/store/store_header.html' />
+<script  src="${ctx}/themes/b2b2cv2/js/My97DatePicker/WdatePicker.js"  ></script>
+
+<!--创建“订单详细”标签-->
+<#assign orderDetailTag = newTag("orderDetailTag")>
+<!--调用“订单详细”标签，并传递参数-->
+<#assign orderDetail = orderDetailTag()>
+
+<#if orderDetail?? && orderDetail!=''>
+	<!-- 获取会员订单详细快递信息 -->
+	<#assign orderDeliveryListTag = newTag("orderDeliveryListTag")>
+	<!-- 调用会员订单详细快递信息 -->
+	<#assign orderDelivery = orderDeliveryListTag("{'orderid':${orderDetail.order_id}}")>
+	<#assign orderSend = orderDelivery.deliveryList>
+	
+	<#assign logi_no ='' >
+	<#assign logi_code ='' >
+	<#assign logi_name ='' >
+	<#if orderDetail.ship_status gt 2 >
+	<#list orderSend as delivery>
+		<#if delivery.type ==1 && delivery.logi_no?exists >
+			<#assign logi_no = "${delivery.logi_no!''}">
+			<#assign logi_code = "${delivery.logi_code!''}" >
+			<#assign logi_name = "${delivery.logi_name!''}">
+		</#if>
+		
+		<#if delivery.type ==2 && delivery.logi_no?exists >
+		</#if>
+		
+		<#if delivery.type ==3 && delivery.logi_no?exists >
+		</#if>
+	</#list>
+	</#if>
+	
+	<!--创建“查询订单物流详细”标签-->
+	<#assign OrderExpressInfoTag = newTag("orderExpressInfoTag")>
+	<!--调用“查询订单物流详细”标签，并传递参数-->
+	<#assign kuaidiResult = OrderExpressInfoTag('{"logino":"${logi_no!\"\"}","code":"${logi_code!\"\"}"}')>
+</#if>
+
+<div class="store_center">
+	<#include '../left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color:#999;">您的位置：</span>
+			<span>></span>
+			<a href="#">交易管理</a><span>></span>快递查询
+		</div>
+		<div class="store_right_main">
+			<div class="tabmenu">
+				<ul class="tab pngFix">
+					<li class="active">
+						<a hre="#">快递查询</a>
+					</li>
+				</ul>
+			</div>
+			<#if logi_no?? && logi_no != ''>
+			<table class="s_orderlist" cellspacing="0" cellpadding="0">
+				<thead>
+					<tr class="s_orderlist_title">
+						<th>时间</th>
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th colspan="20">
+							<span>物流公司：${logi_name}</span>
+							<span style="border:0px none;">快递单号：${logi_no}</span>
+						</th>
+					</tr>
+					<tr>
+						<th colspan="20" class="store_center_courier ">
+							<#include '/member/order_kuaidi.html' />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<#else>
+		  		<p class="no_blank">暂无符合条件的数据记录</p>
+		  	</#if>
+		</div>
+	</div>		
+</div>
+<script>
+		$(function(){
+				selectMenu(0);
+		})
+	</script>
+
+<#include '/common/footer.html'/>

@@ -1,0 +1,222 @@
+<#include '/store/store_header.html' />
+<link rel="stylesheet" type="text/css" href="${ctx}/themes/b2b2cv2/css/uploadify.css" />
+<script type="text/javascript" src="${ctx}/themes/b2b2cv2/js/goodsSpec.js"></script>
+<script type="text/javascript" src="${ctx}/themes/b2b2cv2/js/jquery.uploadify.min.js"></script>
+
+<style>
+.tab_box{padding:20px;}
+.tab_box li{height:24px;line-height:24px;overflow:hidden;}
+.tab_box .hide{display:none;}}
+</style>
+
+<!-- 店铺商品 -->
+<#assign storeGoodsInfoTag=newTag("storeGoodsInfoTag")/>
+<#assign storeGoodsInfo=storeGoodsInfoTag("{'goods_id':'${goods_id}'}")/>
+<#assign storeGoods=storeGoodsInfo.goods>
+<!-- 商品分类 -->
+<#assign storeGoodsCatTag=newTag("storeGoodsCatTag")/>
+<#assign storeGoodsCat=storeGoodsCatTag("{'catid':'${storeGoods.cat_id}'}")/>
+<!-- 品牌列表Tag -->
+<#assign brandTag=newTag("brandsByCatIdTag")/>
+<#assign brandList=brandTag("{'catid':'${storeGoods.cat_id}'}")/>
+<#-- 创建店铺商品分类标签 --> 
+<#assign storeGoodsCatListTag= newTag("storeGoodsCatListTag") > 
+<#-- 查询店铺商品分类列表 0表示查子分类 --> 
+<#assign storeGoodsCatList= storeGoodsCatListTag("'type':0")!''>
+
+<#-- 商品规格标签 -->
+<#assign goodsSpecTag=newTag("goodsSpecTag")/>
+<#assign goodsSpec=goodsSpecTag("{'goods_id':${goods_id}}") />
+
+<#-- 商品规格标签 -->
+<#assign storeGoodsSpecTag=newTag("storeGoodsSpecTag") />
+<#assign goodsSpecList=storeGoodsSpecTag() />
+
+<#-- 商品Tab -->
+<#assign storeGoodsTabTag=newTag("storeGoodsTabTag") >
+<#assign storeGoodsTab=storeGoodsTabTag() >
+
+<#-- 创建商品默认属性信息标签 -->
+<#assign goodsDefaultPropsTag=newTag("goodsDefaultPropsTag") >
+<#-- 查询商品默认属性信息 -->
+<#assign attrList=goodsDefaultPropsTag("{'type':2}")!0 >
+
+<#-- 创建商品默认参数信息标签 -->
+<#assign goodsDefaultParamesTag=newTag("goodsDefaultParamesTag") >
+<#-- 查询商品默认参数信息 -->
+<#assign paramAr=goodsDefaultParamesTag("{'type':2}")!0 >
+
+
+<!-- 规格货品 -->
+<#assign goodsSpecTag = newTag("goodsSpecTag") >
+<#assign goodsSpec = goodsSpecTag("{'goods_id':'${goods_id}'}")>
+
+<div class="store_center">
+	<#include '/store/left_menu.html' />
+	<div id="sotre_right_content" class="sotre_right_content">
+		<div class="path">
+			<span style="color:#999;">您的位置：</span>
+			<span>></span>
+			商品管理<span>></span><a href="${ctx}/mall/goods/store_goods_list.html?market_enable=1&menu=store_goods">出售中的商品</a><span>></span>商品详情
+		</div>
+		<form method="post" id="storeGoodsForm"  class="validate">
+			<div class="box tabmenu" style="height: auto;">
+				<ul class="tab pngFix tab_menu">
+					<li class="active current a_goods0" rel="0"><a href="javascript:void(0);">商品详情</a></li>
+				    <#assign t=1>
+					<#list storeGoodsTab as goodsTag>
+						<li class="normal current a_goods${t}" rel="${t}"><a href="javascript:void(0);">${goodsTag.name}</a></li>
+						<#assign t=t+1>
+					</#list>
+				</ul>
+				<#assign n=1>
+				<div class="tab_box" style="clear: both;">
+					<#include '/goods/see_base_info.html' />
+					
+					<#list storeGoodsTab as gTag>
+						<div class="hide${n} store_add_goods" style="display:none;">
+							<#include '/${gTag.url}' />
+						</div>
+						<#assign n=n+1>
+					</#list>
+				</div>
+			</div>
+		</form>
+		</div>
+	</div>
+	
+</div>	
+
+<script type="text/javascript">
+
+var ue = UE.getEditor('editor');
+
+$(".tab_menu li").click(function(){
+	var serial = $(this).attr("rel");
+	$(".tab_menu li").addClass("normal");
+	$(this).removeClass("normal");
+	$(this).addClass("active");
+	$(".tab_box .store_add_goods").hide();
+	$(".tab_box .hide"+serial).show();
+})
+
+var app_path="${ctx}";
+
+$(function(){
+	$(".decimal").on("blur",function(money){
+		var discount = $(this).val();
+		var total;
+		if(discount!==''&&!isNaN(discount)){
+			total = parseFloat(discount);
+			total = total.toFixed(2) + "";
+			var re=/(\d{1,3})(?=(\d{3})+(?:$|\.))/g;
+			var n=total.replace(re,"$1,");
+			return  $(this).val(n);
+		}
+});
+
+	$("#whops_seller").click(function(){
+		$("#whops_buyer_box").hide();
+	});
+	$("#whops_buyer").click(function(){
+		$("#whops_buyer_box").show();
+	});
+	window.onload=function(){
+		<#list storeGoodsInfo.galleryList as gallery>
+			bindFileEvent($("#goods${gallery.img_id}"));
+		</#list>
+		<#if (storeGoodsInfo.galleryList?size)<5>
+			<#list (storeGoodsInfo.galleryList?size+1)..5 as t>
+				bindFileEvent($("#goods-${t}"));
+			</#list>
+		</#if>
+	}
+	$("input[name='clean']").click(function(){
+		var fs=$(this).attr("fs");
+		var is_default=$(this).attr("is_default");
+		$("#img"+fs).attr("src","${ctx}/themes/b2b2cv2/images/default_goods_image_tiny.gif");
+		//$("#fs_status"+fs).val("0");
+		$("#fs_img"+fs).attr("name","del_pic");
+		if(is_default=="true"){
+			$("#image_default").val("");
+		}
+	});
+})
+	
+//判断sn是否存在
+function sn_is_exist(obj){
+	$.ajax({
+        url: "${ctx}/api/b2b2c/goods!snIsExist.do",
+        data: {sn:obj.value,goodsid:${goods_id}},
+        dataType: "json",
+        success: function(data){
+			if(data.result==0){
+				$(obj).css("border","1px solid red");
+				$(obj).next(".err").html("货号已存在");
+			}else{
+				$(obj).css("border","1px solid #d0d0d0");
+				$(obj).next(".err").html("");
+			}
+        },
+        error : function(e) {
+        	$.Loading.message('出现错误，请重试');
+		}
+    });
+}
+function bindFileEvent(obj){
+	var status=$(obj).attr("status");
+	var url="";
+	$(obj).uploadify({
+		'queueID'  : 'some_file_queue',
+		'buttonText':status,		//显示文字
+		'fileObjName':'image',		//文件对象名称
+									//上传文件大小限制 'fileSizeLimit':'100KB',
+		'fileTypeDesc': '请选择',//允许上传的文件类型的描述，在弹出的文件选择框里会显示 
+		'fileTypeExts': '*.gif; *.jpg; *.png',//允许上传的文件类型，限制弹出文件选择框里能选择的文件 
+		'uploader' : '${ctx}/api/base/upload-image.do?subFolder=store/${storeMember.store_id}/goods',
+		'swf'      : '${ctx}/themes/b2b2cv2/uploadify.swf',
+		'height':'30',				//高度
+		'width':'70',
+		'multi':true,				//是否支持多文件上传
+		'progressData':'percentage',//设置文件上传时显示的数据
+		'uploadLimit':5,
+		'onFallback':function(){				//falsh兼容
+			alert("麻烦了，不兼容falsh!");
+		},
+		'onUploadStart' : function(file) {
+			var fs= $(obj).attr("fs");
+			url=$("#fs_img"+fs).val();
+        },
+		'onUploadSuccess':function(file,data,response){
+			var img =jQuery.parseJSON(data);
+			var fs= $(obj).attr("fs");
+			$("#img"+fs).attr("src",img.img);
+			$("#fs_img"+fs).val(img.img);
+			$("#fs_img"+fs).attr("name","picnames");
+			if(status=="修改"){
+				$("#fs_status"+fs).val("3");
+				$(".goods_image").append("<input type='hidden' name='del_pic' value='"+url+"'/>");
+			}else{
+				$("#fs_status"+fs).val("1");
+			}
+			
+			if(fs==1){ 
+				$("#image_default").val(img.img);
+			}
+			
+			if($(obj).attr("is_default")=="true"){
+				$("input[name='image_default']").val(img.img);
+			}
+		},
+		'onSelectError':function(file,errorCode,errorMsg){
+			if(errorCode==SWFUpload.QUEUE_ERROR.QUEUE_LIMIT_EXCEEDED){
+				this.queueData.errorMsg="最多只能上传五个";
+			}
+			if(errorCode==SWFUpload.QUEUE_ERROR.INVALID_FILETYPE){
+				this.queueData.errorMsg="请上传正确的格式";
+			}
+		}
+	});
+}
+</script>
+<#include '/common/footer.html' />

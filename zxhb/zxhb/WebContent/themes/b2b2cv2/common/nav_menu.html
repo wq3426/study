@@ -1,0 +1,41 @@
+<!-- 创建菜单标签 -->
+<#assign menuTag= newTag("menuTag")>
+<!-- 调用菜单信息 -->
+<#assign menuList = menuTag()!'' >
+<ul class="site_menu">
+	<#list menuList as menu >
+		<#assign haschild=false />
+		<#assign first=false />
+		<#assign last=false />
+		<#if menu.hasChildren ><#assign haschild=true /></#if>
+		<#if menu_index==0><#assign first=true /></#if>
+		<#if !menu_has_next><#assign last=true /></#if> 
+		<li class="<#if menu_index==0>first</#if><#if !menu_has_next>last</#if><#if haschild > haschild</#if>" >
+			<a href="${ctx}/${menu.url}" >${menu.name!''}</a>	 
+			<#if haschild  >
+				<div class="child" style="display:none;">
+					<p class="point_to"></p>
+					<ul>
+						<#list menu.children as child>
+						   <li <#if !child_has_next>class="last"</#if> ><a href="${ctx}/${child.url!''}">${child.name!''}</a></li>
+					    </#list>
+					</ul>
+				</div>
+			</#if>
+		</li>
+	</#list>
+</ul>
+<script>
+	$(function(){
+		//鼠标移入显示
+		$(".site_menu li").mouseover(function(){
+			$(this).find(".child").show();
+		})
+		
+		//鼠标移出隐藏
+		$(".site_menu li").mouseleave(function(){
+			$(this).find(".child").hide();
+		})
+	})
+</script>
+

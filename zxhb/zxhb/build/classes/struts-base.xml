@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="adminUi" namespace="/admin" extends="eop_default">
+		 <interceptors>	
+			<interceptor name="backendRightInterceptor" class="com.enation.eop.processor.core.BackendRightInterceptor">	
+			</interceptor>
+			<interceptor-stack name="backendStack">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="backendRightInterceptor" />
+			</interceptor-stack>				
+		 </interceptors>
+		 	
+ 		<action name="backendUi" class="backendUiAction">
+			<result name="login_page" type="freemarker">/adminthemes/${theme}/login.html</result>
+			<result name="main_page" type="freemarker">/adminthemes/${theme}/main_page.html</result>
+			<result name="not_login" type="redirectAction">backendUi!login.do?timeout=yes</result>
+			<interceptor-ref name="backendStack">  
+			  <param name="backendRightInterceptor.excludeMethods">login</param>  
+			</interceptor-ref>  			
+		</action>
+	</package>
+		
+	<package name="basefacade" namespace="/core" extends="eop_default">
+		<action name="adv" class="advAction">
+			<result name="go">adv/go.jsp</result>
+		</action>
+	</package>	
+	
+	
+	<package name="base" namespace="/core/admin" extends="eop_default">
+		
+		<!-- 流量 -->
+		<action name="ask" class="askAction">
+		</action>	
+		
+		<action name="multiSite" class="multiSiteAction">
+			<result name="main" type="freemarker">multisite/main.html</result>
+		</action>
+		
+		<!-- 短信 -->
+		<action name="sms" class="smsAction">
+			<result name="edit" type="freemarker">sms/edit.html</result>
+			<result name="list" type="freemarker">sms/sms_platform.html</result>
+		</action>
+	</package>
+ 
+	
+	<package name="user" namespace="/core/admin/user" extends="eop_default">
+		
+		<action name="userSite" class="userSiteAction">
+			<result name="edit" type="freemarker">editUserSite.html</result>
+		</action>
+
+		
+
+		<action name="siteTheme" class="siteThemeAction">
+			<result name="input">newtheme.jsp</result>
+			<result name="success" type="freemarker" >sitetheme.html</result>
+		</action>
+		<action name="siteAdminTheme" class="siteAdminThemeAction">
+			<result name="success" type="freemarker" >siteadmintheme.html</result>
+		</action>
+		
+	</package>
+ 
+	<package name="eop_saler_default" extends="eop_default" namespace="/eop">
+ 	    <action name="index" class="indexAction">
+			<result name="index">index.jsp</result>
+		</action>
+	
+		<action name="upload" class="uploadAction">
+			<interceptor-ref name="fileUploadStack"></interceptor-ref>
+			<result name="input" type="freemarker">/core/admin/upload/upload.html</result>
+			<result name="input_file" type="freemarker">/core/admin/upload/upload_file.html</result>
+		</action>
+		<action name="ckuploader" class="ckEditorUploadAction">
+			<interceptor-ref name="fileUploadStack"></interceptor-ref>
+			<result name="success"  type="freemarker">/core/admin/upload/cksuccess.html</result>
+		</action>		
+	</package>
+	 
+</struts>

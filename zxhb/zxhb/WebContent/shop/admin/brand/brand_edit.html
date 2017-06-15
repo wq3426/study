@@ -1,0 +1,56 @@
+<div class="main shadowBoxWhite"  style="overflow: hidden;">
+	<style>
+		.goods_brand{width:90px;}
+	</style>
+	<div class="easyui-panel" style="border-style: none; ">
+		<div style="padding: 10px 0 10px 20px">
+			<form id="brandEditForm" method="post" class="validate">
+				<table>
+					<tr>
+						<td class="goods_brand">品牌名称</td>
+						<td><input class="input_text easyui-validatebox" type="text" id="name"
+							name="brand.name" data-options="required:true"
+							value="${brand.name!''}"></input>
+						</td>
+					</tr>
+					<tr>
+						<td class="goods_brand">品牌网址：</td>
+						<td><input class="input_text easyui-validatebox"  type="text" id="url"
+							name="brand.url" data-options="required:true,validType:'url'"
+							value="${brand.url}"></input>
+						</td>
+					</tr>
+					<tr>
+						<td class="goods_brand">品牌类型：</td>
+						<td>
+							<select name="brand.type" value="${brand.type!''}">
+								<option value="0" <#if brand.type?? && brand.type == 0>selected="selected"</#if>>汽车品牌</option>
+								<option value="1" <#if brand.type?? && brand.type == 1>selected="selected"</#if>>商品品牌</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="goods_brand">品牌LOGO：</td>
+						<td><input type="file" id="logo" name="logo"
+							data-options="required:false"></input>
+						</td>
+					</tr>
+					<#if imgPath??>
+					<tr>
+						<td></td>
+						<td><img alt="" src="${imgPath!''}" height="100px;">
+						</td>
+					</tr>
+					</#if>
+					<tr>
+						<td class="goods_brand">详细说明</td>
+						<td>
+							<script id="editor" name="brand.brief" type="text/plain" style="height:200px;width: 99%;">${brand.brief!''}</script>
+						</td>
+					</tr>
+				</table>
+				<input type="hidden" name="brand.brand_id" value="${brand.brand_id}">
+			</form>
+		</div>
+	</div>
+</div>

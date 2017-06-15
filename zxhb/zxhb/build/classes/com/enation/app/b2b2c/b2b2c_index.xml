@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dbsolution>
+
+<!-- 	<action>
+		<command>index</command>
+		<table>es_groupbuy_goods</table>
+		<index name="es_groupbuy_index">
+			<field><name>store_id</name></field>
+			<field><name>act_id</name></field>
+			<field><name>cat_id</name></field>
+			<field><name>area_id</name></field>
+		</index>
+	</action> 
+ -->
+	<action> 
+		<command>index</command>
+		<table>es_member</table>
+		<index name="ind_member_b2b2c">
+	 		<field><name>is_store</name></field> 
+			<field><name>store_id</name></field> 
+		</index>
+	</action>	
+	
+	<action>
+		<command>index</command>
+		<table>es_order</table>
+		<index name="ind_order_b2b2c">
+			<field><name>parent_id</name></field>
+			<field><name>store_id</name></field>
+		</index>
+	</action>	
+	
+	<action>
+		<command>index</command>
+		<table>es_store</table>
+		<index name="ind_store_name">
+			<field><name>store_name</name></field>
+		</index>
+	</action>		
+	
+	<action>
+		<command>index</command>
+		<table>es_store_cat</table>
+		<index name="es_store_cat_storeid">
+			<field><name>store_id</name></field>
+		</index>
+	</action>	
+	
+	<action>
+		<command>index</command>
+		<table>es_store_silde</table>
+		<index name="ind_store_silde">
+			<field><name>store_id</name></field>
+		</index>
+	</action> 
+</dbsolution>	

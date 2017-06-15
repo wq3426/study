@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<#assign hotAndGoodsListTag=newTag("hotAndGoodsListTag")>
+<#assign hotGoodsList=hotAndGoodsListTag("{'store_id':${tore_id!'0'}}")/>
+<#assign i = 0>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="${ctx}/themes/b2b2cv2/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="${ctx}/themes/b2b2cv2/css/default.css"/>
+    <link rel="stylesheet" type="text/css" href="${ctx}/themes/b2b2cv2/css/store.css"/>
+</head>
+<body style="max-width: 240px !important; min-width: 210px !important; ">
+<div class="reveal_list_content">
+  <#if (hotGoodsList?size > 0)>
+    <ul>
+     <#list hotGoodsList as hotGoods>
+      <#assign  i = i + 1>
+        <li>
+                <div class="tac">
+                    <h4>${i}</h4>
+                    <img src="${hotGoods.thumbnail}" style="width: 100px;height: 90px;margin-top: 10px;" alt=""></div>
+                <div style="max-height: 28px;overflow: hidden; margin-left: 2px;">
+                    <!--<i class="hot_za"></i>-->
+                    <span>${hotGoods.name}</span>
+                </div>
+                <div style=" margin-left: 2px;"><b>&yen;<span>${hotGoods.price}</span></b></div>
+                <!--<div><h5 class="hot_money"></h5> 商品最高使用安全奖励<b>&yen;<span>${hotGoods.rewards_limit!'0'}</span></b></div>-->
+        </li>
+	  </#list>
+    </ul>
+  </#if>
+</div>
+</body>
+</html>
+
+

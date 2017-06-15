@@ -1,0 +1,167 @@
+<#include '/admin/header.html' >
+<#assign dateformat="com.enation.framework.directive.DateformateDirective"?new()>
+<div id="edit_shopping" style="display: none; overflow:hidden"></div>
+    <style>
+        .ml10{margin-left: 10px;}
+        .tl{text-align: left!important;}
+        .tr{text-align: right;}
+        p{padding: 0px;margin: 0px;}
+        .cred{  color:red;}
+        .ww100{width: 100%;}
+        .ww75{width: 75%;}
+        .w500{width: 500px;}
+        .w100{width: 100px;}
+        .w200{width: 200px;}
+        .w400{width: 400px!important;}
+        .minh100{min-height: 100px;}
+        .of{overflow:hidden }
+        .list_txt{height: 80px;overflow: hidden;}
+         table{margin-top: 20px;}
+        table thead tr th {text-align: center; border: 1px solid #dddddd;background-color: #f9f9f9;}
+        table tbody tr td {text-align: center; }
+        .detail tr th{width: 200px;text-align: center;}
+        .detail tr td{text-align: center;}
+    </style>
+<div id="order_detail">
+    <table>
+        <thead>
+            <tr>
+                <th class="w500">订单名称</th>
+                <th class="w100">单价(元)</th>
+                <th class="w200">规格／图案</th>
+                <th class="w100">数量</th>
+                <th class="w100">小计</th>
+                <th class="w100">实付金额</th>
+                <th class="w100">交易状态</th>
+                 <th class="w100">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="of tl">
+                    <img class="fl" src="${orderMap.spec_image!''}" alt="" width="100" height="100" border="1px solid red">
+                    <div class="fl ww75 ml10">
+                        <p><b>${orderMap.name!''}</b></p>
+                       ${orderMap.intro!''}
+                    </div>
+                </td>
+                <td>&yen;${orderMap.unit_price!''}</td>
+                <td class="tl">
+                    <p class="ml10">${orderMap.spec_value!''}</p>
+                    <p class="ml10">${orderMap.tag_spec_value!''}</p>
+                </td>
+                <td>${orderMap.order_count!''}</td>
+                <td>&yen;${orderMap.total_price!''}</td>
+                <td class="cred">&yen;${orderMap.total_price!''}元</td>
+                <td><#if orderMap.status?? ><#if orderMap.status == 9>已预约<#elseif orderMap.status == 0>待支付<#elseif orderMap.status == 1>已支付,待发货<#elseif orderMap.status == 2>配送中<#elseif orderMap.status == 3>已送达<#elseif orderMap.status == 8>已取消</#if></#if></td>
+                <td><#if orderMap.status?? ><#if orderMap.status == 1 || orderMap.status == 2><a href='#' onclick='editShopping("${orderMap.order_sn}")'>编辑物流</a><br/> </#if></#if>
+             <!--    <a href='#' onclick='reash()'>刷新</a> -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="detail">
+        <thead>
+        
+            <tr>
+                <th >订单号</th>
+                <th >下单时间</th>
+                <th >联系人</th>
+                <th >手机号</th>
+                <th>收货地址</th>
+                <th>物流公司</th>
+                <th>物流单号</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>${orderMap.order_sn!''}</td>
+                <td>${orderMap.create_time_date!''}</td>
+                <td>${orderMap.username!''}</td>
+                <td>${orderMap.user_telephone!''}</td>
+                <td class="tl w400">${orderMap.address!''}</td>
+                <td>${orderMap.shipping_name!'暂无'}</td>
+                <td>${orderMap.shipping_no!''}</td>
+            </tr>
+            <tr>
+                <td colspan="8">
+                    <div class=" tl minh100">
+                        物流信息： 	<#if orderMap.shippingList??>
+	                    <#list orderMap.shippingList as shipping>
+	                    <br/>	    时间：${shipping.AcceptTime} &nbsp;&nbsp; ${shipping.AcceptStation}
+	                    </#list>
+	                    <#else>
+	                                                     暂无信息
+	                </#if>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+function reash(){
+	var currTab = $('#tabs').tabs('getSelected');
+    var url = $(currTab.panel('options').content).attr('src');
+    $('#tabs').tabs('update', {
+        tab: currTab,
+        options: {
+            href:url
+        }
+    });
+}
+
+function editShopping(order_sn){
+     $("#edit_shopping").show();
+    $('#edit_shopping').dialog({
+        title: '编辑物流',
+        width: 750,
+        top: 100,
+        closed: false,
+        cache: false,
+        href: '${ctx}/b2b2c/admin/zxhbOrder!editShoppingPage.do?order_sn='+order_sn,
+        modal: true,
+        buttons: [{					//创建按钮
+　			 text:'保存',
+　			 iconCls:'icon-ok',
+　			 handler:function(){
+　				 var savebtn = $(this);
+　				 var disabled=savebtn.hasClass("l-btn-disabled");
+　				 if(!disabled){
+	　　				 saveShipping(savebtn);
+	　　			 }	
+　			}
+　		}]
+	}); 
+}
+
+function saveShipping(savebtn){
+	var formflag= $("#shippingForm").form().form('validate');
+	if(formflag){
+		$.Loading.show("正在保存请稍后...");
+		savebtn.linkbutton("disable");	
+		var options = {
+				url : "${ctx}/b2b2c/admin/zxhbOrder!saveShopping.do",
+				type : "POST",
+				dataType : "json",
+				success : function(result) {
+					if(result.result==1){
+						$("#edit_shopping").dialog('close');
+						$('#orderdata').datagrid('reload');
+						$.Loading.success(result.message);
+					}else{
+						$.Loading.error(result.message);
+					}
+					savebtn.linkbutton("enable");
+			 	},
+			 	error : function(e) {
+			 		$.Loading.error('出现错误，请重试');
+			 		savebtn.linkbutton("enable");
+				}
+			};
+		$('#shippingForm').ajaxSubmit(options);	
+	}
+}
+</script>
+<#include '/admin/footer.html' >

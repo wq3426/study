@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="jarintegral" basedir="../">
+
+	<!--编译eop-->
+	<target name="jar_integral">
+		<mkdir dir="${build.dir}/integral" />
+		<!--编译cms目录下的类文件-->
+		<javac srcdir="." destdir="${build.dir}/integral" debug="true" includeantruntime="on">
+			<compilerarg line="-encoding UTF-8 " />
+			<classpath refid="buildpath" />
+			<include name="integral/**" />
+		</javac>
+
+		<!--拷贝资源文件-->
+		<copy todir="${build.dir}/integral">
+			<fileset dir="integral" >
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		
+		<!--生成integral.jar-->
+		<jar destfile="${tempdir}/lib/component-integral.jar">
+			<fileset dir="${build.dir}/integral">
+				<exclude name="com/enation/app/integral/component/**" />
+			</fileset>
+		</jar>
+
+		<!--生成integral核心组件jar-->
+		<jar destfile="${tempdir}/lib/component-integral-core.jar">
+			<fileset dir="${build.dir}/integral">
+				<include name="com/enation/app/integral/component/**" />
+			</fileset>
+		</jar>
+	</target>
+</project>

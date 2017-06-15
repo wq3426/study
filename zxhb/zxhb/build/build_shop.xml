@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project name="jarshop" basedir="../">
+
+	<!--编译eop-->
+	<target name="jar_shop">
+		<mkdir dir="${build.dir}/shop" />
+		<!--编译shop目录下的类文件-->
+		<javac  srcdir="." destdir="${build.dir}/shop" debug="true" includeantruntime="on">
+			<compilerarg line="-encoding UTF-8 " />
+			<classpath refid="buildpath" />
+			<include name="shop/**" />
+			<!--<include name="agent**"/>-->
+		</javac>
+
+		<!--拷贝资源文件-->
+		<copy todir="${build.dir}/shop">
+			<fileset dir="shop">
+				<exclude name="**/*.java" />
+			</fileset>
+			<!--
+    	    <fileset dir="agent" >
+    	   		<exclude name="**/*.java"/>
+    	   	</fileset>-->
+		</copy>
+
+		<!--生成shop.jar-->
+		<jar destfile="${tempdir}/lib/component-shop.jar">
+			<fileset dir="${build.dir}/shop">
+				<exclude name="com/enation/app/shop/component/**" />
+			</fileset>
+		</jar>
+
+		<!--生成shop核心组件jar-->
+		<jar destfile="${tempdir}/lib/component-shop-core.jar">
+			<fileset dir="${build.dir}/shop">
+				<include name="com/enation/app/shop/component/**" />
+			</fileset>
+		</jar>
+	</target>
+</project>

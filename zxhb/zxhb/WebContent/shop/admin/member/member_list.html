@@ -1,0 +1,352 @@
+<#include '/admin/header.html' >
+<#assign regionSelectDirective="com.enation.app.shop.core.tag.regions.RegionSelectDirective"?new()>
+<style>
+.input_text{
+	width: 95%;
+}
+</style>
+<div id="loading"></div>
+<div class="main">
+	<form id="memberform">
+		<div id="tb" style="height: auto">
+			<!-- <a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="plain:true" onclick="newTab('会员添加','${ctx}/shop/admin/member!add_member.do')">添加</a> -->
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="plain:true" onclick="del()">删除</a>
+				
+			<span style="float: right;"> 
+				<span id="simpleSearch">
+					<input id="searchKeyword" class="input_text" type="text" value="" size="30" style="width: 300px;"
+					placeholder="请输入用户名，会员昵称，电子邮箱" name="searchKeyWord"> 
+					<a href="javascript:void(0)" class="easyui-linkbutton" 
+					data-options="plain:true" onclick="searchMember()">搜索</a>
+				</span>
+				<a href="javascript:void(0)" class="button" id="aAdvanced"  >高级搜索</a>
+			</span>
+		</div>
+		
+		<div style="display: block;" class="searchAdvanced" >
+		<input id="Advanced" name="Advanced" type="hidden" value="0" />
+			<table>
+				<tr>
+					<th width="70" align="right">用户名</th>
+					<td>
+						<input type="text" value="" id="uname"  class="input_text">
+					</td>
+					
+					<th width="70" align="right">用户昵称</th>
+					<td>
+						<input type=" text" value="" id="nickname" maxlength="11" class="input_text easyui-numberbox">
+					</td>	
+									
+					<th width="70" align="right">电子邮件</th>
+					<td width="300px">
+						<input type="text" value="" id="email"  class="input_text">
+					</td>					
+				</tr>
+				<tr>
+					<th width="70" align="right">注册时间</th>
+					<td width="300px">
+						<input class="easyui-datebox" style="width: 90px;height: 28px;" id="start_time" />
+                        <span>&nbsp;~&nbsp;</span>
+                        <input class="easyui-datebox" style="width: 90px;height: 28px;" id="end_time" />
+					</td>
+					<th width="80" align="right">上次登录时间</th>
+					<td width="300px">
+						<input class="easyui-datebox" style="width: 90px;height: 28px;" id="start_time_login" />
+                        <span>&nbsp;~&nbsp;</span>
+                        <input class="easyui-datebox" style="width: 90px;height: 28px;" id="end_time_login" />
+					</td>
+					<!-- <th width="70" align="right">城市</th>
+					<td width="350px">
+						<@regionSelectDirective  province_id="${province_id!''}" city_id="${city_id!''}" region_id="${region_id!''}" />
+					</td> -->
+					<!-- <th width="70" align="right">性别</th>
+					<td>
+						<select id="sex" class="inputSelect valid" >
+							<option value="" selected="selected">全部</option>
+							<option value="1">男</option>
+							<option value="0">女</option>
+						</select>
+					</td>  -->
+				</tr>
+				<tr>
+					<td width="60" align="right"></td>
+					<td colspan="7" align="center">
+						<a id="searchAdvance" class="button blueButton" onclick="searchMember()" href="javascript:;">开始搜索</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="clear height10"></div>
+		<div class="shadowBoxWhite tableDiv">
+		<table class="easyui-datagrid"
+			data-options="url:'${ctx}/shop/admin/member!memberlistJson.do',pageList: [5,10,15,20],pageSize:${pageSize},fitColumns:'true'"
+			pagination="true" id="memberdata" sortName="member_id" sortOrder="desc" >
+			<thead>
+				<tr>
+					<th data-options="field:'member_id',checkbox:true"></th>
+					<th data-options="field:'nickname',width:200">用户昵称</th>
+					<th data-options="field:'username',width:200">用户名</th>
+					<th data-options="field:'email',width:200">电子邮件</th>
+					<!-- <th data-options="field:'sex',width:200,sortable:'true'" formatter="formatSex">性别</th>
+					<th data-options="field:'area',width:200" formatter="formatArea">所在地区</th> -->
+					<th data-options="field:'regtime',width:200,sortable:'true'"
+						formatter="formatRegtime">注册时间</th>
+					<th data-options="field:'lastlogin',width:200,sortable:'true'"
+						formatter="formatLastlogin">上次登录时间</th>
+					<th data-options="field:'logincount',width:100,sortable:'true'">本月登录次数</th>
+					<th data-options="field:'action',width:200,align:'center'"
+						formatter="formatOperation">操作</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+	</form>
+	<div id="divdia" style="display: none;"></div>
+
+</div>
+<script type="text/javascript">
+
+	//添加、修改会员
+	function append(id) {
+		var map = {}; 
+		if (!id) {
+			map["href"] = "${ctx}/shop/admin/member!add_member.do";
+			map["formId"] = "#addForm";
+			map["url"] = "${ctx}/shop/admin/member!saveMember.do?ajax=yes";
+			map["title"] = "添加会员";
+			map["loadshow"] = "正在添加......";
+		} else {
+			map["href"] = "${ctx}/shop/admin/member!edit_member.do?memberId=" + id;
+			map["formId"] = "#editForm";
+			map["url"] = "${ctx}/shop/admin/member!saveEditMember.do?ajax=yes";
+			map["title"] = "修改会员";
+			map["loadshow"] = "正在修改......";
+		}
+		map["divDialog"] = "#divdia";
+		map["gridreload"] = "#memberdata";
+
+		//需要验证的参数
+		map["nameId"] = "#name";
+		map["urlId"] = "#url";
+
+		addDialog(map);
+	}
+	
+	function addDialog(map) {
+		$(map["divDialog"]).show();
+		$(map["divDialog"]).dialog({
+			title : map["title"],
+			width : 600,
+			height : 400,
+			closed : false,
+			cache : false,
+			href : map["href"],
+			modal : true,
+			buttons : [ {
+				text : '保存',
+				iconCls : 'icon-ok',
+				handler : function() {
+					submitForm(map);
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					$(map["divDialog"]).dialog('close');
+				}
+			} ]
+		});
+	}
+	
+	function submitForm(map) {
+		var formflag = $(map["formId"]).form().form('validate');
+		if (formflag) {
+			$.Loading.show(map["loadshow"]);
+			var options = {
+				url : map["url"],
+				type : "POST",
+				dataType : 'json',
+				success : function(result) {
+					if (result.result == 1) {
+						$.Loading.show(result.message);
+						$(map["divDialog"]).dialog('close');
+						$(map["gridreload"]).datagrid('reload');
+					}
+					if (result.result == 0) {
+						$.Loading.error(result.message);
+					}
+					$.Loading.hide();
+				},
+				error : function(e) {
+					alert("出现错误 ，请重试");
+				}
+			};
+			$(map["formId"]).ajaxSubmit(options);
+		}
+	}
+
+	//清除表单中的内容
+	function clearForm(map) {
+		$(map["formId"]).form('clear');
+	}
+
+	//操作--修改
+	function formatOperation(value, row, index) {
+		var val = "<a href='javascript:void(0);' onclick='newTab(\"会员详情\",\"${ctx}/shop/admin/member!memberDetail.do?memberId="+row.member_id+"\")'>会员详情</a>&nbsp;&nbsp;";
+		val += "&nbsp;&nbsp;<a href='javascript:void(0);' onclick='newTab(\"车辆信息\",\"${ctx}/shop/admin/member!memberCarDetail.do?memberId="+row.member_id+"\")'>车辆信息</a>";
+		return val;
+	}
+
+	//时间格式转换
+	function formatRegtime(value, row, index) {
+		return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+	}
+
+	function formatLastlogin(value, row, index) {
+		return getFormatDateByLong(value, "yyyy-MM-dd hh:mm:ss");
+	}
+
+	//地区格式转换
+	/* function formatArea(value, row, index) {
+		var val = "";
+		if (row.province != null && row.province != "请选择") {
+			val = val + row.province;
+		}
+		if (row.city != null && row.city != "请选择") {
+			val = val + "-" + row.city;
+		}
+		if (row.region != null && row.region != "请选择") {
+			val = val + "" + row.region;
+		}
+		if (val == "") {
+			val = "";
+		}
+		return val;
+	} */
+
+	//性别转换
+	/* function formatSex(value, row, index) {
+		var val;
+		if (value == 0) {
+			val = "女";
+		} else {
+			val = "男";
+		}
+		return val;
+	} */
+
+	//删除会员
+	function del() {
+		var rows = $('#memberdata').datagrid("getSelections");
+		if (rows.length < 1) {
+			$.Loading.error("请选择要删除的会员");
+			return;
+		}
+		if (!confirm("确认要将删除会员吗？")) {
+			return;
+		}
+		var options = {
+			url : "${ctx}/shop/admin/member!delete.do?ajax=yes",
+			type : "POST",
+			dataType : 'json',
+			success : function(result) {
+				$.Loading.success(result.message);
+				if (result.result == 1) {
+					var rows = $('#memberdata').datagrid("getSelections");
+					for ( var i = 0; i < rows.length; i++) {
+						var index = $('#memberdata').datagrid('getRowIndex',
+								rows[i]);
+						$('#memberdata').datagrid('deleteRow', index);
+					}
+				}
+			},
+			error : function(e) {
+				$.Loading.error("出现错误 ，请重试");
+			}
+		};
+		$('#memberform').ajaxSubmit(options);
+	}
+
+	//条件查询（简单查询与复杂查询切换）	
+	$(function() {
+		$(".searchAdvanced").hide();
+		//高级查询按钮
+		$("#aAdvanced").click(function() {
+			if ($("#Advanced").val() == "0") {
+				$("#Advanced").val(1);
+				$("#simpleSearch").hide();
+				$("#aAdvanced").addClass("searchAdvancedS");
+			} else {
+				$("#Advanced").val(0);
+				$("#simpleSearch").show();
+				$("#aAdvanced").removeClass("searchAdvancedS");
+			}
+			$(".searchAdvanced").slideToggle("slow");
+		});
+	});
+
+	//执行查询操作
+	function searchMember() {
+		var searchType = $("#Advanced").val();//1：高级搜索，0：简单搜索
+		var keyword = $("#searchKeyword").val();//简单查询关键字
+		var start_time = $('#start_time').datebox('getValue');
+		var end_time = $('#end_time').datebox('getValue'); 
+		var start_time_login = $('#start_time_login').datebox('getValue');
+		var end_time_login = $('#end_time_login').datebox('getValue'); 
+		var uname = $("#uname").val();
+		var nickname = $("#nickname").val();
+		var email = $("#email").val();
+		
+		//校验时间
+		if(start_time > end_time){
+			alert("开始时间不得大于结束时间！");
+			return;
+		}
+		if(start_time_login > end_time_login){
+			alert("开始时间不得大于结束时间！");
+			return;
+		}
+		
+		//如果手动输入日期搜索，需判断输入的内容是否为正确的日期格式。 
+		//利用正在表达式判断输入的日期格式是否有误。 修改人:DMRain 2015-12-02
+		if(start_time != "" || end_time != ""){
+			var reg = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/;
+			if(!start_time.match(reg) || !end_time.match(reg)){ 
+				alert("输入的日期格式有误！");
+				return;
+			}
+		}
+		if(start_time_login != "" || end_time_login != ""){
+			var reg = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/;
+			if(!start_time_login.match(reg) || !start_time_login.match(reg)){ 
+				alert("输入的日期格式有误！");
+				return;
+			}
+		}		 
+		
+		//校验email格式
+		if (email.length != 0) {
+			var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+			if (!reg.test(email)) {
+				alert("对不起，您输入的字符串类型格式不正确!");//请将“字符串类型”要换成你要验证的那个属性名称！    
+				return;
+			}
+		}
+
+		$("#memberdata").datagrid('load', {
+			searchType : searchType,
+			keyword : keyword,
+
+			start_time_login : start_time_login,
+			end_time_login : end_time_login,
+			start_time : start_time,
+			end_time : end_time,
+			uname : uname,
+			nickname : nickname,
+			email : email,
+			page : 1
+		});
+	}
+</script>
+<#include '/admin/footer.html' >

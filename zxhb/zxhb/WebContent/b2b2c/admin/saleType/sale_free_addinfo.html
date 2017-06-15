@@ -1,0 +1,112 @@
+<style>
+.input_text, .lvPrice, .ipt{
+    border: 1px solid #D7D7D7;
+    border-radius: 3PX;
+    /* height: 14PX; */
+    padding: 7px 0 7px 5px;
+    line-height: 14PX;
+    font-size: 12px;
+    display: inline-block;
+    width: 300px;
+}
+</style>
+<div class="easyui-panel" style="border-style:none;" >
+	<div style="padding: 10px 40px 10px 30px;text-align:right;">
+			<form id="freeform">
+					<div style="margin-top:10px"></div>
+					<div style="margin-top:10px">
+					类型名称：
+						<select  style="width: 305px;" class="input_text" name="saleFree.type_id">
+									<#list saleTypeList as saleType>
+										<option  value="${saleType.type_id}">${saleType.type_name}</option> 
+									</#list>
+						</select>
+					</div>
+					<div style="margin-top:10px">
+					店铺等级：
+						<select  style="width: 305px;" class="input_text" name="saleFree.level_id">
+								<#list storeLevelList as storeLevel>
+									<option value="${storeLevel.level_id}">${storeLevel.level_name}</option>
+								</#list>
+						</select>
+					</div>
+					<div style="margin-top:10px">
+					是否为初始化模板：
+						<select  style="width: 305px;" class="input_text" name="saleFree.isInitia">
+								<option  value="">--请选择--</option> 
+								<option  value="1">否</option> 
+								<option  value="0">是</option> 
+						</select>
+					</div>
+					<div style="margin-top:10px" id="isfree">
+					是否收费：
+						<select  style="width: 305px;" class="input_text" name="saleFree.isFree"  onchange="checkField(this.value)">
+								<option  value="">--请选择--</option> 
+								<option  value="0">否</option> 
+								<option  value="1">是</option> 
+						</select>
+					</div>
+		</form>
+	</div>
+</div>
+<script>
+	function checkField(value){
+		if(value == 1){
+			$("#isfree").nextAll().empty();
+			$("#isfree").after("<div style='margin-top:10px'>"+
+								"条数/栏位:"+
+									"<input type='text' class='input_text' name='saleFree.use_num' autocomplete='off'/>"+
+								"</div>"+
+								"<div style='margin-top:10px'>"+
+								"期限："+
+									"<select  style='width: 305px;' class='input_text' name='saleFree.limit_date'>"+
+											"<option  value='0'>无</option>"+ 
+											"<option  value='1'>一个月</option>"+ 
+											"<option  value='2'>二个月</option>"+
+											"<option  value='3'>三个月</option>"+ 
+											"<option  value='4'>四个月</option>"+
+											"<option  value='5'>五个月</option>"+ 
+											"<option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option>"+ 
+											"<option  value='8'>八个月</option>"+
+											"<option  value='9'>九个月</option>"+ 
+											"<option  value='10'>十个月</option>"+
+											"<option  value='11'>十一个月</option>"+ 
+											"<option  value='12'>十二个月</option>"+
+									"</select>"+
+								"</div>"+
+								"<div style='margin-top:10px'>"+
+								"价格："+
+									"<input type='text' class='input_text decimal' name='saleFree.price' dataType='double'  isrequired='true' autocomplete='off'/>"+
+								"</div>");
+		}else{
+			$("#isfree").nextAll().empty();
+			$("#isfree").after("<div style='margin-top:10px'>"+
+								"免费条数/栏位:"+
+									"<input type='text' class='input_text' name='saleFree.use_num' autocomplete='off'/>"+
+								"</div>"+
+								"<div style='margin-top:10px'>"+
+								"期限："+
+									"<select  style='width: 305px;' class='input_text' name='saleFree.limit_date'>"+
+											"<option  value='0'>无</option>"+ 
+											"<option  value='1'>一个月</option>"+ 
+											"<option  value='2'>二个月</option>"+
+											"<option  value='3'>三个月</option>"+ 
+											"<option  value='4'>四个月</option>"+
+											"<option  value='5'>五个月</option>"+ 
+											"<option  value='6'>六个月</option>"+
+											"<option  value='7'>七个月</option>"+ 
+											"<option  value='8'>八个月</option>"+
+											"<option  value='9'>九个月</option>"+ 
+											"<option  value='10'>十个月</option>"+
+											"<option  value='11'>十一个月</option>"+ 
+											"<option  value='12'>十二个月</option>"+
+									"</select>"+
+								"</div>"+
+								"<div style='margin-top:10px'>"+
+									"<input type='hidden' class='input_text decimal' value='0' name='saleFree.price' dataType='double'  isrequired='true' autocomplete='off'/>"+
+								"</div>");
+		}
+	}
+	
+</script>

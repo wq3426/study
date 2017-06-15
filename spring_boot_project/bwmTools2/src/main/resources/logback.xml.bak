@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- 文件输出格式 -->
+	<property name="PATTERN"
+		value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+
+	<!-- pro文件路径 -->
+	<property name="PRO_FILE_PATH" value="d:/bmw/logs/log.log" />
+
+	<!-- 测试环境 -->
+	<springProfile name="dev">
+		<appender name="PROD_FILE"
+			class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>${PRO_FILE_PATH}</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${PRO_FILE_PATH}/warn.%d{yyyy-MM-dd}.log
+				</fileNamePattern>
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+		<root level="debug">
+			<appender-ref ref="PROD_FILE" />
+		</root>
+	</springProfile>
+
+	<!-- 生产环境 -->
+	<springProfile name="prod">
+		<appender name="RedisAppender" class="com.cwbase.logback.RedisAppender">
+			<type>bmw-tool</type>
+			<host>2.86.2.187</host>
+			<port>6379</port>
+			<key>logstash</key>
+			<mdc>true</mdc>
+			<location>true</location>
+		</appender>
+		<appender name="PROD_FILE"
+			class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>${PRO_FILE_PATH}</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${PRO_FILE_PATH}/warn.%d{yyyy-MM-dd}.log
+				</fileNamePattern>
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+
+		<root level="info">
+			<appender-ref ref="PROD_FILE" />
+			<appender-ref ref="RedisAppender" />
+		</root>
+	</springProfile>
+</configuration>
+

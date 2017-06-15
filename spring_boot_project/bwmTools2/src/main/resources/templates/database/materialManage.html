@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragment/layout}">
+<head>
+<title>物料管理</title>
+<style type="text/css">
+ .newLine{
+ 	word-wrap:break-word;
+ 	word-break:break-all;
+ }
+</style>
+</head>
+<body layout:fragment="content">
+	<div>
+        <div>
+            <div class="navbar-form">
+                <div class="form-group">
+                    <label>物料编号:</label>
+                    <input type="text" class="form-control" id="code" name="code">
+                    <label>最优货位类型:</label>
+                    <input type="text" class="form-control" id="optimalLocationType" name="optimalLocationType">
+                    <label>推荐货位类型:</label>
+                    <input type="text" class="form-control" id="recommendedLocationType" name="recommendedLocationType">
+                     <span sec:authorize="hasAuthority('MATERIAL_QUERY')">
+                     	<button id="queryBut" type="button" class="btn btn-default single">
+                        	<span class="glyphicon glyphicon-search"></span>
+                    	</button>
+                     </span>
+                </div>
+                <div class="form-group pull-right">
+                	<span sec:authorize="hasAuthority('MATERIAL_CREATE')">
+                		<button type="button" class="btn btn-default single" data-toggle="modal"
+                            data-target="#addMaterialModal">添加
+                    	</button>
+                	</span>
+                    <span sec:authorize="hasAuthority('MATERIAL_IMPORT')">
+                    	<button type="button" class="btn btn-default single" data-toggle="modal"
+                            data-target="#importMaterialModal">导入
+                    	</button>
+                    </span>
+                    <span sec:authorize="hasAuthority('MATERIAL_EXPORT')">
+                    	<button id="exportBut" type="button" class="btn btn-default single">导出</button>
+                    </span>
+                    <span sec:authorize="hasAuthority('MATERIAL_RECOMMEND')">
+                    	<button type="button" class="btn btn-default single" data-toggle="modal"
+                            data-target="#updateStoreModal">更新库存
+                    	</button>
+                    </span>
+                    <span sec:authorize="hasAuthority('MATERIAL_UPDATESTOCK')">
+                    	<button id="recommendBut" type="button" class="btn btn-default single">重新推荐</button>
+                    </span>
+                    <!-- 删除和更新权限标识 -->
+                    <span sec:authorize="hasAuthority('MATERIAL_DELETE')">
+	                    <input type="hidden" id="deleteFlag" value="true">
+                    </span>
+                    <span sec:authorize="hasAuthority('MATERIAL_UPDATE')">
+	                    <input type="hidden" id="updateFlag" value="true">
+                    </span>
+                </div>
+            </div>
+            <div style="padding:0px 20px;">
+	            <div class="overflow:auto;">
+		            <table class="table">
+		                <thead>
+			                <tr style="white-space:nowrap;">
+			                    <th>序号</th>
+			                    <th>物料编号</th>
+			                    <th>长深高(m)</th>
+			                    <th>最大存放数量</th>
+			                    <th>合适货位类型(非扩展)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+			                    <th>合适货位类型(扩展)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+			                    <th>最优货位类型</th>
+			                    <th>推荐摆放(长深高)</th>
+			                    <th>推荐货位类型</th>
+			                    <th>推荐摆放(长深高)</th>
+			                    <th>操作</th>
+			                </tr>
+		                </thead>
+		                <tbody id="materialList"></tbody>
+		            </table>
+	            </div>
+	            <div id="pagination"></div>
+            </div>
+        </div>
+
+        <!-- 添加货位类型 -->
+        <div class="modal fade" id="addMaterialModal" tabindex="-1" role="dialog"
+             aria-labelledby="addMaterialModalLabel">
+			<div class="modal-dialog" role="document" style="width: 800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+                        <h4 class="modal-title" id="addMaterialModalLabel">添加物料</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    		<h4>添加物料类型失败，请重试!</h4>
+                		</div>
+                        <form class="form-horizontal" th:action="@{/material}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">物料编码:</label>
+								<div class="col-sm-6">
+                                    <input type="text" class="form-control" name="code"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">最大存放:</label>
+								<div class="col-sm-6">
+                                    <input type="text" class="form-control" name="maxStore"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">长深高(m):</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="length"/>
+								</div>
+								<div class="col-sm-2">
+                                   	<input type="text" class="form-control" name="width"/>
+								</div>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="height"/>
+								</div>
+								<div class="col-sm-2">
+									<label>
+										<input type="checkbox" name="faceUp" checked/>正面朝上
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位类型:</label>
+								<div class="col-sm-6">
+                                    <select name="cargoLocationTypeId" class="form-control">
+                                    	<option value="">请选择</option>
+                                    </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位:</label>
+								<div class="col-sm-6">
+                                    <select name="cargoLocationId" class="form-control">
+                                    	<option value="">请选择</option>
+                                    </select>
+								</div>
+							</div>
+                        </form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+        </div>
+        
+        <!-- 编辑物料 -->
+        <div class="modal fade" id="editMaterialModal" tabindex="-1" role="dialog"
+             aria-labelledby="editMaterialModalLabel">
+			<div class="modal-dialog" role="document" style="width: 800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+                        <h4 class="modal-title" id="editMaterialModalLabel">编辑物料</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    		<h4>编辑物料失败，请重试!</h4>
+                		</div>
+                        <form class="form-horizontal" th:action="@{/material}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">物料编码:</label>
+								<div class="col-sm-6">
+                                    <input type="hidden" class="form-control" name="id"/>
+                                    <input type="text" class="form-control" name="code"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">最大存放:</label>
+								<div class="col-sm-6">
+                                    <input type="text" class="form-control" name="maxStore"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">长深高(m):</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="length"/>
+								</div>
+								<div class="col-sm-2">
+                                   	<input type="text" class="form-control" name="width"/>
+								</div>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="height"/>
+								</div>
+								<div class="col-sm-2">
+									<label>
+										<input type="checkbox" name="faceUp"/>正面朝上
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位类型:</label>
+								<div class="col-sm-6">
+                                    <select name="cargoLocationTypeId" class="form-control">
+                                    	<option value="">请选择</option>
+                                    </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位:</label>
+								<div class="col-sm-6">
+                                    <select name="cargoLocationId" class="form-control">
+                                    	<option value="">请选择</option>
+                                    </select>
+								</div>
+							</div>
+                        </form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+        </div>
+        
+        <!-- 删除模态框 -->
+		<div class="modal fade" id="deleteMaterialModal" tabindex="-1" role="dialog"
+		     aria-labelledby="deleteMaterialModalLabel">
+		    <div class="modal-dialog" role="document" style="width: 700px;">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal"
+		                        aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		                <h4 class="modal-title" id="deleteMaterialModalLabel">删除物料</h4>
+		            </div>
+		            <div class="modal-body">
+		                <form class="form-horizontal" th:action="@{/material}">
+		                    <input type="hidden" name="id">
+		                </form>
+		                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+		                    <h4>您好！您正在执行删除操作!</h4>
+		                    <p>操作执行后，将无法恢复，您确定要删除物料 <span class="label label-info"></span> 吗？</p>
+		                </div>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i>确定</button>
+		                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+		                </button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		
+		<!-- 导入物料 -->
+        <div class="modal fade" id="importMaterialModal" tabindex="-1" role="dialog"
+             aria-labelledby="importMaterialModalLabel">
+			<div class="modal-dialog" role="document" style="width: 800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+                        <h4 class="modal-title" id="importMaterialModalLabel">导入物料</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    		<h4 id="importError"></h4>
+                		</div>
+                        <form class="form-horizontal" th:action="@{/material/import}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">导入文件:</label>
+								<div class="col-sm-6">
+                                    <input type="file" class="form-control" name="file"/>
+								</div>
+								<label class="col-sm-3 control-label text-left"><a href="/importTemplate/导入物料模版.xlsx">物料导入模版下载</a></label>
+							</div>
+                        </form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+        </div>
+        
+        <!-- 更新库存 -->
+        <div class="modal fade" id="updateStoreModal" tabindex="-1" role="dialog"
+             aria-labelledby="updateStoreModalLabel">
+			<div class="modal-dialog" role="document" style="width: 800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+                        <h4 class="modal-title" id="updateStoreModalLabel">导入库存</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    		<h4 id="updateStoreError"></h4>
+                		</div>
+                        <form class="form-horizontal" th:action="@{/material/update}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">导入文件:</label>
+								<div class="col-sm-6">
+                                    <input type="file" class="form-control" name="file"/>
+								</div>
+								<label class="col-sm-3 control-label text-left"><a href="/importTemplate/更新库存模版.xlsx">更新库存模版下载</a></label>
+							</div>
+                        </form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+        </div>
+    </div>
+    <!-- 自定义JavaScript -->
+    <script src="/static/js/material.js" th:src="@{/js/material.js}"></script>
+</body>
+</html>

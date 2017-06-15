@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragment/layout}">
+<head>
+<title>仓库配置</title>
+<style type="text/css">
+	.none{
+		display: none;
+	}
+	.col-sm-1-5{
+		width: 10%;
+	}
+</style>
+</head>
+<body layout:fragment="content">
+<div>
+    <div class="navbar-form">
+        <div class="form-group">
+            <span id="queryCondition"></span>
+            <span sec:authorize="hasAuthority('WAREHOUSECONFIG_QUERY')">
+            	<button id="queryBut" type="button" class="btn btn-default single">
+                	<span class="glyphicon glyphicon-search"></span>
+            	</button>
+            </span>
+        </div>
+        <div class="form-group pull-right">
+	        <span sec:authorize="hasAuthority('WAREHOUSECONFIG_SETPARAM')">
+	        	<button type="button" class="btn btn-default single" data-toggle="modal"
+	                    data-target="#setParamModal">设置参数
+	            </button>
+	        </span>
+	        <span sec:authorize="hasAuthority('WAREHOUSECONFIG_EDIT')">
+	            <button id="editParam" type="button" class="btn btn-default single">编辑参数</button>
+	        </span>
+	        <span sec:authorize="hasAuthority('WAREHOUSECONFIG_SYNCPARAM')">
+	            <button id="syncParamBut" type="button" class="btn btn-default single">同步参数</button>
+	        </span>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+	        <tr>
+	            <th><input type="checkbox" name="selectAll"/>序号</th>
+	            <th><span id="codeId">区域</span>编号</th>
+	            <th>优先级</th>
+	            <th>次优先级</th>
+	            <th id="distanceTh">距离(m)</th>
+	            <th id="pickToolTh" class="none">拣货工具</th>
+	        </tr>
+        </thead>
+        <tbody id="dataList"></tbody>
+    </table>
+    <!-- 分页组件 -->
+    <div id="pagination"></div>
+</div>
+
+	<!-- 查询条件模版 -->
+	<textarea id="queryTemplateId" style="display: none;">
+		<label>{alias}:</label>
+	    <select class="form-control" id="{id}" name="{name}" style="width: 100px;">
+	      <option value="">请选择</option>
+	    </select>
+	</textarea>
+
+	<!-- 设置参数 -->
+	<div class="modal fade" id="setParamModal" tabindex="-1" role="dialog"
+             aria-labelledby="setParamModalLabel">
+		<div class="modal-dialog" role="document" style="width: 1200px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+                    <h4 class="modal-title" id="setParamModalLabel">设置参数</h4>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                   		<h4>设置参数失败，请重试!</h4>
+               		</div>
+                       <form class="form-horizontal" th:action="@{/cargo-location-data/setParam}">
+							<input type="hidden" name="parentId"/>
+							<span style="margin-left: 50px;">勾选需要设置的等级信息参数</span>
+							<div id="child"></div>
+                       </form>
+				</div>
+				<div class="modal-footer">
+					   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                       <button type="submit" class="btn btn-primary">确定</button>
+				</div>
+			</div>
+		</div>
+ 	</div>
+ 	<!-- 设置参数节点模版 -->
+ 	<textarea id="childTemplate" class="none">
+ 		<div class="form-group">
+ 			<input type="hidden" name="configTypeId" value="{configTypeId}">
+			<label class="col-sm-2 control-label text-right">
+				<input type="checkbox" name="childChecked" value="{index}">{alias}
+			</label>
+            <label class="col-sm-1 control-label text-right">优先级</label>
+			<div class="col-sm-2">
+                <select name="childPrimaryPriority" class="form-control">
+               		<option value="1">升序</option>
+               		<option value="2">降序</option>
+               		<option value="3">升序奇偶相同</option>
+               		<option value="4">降序奇偶相同</option>
+               		<option value="5">自定义</option>
+                </select>
+			</div>
+			<label class="col-sm-1 control-label text-right">次优先级</label>
+			<div class="col-sm-2">
+	              <select name="childStandbyPriority" class="form-control">
+              		<option value="6" selected="selected">相同</option>
+              		<option value="1">升序</option>
+              		<option value="2">降序</option>
+              		<option value="3">升序奇偶相同</option>
+              		<option value="4">降序奇偶相同</option>
+              		<option value="5">自定义</option>
+	              </select>
+			</div>
+			<span class="{distinceSpanClass}">
+				<label class="col-sm-1 control-label text-right">{distanceName}</label>
+				<div class="col-sm-2">
+                    <input type="text" class="form-control" name="childDistance"/>
+                </div>
+			</span>
+			<span class="{pickToolSpanClass}">
+				<label class="col-sm-1 control-label text-right">拣货工具</label>
+				<div class="col-sm-2">
+                     <select name="childPickTool" class="form-control">
+                   		<option value="">请选择</option>
+                   		<option value="1">人</option>
+                   		<option value="2">叉车</option>
+                   		<option value="3">拣货车</option>
+                     </select>
+				</div>
+			</span>
+		</div>
+ 	</textarea>
+ 	<!-- 批量修改参数 -->
+	<div class="modal fade" id="batchUpdateParamModal" tabindex="-1" role="dialog"
+             aria-labelledby="batchUpdateParamModalLabel">
+		<div class="modal-dialog" role="document" style="width: 1000px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+                    <h4 class="modal-title" id="batchUpdateParamModalLabel">批量修改<span id="updateEditParamTitle"></span>参数</h4>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                   		<h4>批量修改失败，请重试!</h4>
+               		</div>
+                       <form class="form-horizontal" th:action="@{/cargo-location-data}"></form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                       <button type="submit" class="btn btn-primary">确定</button>
+				</div>
+			</div>
+		</div>
+ 	</div>
+ 	<!-- 批量编辑模版 -->
+ 	<textarea id="editTemplate" class="none">
+ 		<div class="form-group">
+			<label class="col-sm-2 control-label text-right">
+				<input type="hidden" name="configTypeId" value="{configTypeId}">
+				<input type="hidden" name="id" value="{id}">{alias}{code}
+			</label>
+            <label class="col-sm-1 control-label text-right">优先级</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" name="childPrimaryPriority" value="{primaryPriority}">
+			</div>
+			<label class="col-sm-2 control-label text-right col-sm-1-5">次优先级</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" name="childStandbyPriority" value="{standbyPriority}">
+			</div>
+			<span class="{distinceSpanClass}">
+				<label class="col-sm-1 control-label text-right">{distanceName}</label>
+				<div class="col-sm-2">
+                    <input type="text" class="form-control" name="childDistance" value="{distance}"/>
+                </div>
+			</span>
+			<span class="{pickToolSpanClass}">
+				<label class="col-sm-2 control-label text-right col-sm-1-5">拣货工具</label>
+				<div class="col-sm-2">
+                     <select name="childPickTool" class="form-control">
+                   		<option value="">请选择</option>
+                   		<option value="1">人</option>
+                   		<option value="2">叉车</option>
+                   		<option value="3">拣货车</option>
+                     </select>
+				</div>
+			</span>
+		</div>
+ 	</textarea>
+ 	
+ 	<!-- 同步参数 -->
+	<div class="modal fade" id="syncParamModal" tabindex="-1" role="dialog"
+             aria-labelledby="syncParamModalLabel">
+		<div class="modal-dialog" role="document" style="width: 800px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+                    <h4 class="modal-title" id="syncParamModalLabel">同步参数</h4>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                   		<h4>同步参数失败，请重试!</h4>
+               		</div>
+                       <form class="form-horizontal" th:action="@{/cargo-location-data/syncParam}">
+                       	  <div class="form-group">
+                       	  		<input type="hidden" name="syncIds">
+                        		<label class="col-sm-2 control-label text-right">参考<span id="syncParamTitle"></span>对象</label>
+								<div class="col-sm-2">
+	                                  <select name="referId" class="form-control"></select>
+								</div>
+						  </div>
+						  <div class="form-group">
+                        		<label class="col-sm-2 control-label text-right">同步等级</label>
+								<div id="syncChildList" class="col-sm-6" style="padding-top: 7px;"></div>
+						  </div>
+                      </form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                       <button type="submit" class="btn btn-primary">确定</button>
+				</div>
+			</div>
+		</div>
+ 	</div>
+ 	
+	<!-- 自定义JavaScript -->
+    <script src="/static/js/warehouseConfig.js" th:src="@{/js/warehouseConfig.js}"></script>
+</body>
+</html>

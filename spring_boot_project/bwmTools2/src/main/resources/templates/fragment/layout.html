@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge;" />
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">BMW 仓库优化工具1.0</title>
+
+    <!-- JQuery -->
+    <script src="/static/vendor/jquery/jquery-2.2.0.min.js" th:src="@{/vendor/jquery/jquery-2.2.0.min.js}"></script>
+    <script src="/static/vendor/jquery/jquery.json.min.js" th:src="@{/vendor/jquery/jquery.json.min.js}"></script>
+    <!-- 为了兼容一些使用低版本JQuery的插件 -->
+    <!-- 
+    <script src="/static/vendor/jquery/jquery-migrate-3.0.0.min.js"
+            th:src="@{/vendor/jquery/jquery-migrate-3.0.0.min.js}"></script>
+     -->
+
+    <!-- Bootstrap JS -->
+    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"
+            th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap-datepicker.min.js"
+            th:src="@{/vendor/bootstrap/js/bootstrap-datepicker.min.js}"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap-treenav.min.js"
+            th:src="@{/vendor/bootstrap/js/bootstrap-treenav.min.js}"></script>
+    <script src="/static/vendor/bootstrap/js/local/bootstrap-datepicker.zh-CN.min.js"
+            th:src="@{/vendor/bootstrap/js/local/bootstrap-datepicker.zh-CN.min.js}"></script>
+
+    <!-- FontAwesome 图标-->
+    <link rel="stylesheet" href="/static/vendor/font-awesome/css/font-awesome.min.css"
+          th:href="@{/vendor/font-awesome/css/font-awesome.min.css}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap-datepicker3.min.css" th:href="@{/vendor/bootstrap/css/bootstrap-datepicker3.min.css}">
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap-datepicker3.standalone.min.css" th:href="@{/vendor/bootstrap/css/bootstrap-datepicker3.standalone.min.css}">
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap-treenav.min.css" th:href="@{/vendor/bootstrap/css/bootstrap-treenav.min.css}">
+
+    <!-- 表单校验 -->
+    <link rel="stylesheet" href="/static/vendor/formvalidation/css/formValidation.min.css"
+          th:href="@{/vendor/formvalidation/css/formValidation.min.css}">
+    <script src="/static/vendor/formvalidation/js/formValidation.min.js"
+            th:src="@{/vendor/formvalidation/js/formValidation.min.js}"></script>
+    <script src="/static/vendor/formvalidation/js/framework/bootstrap.min.js"
+            th:src="@{/vendor/formvalidation/js/framework/bootstrap.min.js}"></script>
+    <script src="/static/vendor/formvalidation/js/language/zh_CN.js"
+            th:src="@{/vendor/formvalidation/js/language/zh_CN.js}"></script>
+
+    <!-- 分页插件 -->
+    <link rel="stylesheet" href="/static/vendor/bs_pagination/jquery.bs_pagination.min.css"
+          th:href="@{/vendor/bs_pagination/jquery.bs_pagination.min.css}">
+    <script src="/static/vendor/bs_pagination/jquery.bs_pagination.min.js"
+            th:src="@{/vendor/bs_pagination/jquery.bs_pagination.min.js}"></script>
+    <script src="/static/vendor/bs_pagination/localization/zh-CN.js"
+            th:src="@{/vendor/bs_pagination/localization/zh-CN.js}"></script>
+            
+    <!-- zTree -->
+    <link rel="stylesheet" href="/static/vendor/zTree3.5.28/css/zTreeStyle/zTreeStyle.css"
+          th:href="@{/vendor/zTree3.5.28/css/zTreeStyle/zTreeStyle.css}">
+    <script src="/static/vendor/zTree3.5.28/jquery.ztree.all.min.js"
+            th:src="@{/vendor/zTree3.5.28/jquery.ztree.all.min.js}"></script>
+    
+    <!-- showLoading -->
+    <!-- 
+    <script src="/static/vendor/jquery/jquery.showLoading.js" th:src="@{/vendor/jquery/jquery.showLoading.js}"></script>
+    <link rel="stylesheet" href="/static/vendor/jquery/css/showLoading.css" th:href="@{/vendor/jquery/css/showLoading.css}">
+     -->
+    
+    <!-- jQuery LoadingOverlay -->
+    <script src="/static/vendor/jquery/loadingoverlay.min.js" th:src="@{/vendor/jquery/loadingoverlay.min.js}"></script>
+    
+    <!-- EChars -->
+    <script src="/static/vendor/echars/echarts.min.js" th:src="@{/vendor/echars/echarts.min.js}"></script>
+    
+    <script src="/static/js/common.js" th:src="@{/js/common.js}"></script>
+            
+    <!-- 自定义样式表 -->
+    <link rel="stylesheet" href="/static/css/dsc.css" th:href="@{/css/dsc.css}">
+</head>
+<body>
+
+<!-- 导航栏 -->
+<header>
+    <div layout:replace="~{fragment/navbar}"></div>
+</header>
+
+<!-- 获取应用路径 -->
+<a id="baseUrl" th:href="@{/}"></a>
+
+<!-- 页面内容 -->
+<div class="container" style="margin-top: 70px;" layout:fragment="content"></div>
+
+<!-- 页面底部 -->
+<footer>
+    <div layout:replace="~{fragment/footer}"></div>
+</footer>
+
+</body>
+</html>

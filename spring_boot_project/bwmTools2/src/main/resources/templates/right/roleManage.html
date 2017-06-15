@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragment/layout}">
+<head>
+<title>角色管理</title>
+
+</head>
+<body layout:fragment="content">
+<div>
+    <div class="navbar-form">
+        <div class="form-group">
+            <label>角色名称:</label>
+            <input type="text" class="form-control" id="name" name="name">
+             <span sec:authorize="hasAuthority('USER_QUERY')">
+             	<button id="queryBut" type="button" class="btn btn-default single">
+                	<span class="glyphicon glyphicon-search"></span>
+            	</button>
+             </span>
+        </div>
+        <div class="form-group pull-right">
+        	<span sec:authorize="hasAuthority('ROLE_CREATE')">
+            	<button type="button" class="btn btn-default single" data-toggle="modal"
+                    data-target="#addRoleInfoModal">添加
+            	</button>
+            </span>
+            <!-- 删除、更新、分配仓库、分配权限权限标识 -->
+            <span sec:authorize="hasAuthority('ROLE_DELETE')">
+             	<input type="hidden" id="deleteFlag" value="true">
+            </span>
+            <span sec:authorize="hasAuthority('ROLE_UPDATE')">
+             	<input type="hidden" id="updateFlag" value="true">
+            </span>
+            <span sec:authorize="hasAuthority('ROLE_ALLOCATEWAREHOUSE')">
+             	<input type="hidden" id="allocateWareHouseFlag" value="true">
+            </span>
+            <span sec:authorize="hasAuthority('ROLE_ALLOCATERIGHT')">
+             	<input type="hidden" id="allocateRightFlag" value="true">
+            </span>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>角色名称</th>
+            <th>所管仓库</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="roleList"></tbody>
+    </table>
+    <!-- 分页组件 -->
+    <div id="pagination"></div>
+</div>
+
+<!-- 添加角色 -->
+<div class="modal fade" id="addRoleInfoModal" tabindex="-1" role="dialog"
+     aria-labelledby="addRoleInfoModalLabel">
+    <div class="modal-dialog" role="document" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="addUserInfoModalLabel">添加角色</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    <h4>添加角色失败，请重试!</h4>
+                </div>
+                <form class="form-horizontal" th:action="@{/role}">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">角色名称:</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="name"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑模态框 -->
+<div class="modal fade" id="editRoleInfoModal" tabindex="-1" role="dialog"
+     aria-labelledby="editRoleInfoModalLabel">
+    <div class="modal-dialog" role="document" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editRoleInfoModalLabel">编辑角色</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    <h4>编辑角色失败，请重试!</h4>
+                </div>
+                <form class="form-horizontal" th:action="@{/role}">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">角色名称:</label>
+                        <div class="col-sm-6">
+                        	<input type="hidden" class="form-control" name="id"/>
+                            <input type="text" class="form-control" name="name"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 删除模态框 -->
+<div class="modal fade" id="deleteRoleInfoModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteUserInfoModalLabel">
+    <div class="modal-dialog" role="document" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="deleteUserInfoModalLabel">删除角色</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" th:action="@{/role}">
+                    <input type="hidden" name="id">
+                </form>
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <h4>您好！您正在执行删除操作!</h4>
+                    <p>操作执行后，将无法恢复，您确定要删除角色 <span class="label label-info"></span> 吗？</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 分配仓库模态框 -->
+<div class="modal fade" id="allocateWareHouseModal" tabindex="-1" role="dialog"
+     aria-labelledby="allocateWareHouseModalLabel">
+    <div class="modal-dialog" role="document" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="allocateWareHouseModalLabel">仓库列表</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    <h4>分配仓库失败，请重试!</h4>
+                    <input type="hidden" name="id">
+                </div>
+                <table class="table">
+			        <thead>
+			        <tr>
+			        	<th><input type="checkbox" onclick="selectAll(this,'warehouseList');"></th>
+			            <th>序号</th>
+			            <th>仓库编码</th>
+			        </tr>
+			        </thead>
+			        <tbody id="warehouseList"></tbody>
+    			</table>
+    			<!-- 分页组件 -->
+   	 			<div id="warehousePagination"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 显示用户列表 -->
+<div  id="allocateRightModal" class="modal fade" role="dialog" aria-labelledby="allocateRightModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:270px;">
+		<div class="modal-content"> 
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="allocateRightModalLabel">权限分配</h4>
+				<input type="hidden" name="id">
+			</div>
+			<div id="rightTree" class="ztree" style="padding: 20px;"></div>
+			<div class="modal-footer">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+                </button>
+            </div>
+		</div>
+	</div>
+</div>
+
+<!-- 自定义JavaScript -->
+    <script src="/static/js/roleInfo.js" th:src="@{/js/roleInfo.js}"></script>
+</body>
+</html>

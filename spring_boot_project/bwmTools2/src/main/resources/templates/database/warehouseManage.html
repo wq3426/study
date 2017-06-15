@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragment/layout}">
+<head>
+<title>仓库管理</title>
+
+</head>
+<body layout:fragment="content">
+<div>
+    <div class="navbar-form">
+        <div class="form-group">
+            <label>仓库编码:</label>
+            <input type="text" class="form-control" id="code" name="code">
+            <span sec:authorize="hasAuthority('WAREHOUSE_QUERY')">
+            	<button id="queryBut" type="button" class="btn btn-default single">
+                	<span class="glyphicon glyphicon-search"></span>
+            	</button>
+            </span>
+        </div>
+        <div class="form-group pull-right">
+	        <span sec:authorize="hasAuthority('WAREHOUSE_CREATE')">
+	        	<button type="button" class="btn btn-default single" data-toggle="modal"
+	                    data-target="#addWareHouseModal">添加
+	            </button>
+	        </span>
+	        <!-- 删除和更新权限标识 -->
+	        <span sec:authorize="hasAuthority('WAREHOUSE_UPDATE')">
+	        	<input type="hidden" id="updateFlag" value="true"/>
+	        </span>
+	        <span sec:authorize="hasAuthority('WAREHOUSE_DELETE')">
+	        	<input type="hidden" id="deleteFlag" value="true"/>
+	        </span>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>仓库编码</th>
+            <th>仓库等级</th>
+            <th>地堆货物类型</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="warehouseList"></tbody>
+    </table>
+    <!-- 分页组件 -->
+    <div id="pagination"></div>
+</div>
+
+<!-- 添加仓库 -->
+<div class="modal fade" id="addWareHouseModal" tabindex="-1" role="dialog"
+     aria-labelledby="addWareHouseModalLabel">
+    <div class="modal-dialog" role="document" style="width: 900px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="addWareHouseModalLabel">添加仓库</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    <h4>添加仓库失败，请重试!</h4>
+                </div>
+                <form class="form-horizontal" th:action="@{/ware-house}">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">仓库编码:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="code"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">地堆货位类型:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="stallType"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">人行驶速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="personDrivingSpeed"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">人抬胳膊速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="personPickUpSpeed"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">叉车行驶速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="forkliftDrivingSpeed"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">叉车抬举速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="forkliftPickUpSpeed"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">拣货车行驶速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="pickTruckDrivingSpeed"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">拣货车抬举速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="pickTuckPickUpSpeed"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">等级数量:</label>
+                        <div class="col-sm-3">
+                            <select name="gradeCount" class="form-control">
+                            	<option value="">请选择</option>
+                            	<option value="1">1</option>
+                            	<option value="2">2</option>
+                            	<option value="3">3</option>
+                            	<option value="4">4</option>
+                            	<option value="5">5</option>
+                            	<option value="6">6</option>
+                            	<option value="7">7</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="paramClass"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<textarea id="gradeTemplateId" style="display: none;">
+  <div class="form-group row">
+       <label class="col-sm-2 control-label text-right">级别{index}:</label>
+       <label class="col-sm-1 control-label text-right">类型:</label>
+       <div class="col-sm-2">
+         <select class="form-control" name="typeIds">
+			<option th:each="item : ${#authentication.principal.wareHouseTypeList}" th:value="${item.id}" th:text="${item.type}"></option>
+		 </select>
+       </div>
+       <label class="col-sm-2 control-label text-right">字符长度:</label>
+       <div class="col-sm-2">
+          <input type="text" class="form-control" name="lengths"/>
+       </div>
+       <label class="col-sm-1 control-label text-right">别名:</label>
+       <div class="col-sm-2">
+          <input type="text" class="form-control" name="alias" value="区域"/>
+       </div>
+   </div>
+</textarea>
+
+<!-- 编辑模态框 -->
+<div class="modal fade" id="editWareHouseModal" tabindex="-1" role="dialog"
+     aria-labelledby="editWareHouseModalLabel">
+    <div class="modal-dialog" role="document" style="width: 900px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editWareHouseModalLabel">编辑仓库</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    <h4>编辑仓库失败，请重试!</h4>
+                </div>
+                <form class="form-horizontal" th:action="@{/ware-house}">
+                    <input type="hidden" name="id">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">仓库编码:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="code"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">地堆货位类型:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="stallType"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">人行驶速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="personDrivingSpeed"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">人抬胳膊速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="personPickUpSpeed"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">叉车行驶速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="forkliftDrivingSpeed"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">叉车抬举速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="forkliftPickUpSpeed"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">拣货车行驶速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="pickTruckDrivingSpeed"/>
+                        </div>
+                        <label class="col-sm-3 control-label text-right">拣货车抬举速度(m/min):</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="pickTuckPickUpSpeed"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label text-right">等级数量:</label>
+                        <div class="col-sm-3">
+                            <select name="gradeCount" class="form-control">
+                            	<option value="">请选择</option>
+                            	<option value="1">1</option>
+                            	<option value="2">2</option>
+                            	<option value="3">3</option>
+                            	<option value="4">4</option>
+                            	<option value="5">5</option>
+                            	<option value="6">6</option>
+                            	<option value="7">7</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="paramClass"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+                </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+<!-- 删除模态框 -->
+<div class="modal fade" id="deleteWareHouseModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteWareHouseModalLabel">
+    <div class="modal-dialog" role="document" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="deleteWareHouseModalLabel">删除仓库</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" th:action="@{/ware-house}">
+                    <input type="hidden" name="id">
+                </form>
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <h4>您好！您正在执行删除操作!</h4>
+                    <p>操作执行后，将级联删除该仓库下的物料、货位以及货位类型等信息，您确定要删除仓库 <span class="label label-info"></span> 吗？</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 自定义JavaScript -->
+    <script src="/static/js/warehouse.js" th:src="@{/js/warehouse.js}"></script>
+</body>
+</html>

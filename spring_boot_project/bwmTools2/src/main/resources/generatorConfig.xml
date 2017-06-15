@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<!-- 使用 mvn mybatis-generator:generate -->
+<generatorConfiguration>
+    <!-- 配置文件 -->
+    <properties resource="application-dev.yml"/>
+    <context id="BMW_Goods_Allocation_Tools_Table" targetRuntime="MyBatis3" defaultModelType="flat">
+        <!-- 设置使用UTF-8编码格式 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+
+        <!-- plugin -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+
+        <!-- 取消生成的代码注释 -->
+        <commentGenerator type="org.mybatis.generator.internal.DefaultCommentGenerator">
+            <property name="suppressAllComments" value="false"/>
+            <property name="suppressDate" value="true"/>
+            <!-- 此处为 true 时，生成的 Model 包含对应表字段注释 -->
+            <property name="addRemarkComments" value="true"/>
+            <!-- 此处为 true 时，生成的 Mapper 接口将增加 @Mapper 注解，Spring ComponentScan 时可自动识别 -->
+            <property name="addMapperAnnotation" value="true"/>
+        </commentGenerator>
+
+        <!-- 连接配置 -->
+        <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                        connectionURL="jdbc:sqlserver://192.168.1.105:1433;DatabaseName=BMW-Goods-Allocation-Tools"
+                        userId="sa"
+                        password="system123">
+        </jdbcConnection>
+
+        <!-- javaModelGenerator是模型的生成信息，这里将指定这些Java model类的生成路径 -->
+        <javaModelGenerator targetPackage="com.dhl.tools.domain"
+                            targetProject="src/main/java">
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成Mapper 配置文件 -->
+        <sqlMapGenerator targetPackage="com.dhl.tools.mapper"
+                         targetProject="src/main/resources">
+        </sqlMapGenerator>
+
+        <!-- javaClientGenerator是应用接口的生成信息 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.dhl.tools.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+		
+        <!-- oracle 使用 schema 对应 用户名称空间 mysql 使用 catalog 对应 数据库 -->
+        <table tableName="Material" domainObjectName="Material">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <!-- 
+        <table tableName="AuthorityInfo" domainObjectName="AuthorityInfo">
+            <property name="useActualColumnNames" value="true"/>
+            <property name="selectAllOrderByClause" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="CargoLocation" domainObjectName="CargoLocation">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+         
+        <table tableName="CargoLocationType" domainObjectName="CargoLocationType">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="Material" domainObjectName="Material">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="Material_CargoLocationType_Data" domainObjectName="MaterialCargoLocationTypeData">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="RoleInfo" domainObjectName="RoleInfo">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="RoleInfo_AuthorityInfo" domainObjectName="RoleInfoAuthorityInfo">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="RoleInfo_WareHouse" domainObjectName="RoleInfoWareHouse">
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+        <table tableName="UserInfo" domainObjectName="UserInfo">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="UserInfo_RoleInfo" domainObjectName="UserInfoRoleInfo">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="WareHouse" domainObjectName="WareHouse">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="WareHouseType" domainObjectName="WareHouseType">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="WareHouseConfig" domainObjectName="WareHouseConfig">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        <table tableName="CargoLocation_Data" domainObjectName="CargoLocationData">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="SqlServer" identity="true"/>
+        </table>
+        -->
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragment/layout}">
+<head>
+<title>货位管理</title>
+</head>
+<body layout:fragment="content">
+	<div>
+        <div>
+            <div class="navbar-form">
+                <div class="form-group">
+                    <label>货位编码:</label>
+                    <input type="text" class="form-control" id="code" name="code">
+                    <label>货位类型:</label>
+                    <select class="form-control" id="typeId" name="typeId" style="width: 172px;">
+                    	<option value="">请选择</option>
+                    </select>
+                    <span sec:authorize="hasAuthority('CARGO_LOCATION_QUERY')">
+                    	<button id="queryBut" type="button" class="btn btn-default single">
+                        	<span class="glyphicon glyphicon-search"></span>
+                    	</button>
+                    </span>
+                </div>
+                <div class="form-group pull-right">
+                	<span sec:authorize="hasAuthority('CARGO_LOCATION_CREATE')">
+                		<button type="button" class="btn btn-default single" data-toggle="modal"
+	                            data-target="#addCargoLocationModal">添加
+	                	</button>
+	                </span>
+                    <span sec:authorize="hasAuthority('CARGO_LOCATION_IMPORT')">
+	                    <button type="button" class="btn btn-default single" data-toggle="modal"
+	                            data-target="#importCargoLocationModal">
+	                        导入
+	                    </button>
+                    </span>
+                    <span sec:authorize="hasAuthority('CARGO_LOCATION_SCORECALCULATION')">
+	                    <button id="scoreCalculationBut" type="button" class="btn btn-default single">分值计算</button>
+                    </span>
+                    <!-- 删除和更新权限标识 -->
+			        <span sec:authorize="hasAuthority('CARGO_LOCATION_UPDATE')">
+			        	<input type="hidden" id="updateFlag" value="true"/>
+			        </span>
+			        <span sec:authorize="hasAuthority('CARGO_LOCATION_DELETE')">
+			        	<input type="hidden" id="deleteFlag" value="true"/>
+			        </span>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+	                <tr>
+	                    <th>序号</th>
+	                    <th>货位编码</th>
+	                    <th>货位类型编码</th>
+	                    <th>分值</th>
+	                    <th>操作</th>
+	                </tr>
+                </thead>
+                <tbody id="cargoLocationList"></tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
+		<!-- 导入货位 -->
+        <div class="modal fade" id="importCargoLocationModal" tabindex="-1" role="dialog"
+             aria-labelledby="importCargoLocationModalLabel">
+			<div class="modal-dialog" role="document" style="width: 800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+                        <h4 class="modal-title" id="importCargoLocationModalLabel">导入货位</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    		<h4 id="importError"></h4>
+                		</div>
+                        <form class="form-horizontal" th:action="@{/cargo-location/import}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">导入文件:</label>
+								<div class="col-sm-6">
+                                    <input type="file" class="form-control" name="file"/>
+								</div>
+								<label class="col-sm-3 control-label text-left"><a href="/importTemplate/导入货位模版.xlsx">货位导入模版下载</a></label>
+							</div>
+                        </form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+        </div>
+        
+        <!-- 添加货位 -->
+        <div class="modal fade" id="addCargoLocationModal" tabindex="-1" role="dialog"
+             aria-labelledby="addCargoLocationModalLabel">
+			<div class="modal-dialog" role="document" style="width: 800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+                        <h4 class="modal-title" id="addCargoLocationModalLabel">添加货位</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    		<h4>添加货位失败，请重试!</h4>
+                		</div>
+                        <form class="form-horizontal" th:action="@{/cargo-location}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位类型编码:</label>
+								<div class="col-sm-6">
+                                    <select name="typeId" class="form-control">
+                                    	<option value="">请选择</option>
+                                    </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位编码:</label>
+								<div class="col-sm-6">
+                                    <input type="text" class="form-control" name="code"/>
+								</div>
+							</div>
+                        </form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+        </div>
+        
+        <!-- 编辑货位 -->
+        <div class="modal fade" id="editCargoLocationModal" tabindex="-1" role="dialog"
+             aria-labelledby="editCargoLocationModalLabel">
+			<div class="modal-dialog" role="document" style="width: 800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+                        <h4 class="modal-title" id="editCargoLocationModalLabel">编辑货位</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                    		<h4>编辑货位失败，请重试!</h4>
+                		</div>
+                        <form class="form-horizontal" th:action="@{/cargo-location}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位类型编码:</label>
+								<div class="col-sm-6">
+									<input type="hidden" class="form-control" name="id"/>
+                                    <select name="typeId" class="form-control">
+                                    	<option value="">请选择</option>
+                                    </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label text-right">货位编码:</label>
+								<div class="col-sm-6">
+                                    <input type="text" class="form-control" name="code"/>
+								</div>
+							</div>
+                        </form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+        </div>
+        
+        <!-- 删除模态框 -->
+		<div class="modal fade" id="deleteCargoLocationModal" tabindex="-1" role="dialog"
+		     aria-labelledby="deleteCargoLocationModalLabel">
+		    <div class="modal-dialog" role="document" style="width: 700px;">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal"
+		                        aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		                <h4 class="modal-title" id="deleteCargoLocationModalLabel">删除货位类型</h4>
+		            </div>
+		            <div class="modal-body">
+		                <form class="form-horizontal" th:action="@{/cargo-location}">
+		                    <input type="hidden" name="id">
+		                </form>
+		                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+		                    <h4>您好！您正在执行删除操作!</h4>
+		                    <p>操作执行后，将删除该货位，您确定要删除货位 <span class="label label-info"></span> 吗？</p>
+		                </div>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i>确定</button>
+		                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>关闭
+		                </button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+        
+    </div>
+    <!-- 自定义JavaScript -->
+    <script src="/static/js/cargoLocation.js" th:src="@{/js/cargoLocation.js}"></script>
+</body>
+</html>

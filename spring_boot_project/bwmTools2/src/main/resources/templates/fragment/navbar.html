@@ -1,0 +1,50 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">BMW 仓库优化工具1.0</a>
+		</div>
+        <div id="navbar" class="collapse navbar-collapse" sec:authorize="isAuthenticated()">
+			<ul class="nav navbar-nav">
+				<li id="menuHome"><a href="/home">主页</a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">基础数据管理<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li sec:authorize="hasAuthority('WAREHOUSE_MANAGE')"><a href="/ware-house-manage" th:href="@{/ware-house-manage}">仓库管理</a></li>
+						<li sec:authorize="hasAuthority('CARGO_LOCATION_TYPE_MANAGE')"><a href="/cargoLocationType-manage" th:href="@{/cargoLocationType-manage}">货位类型管理</a></li>
+						<li sec:authorize="hasAuthority('CARGO_LOCATION_MANAGE')"><a href="/cargoLocation-manage" th:href="@{/cargoLocation-manage}">货位管理</a></li>
+						<li sec:authorize="hasAuthority('MATERIAL_MANAGE')"><a href="/material-manage" th:href="@{/material-manage}">物料管理</a></li>
+						<li sec:authorize="hasAuthority('WAREHOUSECONFIG')"><a href="/ware-house-config-manage" th:href="@{/ware-house-config-manage}">仓库配置</a></li>
+						<li sec:authorize="hasAuthority('CARGO_LOCATION_RECOMMEND')"><a href="/cargoLocation-recommend" th:href="@{/cargoLocation-recommend}">货位推荐</a></li>
+					</ul>
+				</li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">权限管理<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li sec:authorize="hasAuthority('USER_MANAGE')"><a href="/user-manage" th:href="@{/user-manage}">用户管理</a></li>
+						<li sec:authorize="hasAuthority('ROLE_MANAGE')"><a href="/role-manage" th:href="@{/role-manage}">角色管理</a></li>
+					</ul>
+				</li>
+			</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				<li><a>欢迎您：<span th:text="${#authentication.principal.username}">Administrator</span></a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">当前仓库：<span
+							th:text="${#authentication.principal.currentWareHouseCode}">C1</span> <span
+							class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li th:each="item : ${#authentication.principal.wareHouseList}"><a href="javascript: void(0);">切换到仓库：<span
+								th:text="${item.code}">C1</span></a></li>
+					</ul>
+				</li>
+				<li><a onclick="logout();" style="cursor: pointer;">退出</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>

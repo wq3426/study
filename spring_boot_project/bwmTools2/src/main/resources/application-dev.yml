@@ -1,0 +1,28 @@
+# 开启调试模式
+debug: true
+
+# 设置端口号
+server:
+    port: 8080
+spring:
+# 数据源配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://192.168.1.106:1433;DatabaseName=BMW-Goods-Allocation-Tools
+    username: sa
+    password: system123
+    initialize: true
+# Thymeleaf
+  thymeleaf:
+    mode: HTML
+    cache: false
+# AOP 配置
+  aop:
+    proxy-target-class: true
+# 日志配置
+logging:
+  level:
+    com.dhl.tools: debug
+    # 输出SQL日志
+    com.dhl.tools.mapper: debug

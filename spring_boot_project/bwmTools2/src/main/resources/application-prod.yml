@@ -1,0 +1,29 @@
+# 开启调试模式
+debug: true
+
+# 设置端口号
+server:
+    port: 8803
+spring:
+# 数据源配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://10.210.16.41:1433;DatabaseName=BWMTools
+    username: sa
+    password: yywlsql41,
+    initialize: true
+# Thymeleaf
+  thymeleaf:
+    mode: HTML
+    cache: false
+# AOP 配置
+  aop:
+    proxy-target-class: true
+# 日志配置
+#logging:
+#  file: D:/BWM-Tools/log/BMW-GAT.log
+#  level:
+#    com.dhl.tools: debug
+    # 输出SQL日志
+#    com.dhl.tools.mapper: debug

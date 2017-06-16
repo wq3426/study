@@ -96,16 +96,6 @@
         <artifactId>hibernate-validator</artifactId>
         <version>5.2.0.Final</version>
     </dependency>
-    <dependency>
-  		<groupId>javax.validation</groupId>
-    	<artifactId>validation-api</artifactId>
-    	<version>1.1.0.Final</version>  		
-	</dependency>
-	<dependency>
-	    <groupId>org.ow2.util.bundles</groupId>
-    	<artifactId>hibernate-validator-4.3.1.Final</artifactId>
-    	<version>1.0.0</version>
-	</dependency>
   	
   	<!-- 使用SLF4J和LogBack作为日志 -->
   	<dependency>

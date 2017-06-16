@@ -16,7 +16,7 @@ import javax.xml.bind.ValidationException;
  * @author zhangyy 
  * @date 2015-7-31 上午10:28:48  
  */
-public class VlidationUtil {
+public class ValidationUtil {
 
 	private static Validator validator;
 	

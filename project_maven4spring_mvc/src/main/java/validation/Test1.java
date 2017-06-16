@@ -4,7 +4,7 @@ package validation;
 
 import javax.xml.bind.ValidationException;
 
-import validation.util.VlidationUtil;
+import validation.util.ValidationUtil;
 import validation.vo.Person;
 
 /** 
@@ -18,7 +18,7 @@ public class Test1 {
 	public static void main(String [] args ){
 		Person person = new Person();
 		try {
-			VlidationUtil.validate(person);
+			ValidationUtil.validate(person);
 		} catch (ValidationException e) {
 			System.out.println(e.getMessage());
 		}

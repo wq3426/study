@@ -15,7 +15,7 @@ import org.wq.spring.spring_mvc.domain.DemoObj;
 import org.wq.spring.spring_mvc.domain.validator.AllValidator;
 import org.wq.spring.spring_mvc.domain.validator.UpdateValidator;
 
-import validation.util.VlidationUtil;
+import validation.util.ValidationUtil;
 
 /**
  *0. @Controller声明控制器类
@@ -61,7 +61,7 @@ public class DemoAnnoController {
 	public DemoObj passObj(DemoObj obj, HttpServletRequest request){// 6
 		try {
 			//输入校验工具类进行输入校验
-			VlidationUtil.validate(obj, AllValidator.class, UpdateValidator.class);
+			ValidationUtil.validate(obj, AllValidator.class, UpdateValidator.class);
 			System.out.println("url:" + request.getRequestURL() + " can access, obj id: " 
 	                   + obj.getId() + " obj name:" + obj.getName());
 		} catch (Exception e) {

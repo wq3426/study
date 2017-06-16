@@ -60,7 +60,7 @@ public class DemoAnnoController {
 	@ResponseBody
 	public DemoObj passObj(DemoObj obj, HttpServletRequest request){// 6
 		try {
-			//输入校验工具类进行输入校验
+			//输入校验工具类对实体类进行输入校验
 			ValidationUtil.validate(obj, AllValidator.class, UpdateValidator.class);
 			System.out.println("url:" + request.getRequestURL() + " can access, obj id: " 
 	                   + obj.getId() + " obj name:" + obj.getName());
@@ -117,4 +117,5 @@ public class DemoAnnoController {
 	public @ResponseBody String remove(HttpServletRequest request){
 		return "url:" + request.getRequestURL() + " can access";
 	}
+    
 }

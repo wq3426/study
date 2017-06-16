@@ -1,5 +1,7 @@
 package org.wq.spring.spring_mvc.web.controller;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.wq.spring.spring_mvc.domain.DemoObj;
@@ -32,4 +34,14 @@ public class DemoRestController {
 	public DemoObj getXml(DemoObj obj){
 		return new DemoObj(obj.getId(), obj.getName()+"yy");// 5
 	}
+	
+	@RequestMapping("/second")
+    public @Length Object second(@Length(min=6, message="密码长度不能小于6位") String password) {
+        return "second controller";
+    }
+
+    @RequestMapping("/third")
+    public @Length Object third(@Range(min=6, max=10, message="数据需要大于6小于10") int num, @Length(min=6, message="密码长度不能小于6位") String password) {
+        return "third controller";
+    }
 }

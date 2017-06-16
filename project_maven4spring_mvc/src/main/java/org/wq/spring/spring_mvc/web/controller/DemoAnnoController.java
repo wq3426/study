@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.wq.spring.spring_mvc.domain.DemoObj;
 import org.wq.spring.spring_mvc.domain.validator.AllValidator;
+import org.wq.spring.spring_mvc.domain.validator.UpdateValidator;
+
+import validation.util.VlidationUtil;
 
 /**
  *0. @Controller声明控制器类
@@ -56,8 +59,16 @@ public class DemoAnnoController {
 	@RequestMapping(value="/obj", produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public DemoObj passObj(DemoObj obj, HttpServletRequest request){// 6
-		System.out.println("url:" + request.getRequestURL() + " can access, obj id: " 
-		                   + obj.getId() + " obj name:" + obj.getName());
+		try {
+			//输入校验工具类进行输入校验
+			VlidationUtil.validate(obj, AllValidator.class, UpdateValidator.class);
+			System.out.println("url:" + request.getRequestURL() + " can access, obj id: " 
+	                   + obj.getId() + " obj name:" + obj.getName());
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("msg******************"+e.getMessage());
+		}
+		
 		return obj;
 	}
 	

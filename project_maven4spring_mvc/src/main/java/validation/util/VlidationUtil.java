@@ -35,8 +35,8 @@ public class VlidationUtil {
 	 * void
 	 * @throws 
 	 */ 
-	public static <T> void validate(T t) throws ValidationException{
-		Set<ConstraintViolation<T>> set =  validator.validate(t);
+	public static <T> void validate(T t, Class<?>... groups) throws ValidationException{
+		Set<ConstraintViolation<T>> set =  validator.validate(t, groups);
 		if(set.size()>0){
 			StringBuilder validateError = new StringBuilder();
 			for(ConstraintViolation<T> val : set){

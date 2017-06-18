@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
@@ -29,6 +30,7 @@ import org.wq.spring.spring_mvc.web.message_converter.MyMessageConverter;
 @Configuration
 @EnableWebMvc // 1
 @EnableScheduling // 11 开启计划任务支持
+@EnableAspectJAutoProxy //启用AspectJ自动代理
 @ComponentScan("org.wq.spring.spring_mvc")
 public class MyMvcConfig extends WebMvcConfigurerAdapter{// 2
 

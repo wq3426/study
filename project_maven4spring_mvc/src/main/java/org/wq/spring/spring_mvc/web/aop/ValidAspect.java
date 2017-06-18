@@ -25,14 +25,11 @@ import org.springframework.validation.ObjectError;
 @Component
 public class ValidAspect {
 	
-    private ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private final ExecutableValidator validator = factory.getValidator().forExecutables();
 	private ObjectError error;
 
     @Pointcut("execution(public * org.wq.spring.spring_mvc.web.controller.*.*(..))")
     public void valid() {
-    	
+    	System.out.println("***********************aop pointcout");
     }
 
     //环绕通知,环绕增强，相当于MethodInterceptor
@@ -92,6 +89,10 @@ public class ValidAspect {
             return null;
         }
     }
+    
+    private ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final ExecutableValidator validator = factory.getValidator().forExecutables();
 
     private <T> Set<ConstraintViolation<T>> validMethodParams(T obj, Method method, Object[] params) {
         return validator.validateParameters(obj, method, params);

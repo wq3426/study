@@ -83,7 +83,7 @@ public class ValidAspect {
 //                    System.out.println("message---"+constraintViolation.getMessage());
 //                }
                 
-                //返回第一条
+                //返回第一条(此处返回值的类型应该与拦截的方法的返回值类型一致)
                 String json = "{\"result\": 0, \"msg\": \""+ validResult.iterator().next().getMessage() +"\"}";
                 
                 return json;

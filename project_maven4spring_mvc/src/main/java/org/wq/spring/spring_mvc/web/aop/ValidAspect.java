@@ -84,7 +84,7 @@ public class ValidAspect {
 //                }
                 
                 //返回第一条
-                String json = "{\"result\": 0, \"msg\": "+ validResult.iterator().next().getMessage() +"}";
+                String json = "{\"result\": 0, \"msg\": \""+ validResult.iterator().next().getMessage() +"\"}";
                 
                 return json;
             }

@@ -24,7 +24,7 @@ import validation.util.ValidationUtil;
  * @author wq3426
  */
 @Controller //0
-@Validated //实现方法级别的校验
+//@Validated //实现方法级别的校验
 @RequestMapping("/anno") //请求映射注解，映射此类的访问路径为 /anno
 public class DemoAnnoController {
 
@@ -52,7 +52,14 @@ public class DemoAnnoController {
 	//5.Long id 常规的request参数解析（基础类型），请求方式为：/anno/requestParam?id=1
 	@RequestMapping(value="/requestParam", produces="text/plain;charset=UTF-8")
 	public @ResponseBody String passRequestParam(@Min(value=1, message="id最小为1") @RequestParam Long id, HttpServletRequest request){// 5
-		return "url:" + request.getRequestURL() + " can access, id: " + id;
+		String str = "";
+		try {
+//			ValidationUtil.validate(id);
+			str = "url:" + request.getRequestURL() + " can access, id: " + id;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return str;
 	}
 	
 	//6.DemoObj obj 解析参数到对象（引用类型），请求方式为：/anno/obj?id=1&name=wq

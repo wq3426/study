@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.wq.spring.spring_mvc.domain.DemoObj;
-import org.wq.spring.spring_mvc.domain.validator.AllValidator;
-import org.wq.spring.spring_mvc.domain.validator.UpdateValidator;
+import org.wq.util.validator.AllValidator;
+import org.wq.util.validator.UpdateValidator;
 
 import validation.util.ValidationUtil;
 

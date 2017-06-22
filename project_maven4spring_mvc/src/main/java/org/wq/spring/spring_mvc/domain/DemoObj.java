@@ -5,8 +5,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import org.wq.spring.spring_mvc.domain.validator.AllValidator;
-import org.wq.spring.spring_mvc.domain.validator.UpdateValidator;
+import org.wq.util.validator.AllValidator;
+import org.wq.util.validator.UpdateValidator;
 
 public class DemoObj {
 	

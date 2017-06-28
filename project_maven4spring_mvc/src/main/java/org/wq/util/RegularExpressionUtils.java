@@ -53,7 +53,15 @@ public class RegularExpressionUtils {
 //		Pattern pattern = Pattern.compile("^[0-9]{4}-(0?[0-9]|1[0-2])-(0?[1-9]|[12]?[0-9]|3[01])$");
 //		boolean match = pattern.matcher("2424-12-14").matches();
 //		System.out.println(match);
-		System.out.println(matches("琼G88002", carplatePattern));
+		System.out.println(matches("JB12345", carplatePattern));
+		
+		String pattern = "(\\d{2}|\\d{4})(?:\\-)?([0]{1}\\d{1}|[1]{1}[0-2]{1})(?:\\-)?([0-2]{1}\\d{1}|[3]{1}[0-1]{1})(?:\\s)?([0-1]{1}\\d{1}|[2]{1}[0-3]{1})(?::)?([0-5]{1}\\d{1})(?::)?([0-5]{1}\\d{1})";
+		String s =    "^$|^null$|"+ pattern;
+		String a = "^$|^null$|(\\d{2}|\\d{4})(?:\\-)?([0]{1}\\d{1}|[1]{1}[0-2]{1})(?:\\-)?([0-2]{1}\\d{1}|[3]{1}[0-1]{1})(?:\\s)?([0-1]{1}\\d{1}|[2]{1}[0-3]{1})(?::)?([0-5]{1}\\d{1})(?::)?([0-5]{1}\\d{1})";
+		String date = "2012-09-12 11:44:33";
+		String d = "0";
+		
+		System.out.println(matches(d, intPattern));
 	} 
 	
 }
